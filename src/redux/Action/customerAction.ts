@@ -2,12 +2,10 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {get, post, put} from '../../service/Apis';
 import {errorMsgWrap} from '../../config/helper';
 
-interface userDetails {
+interface customerDetails {
   firstName: string;
   lastName: string;
   email: string;
-  title: string;
-  role: string;
   mobileNumber: string;
   dateOfjoining: string;
   status: string;
@@ -15,16 +13,18 @@ interface userDetails {
   password?: string;
 }
 
-interface UpdateUserParams {
-  userId: string;
-  payload: userDetails;
+interface UpdateCustomerParams {
+  customerId: string;
+  payload: customerDetails;
 }
 
-export const fetchGetUser = createAsyncThunk(
-  'getUser',
+export const fetchGetCustomer = createAsyncThunk(
+  'getCustomer',
   async (_, {rejectWithValue}) => {
     try {
-      const res = await get({url: '/users'});
+      const res = await get({url: '/users/customer'});
+      console.log(res,'get customer');
+      
       if (res.success) {
         return res.data;
       } else {
@@ -37,12 +37,12 @@ export const fetchGetUser = createAsyncThunk(
   },
 );
 
-export const fetchUpdateUser = createAsyncThunk(
-  'updateUser',
-  async ({userId, payload}: UpdateUserParams, {rejectWithValue}) => {
+export const fetchUpdateCustomer = createAsyncThunk(
+  'updateCustomer',
+  async ({customerId, payload}: UpdateCustomerParams, {rejectWithValue}) => {
     try {
       const res = await put({
-        url: `/users/${userId}`,
+        url: `/users/customer/${customerId}`,
         body: payload,
       });
       return res;
@@ -53,12 +53,12 @@ export const fetchUpdateUser = createAsyncThunk(
   },
 );
 
-export const fetchAddUser = createAsyncThunk(
-  'addUser',
-  async (payload: userDetails, {rejectWithValue}) => {
+export const fetchAddCustomer = createAsyncThunk(
+  'addCustomer',
+  async (payload: customerDetails, {rejectWithValue}) => {
     try {
       const res: any = await post({
-        url: '/users',
+        url: '/users/customer',
         body: payload,
       });
       if (res.success) {
@@ -66,23 +66,6 @@ export const fetchAddUser = createAsyncThunk(
       } else {
         return rejectWithValue(res.message);
       }
-    } catch (error) {
-      let errorMessage = errorMsgWrap(error);
-      return rejectWithValue(errorMessage);
-    }
-  },
-);
-
-export const uploadImg = createAsyncThunk(
-  'uploadImg',
-  async (payload: FormData, {rejectWithValue}) => {
-    try {
-      const res = await post({
-        url: '/users/uploadImg',
-        body: payload,
-        hasFormData: true,
-      });
-      return res;
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
       return rejectWithValue(errorMessage);

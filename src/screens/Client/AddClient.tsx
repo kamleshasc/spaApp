@@ -6,7 +6,6 @@ import {UI} from '../../components';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchGetUser} from '../../redux/Action/userAction';
 import {fetchAddClient, fetchClient} from '../../redux/Action/clientAction';
-import {deformatMobileNumber} from '../../config/helper';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
 
@@ -448,7 +447,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     maxWidth: 600,
-    // alignSelf: 'center',
+    alignSelf: 'center',
     flex: 1,
   },
   btnContainer: {

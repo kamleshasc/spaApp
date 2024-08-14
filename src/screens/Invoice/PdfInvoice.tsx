@@ -35,12 +35,12 @@ function PdfInvoice({navigation, route}: PdfInvoiceProp) {
         <TouchableOpacity
           onPress={() => checkPermission()}
           style={styles.iconContainer}>
-          <Icon name="download" size={30} color="white" />
+          <Icon name="download" size={30} color={colors.themePrimary} />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
-  
+
   const downloadPdf = async () => {
     if (!data) return;
     try {

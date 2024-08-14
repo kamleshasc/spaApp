@@ -20,6 +20,7 @@ export type DrawerNavigationParamList = {
   CommissionRules: undefined;
   Invoices: undefined;
   Bookings: undefined;
+  Customers: undefined;
 };
 
 export type DrawerNavigationPropList =
@@ -116,6 +117,12 @@ function DrawerNavigation() {
         <Drawer.Screen
           name="Bookings"
           component={SCREENS.BOOKINGSCREENS.bookings}
+        />
+      )}
+      {screens.includes('Customers') && (
+        <Drawer.Screen
+          name="Customers"
+          component={SCREENS.CUSTOMERSCREENS.customer}
         />
       )}
     </Drawer.Navigator>

@@ -86,21 +86,13 @@ const CustomModalImagePicker: React.FC<ImagePickerProps> = ({
               <TouchableOpacity
                 style={styles.btnContainer}
                 onPress={openGallery}>
-                <MIcon
-                  name="photo-library"
-                  size={40}
-                  color={colors.secondaryDark}
-                />
+                <MIcon name="photo-library" size={40} color={colors.fontDark} />
                 <Text style={styles.btnText}>Gallery</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.btnContainer}
                 onPress={openCamera}>
-                <MIcon
-                  name="photo-camera"
-                  size={40}
-                  color={colors.secondaryDark}
-                />
+                <MIcon name="photo-camera" size={40} color={colors.fontDark} />
                 <Text style={styles.btnText}>Camera</Text>
               </TouchableOpacity>
             </View>
@@ -145,8 +137,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   btnContainer: {
-    borderWidth: 1,
-    borderColor: 'grey',
+    borderWidth: 2,
+    borderColor: colors.fontDark,
     borderRadius: 12,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -155,7 +147,7 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#000',
+    color: colors.fontDark,
     marginTop: 8,
   },
 });

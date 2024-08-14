@@ -109,7 +109,6 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
       } else if (key == 'invoiceNumber') {
         inputChangedHandler(key, String(invoice[key]) || '');
       } else if (key == 'dateOfInvoice') {
-        setSelectedDate(invoice[key]);
         inputChangedHandler(key, DateFormateMMMMDDYYY(invoice[key]) || '');
       } else {
         inputChangedHandler(key, invoice[key] || '');
@@ -164,8 +163,8 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
     setShowDate(false);
     if (value) {
       setSelectedDate(value);
-      const selectedDate = DateFormateMMMMDDYYY(value);
-      inputChangedHandler('dateOfInvoice', selectedDate);
+      const newDate = DateFormateMMMMDDYYY(value);
+      inputChangedHandler('dateOfInvoice', newDate);
     }
   };
 

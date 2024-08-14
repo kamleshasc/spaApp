@@ -8,7 +8,6 @@ import {clientInput, initialInputs} from './AddClient';
 import {fetchGetUser} from '../../redux/Action/userAction';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
-import {deformatMobileNumber, formatMobileNumber} from '../../config/helper';
 import {fetchClient, fetchUpdateClient} from '../../redux/Action/clientAction';
 
 const prefixData = [
@@ -281,9 +280,6 @@ function EditClient({navigation, route}: EditProps) {
       value => fieldKeys.indexOf(value) > -1,
     );
     for (let key of keys) {
-      // if (key == 'mobileNumber') {
-      //   inputChangedHandler(key, formatMobileNumber(client[key]));
-      // }
       if (key == 'owner') {
         inputChangedHandler('owner', client[key]._id);
       } else {

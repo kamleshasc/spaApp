@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchClient} from '../../redux/Action/clientAction';
 import {clearGetClientErrorMsg} from '../../redux/Reducer/clientReducer/getClientSlice';
-import {DateFormateMMMMDDYYY, formatMobileNumber} from '../../config/helper';
+import {DateFormateMMMMDDYYY} from '../../config/helper';
 
 type ClientProps = CompositeScreenProps<
   DrawerScreenProps<DrawerNavigationParamList, 'Clients'>,
@@ -35,7 +35,6 @@ export interface ClientsData {
   _id: string;
   firstName: string;
   lastName: string;
-  // mobileNumber: object;
   mobileNumber: string;
   email: string;
   addressLineOne: string;
@@ -87,7 +86,6 @@ function Clients({navigation}: ClientProps): React.JSX.Element {
           }`}
         />
         <UI.TableI name={item.email} />
-        {/* <UI.TableI name={formatMobileNumber(item.mobileNumber)} /> */}
         <UI.TableI name={item.mobileNumber} />
         <UI.TableI name={item.addressLineOne} />
         <UI.TableI name={item.addressLineTwo} />

@@ -239,7 +239,7 @@ function EditService({route, navigation}: Props) {
         uploadServiceImg(formData),
       ).unwrap();
 
-      inputChangedHandler('serviceImage', result?.fileName || '');
+      inputChangedHandler('serviceImage', result?.data || '');
     } catch (error) {
       setMessageStatus(true);
       setErrorMessage(error);

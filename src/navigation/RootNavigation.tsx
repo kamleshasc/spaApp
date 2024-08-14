@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {UI} from '../components';
 import {useAppDispatch} from '../hooks/storeHook';
 import {loadUserScreens, userDetails} from '../redux/Action/authAction';
+import {CustomerData} from '../screens/Customer/Customer';
 
 export type RootStackParamList = {
   DrawerNavigation: undefined;
@@ -37,6 +38,8 @@ export type RootStackParamList = {
   Welcome: undefined;
   Login: undefined;
   Loading: undefined;
+  AddCustomer: undefined;
+  EditCustomer: {customer: CustomerData};
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -158,6 +161,16 @@ function RootNavigation() {
       <Stack.Screen
         name="PdfInvoice"
         component={SCREENS.INVOICESCREENS.PdfInvoice}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="AddCustomer"
+        component={SCREENS.CUSTOMERSCREENS.addCustomer}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="EditCustomer"
+        component={SCREENS.CUSTOMERSCREENS.editCustemer}
         options={{headerShown: true}}
       />
     </Stack.Navigator>

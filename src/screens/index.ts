@@ -1,6 +1,7 @@
 import BOOKINGSCREENS from './Booking';
 import CLIENT from './Client';
 import COMMISSIONRULESCREENS from './CommissionRule';
+import CUSTOMERSCREENS from './Customer';
 import DASHBOARD from './Dashboard';
 import INVENTORY from './Inventory';
 import INVOICESCREENS from './Invoice';
@@ -18,6 +19,7 @@ const SCREENS = {
   INVOICESCREENS,
   BOOKINGSCREENS,
   ONBOARDINGSCREENS,
+  CUSTOMERSCREENS,
 };
 
 export default SCREENS;

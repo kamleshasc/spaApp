@@ -86,8 +86,6 @@ function DropDownWithItemList({
 
   const onAddPress = () => {
     if (dropDownValue) {
-      console.log(dropDownValue, 'dropDownValue');
-
       addValue(dropDownValue);
       setDropDownValue('');
     }
@@ -150,14 +148,14 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingLeft: 14,
     borderWidth: 1,
-    borderColor: colors.secondaryDark,
+    borderColor: colors.borderColor,
     backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 10,
     flex: 0.7,
   },
   placeholderStyle: {
-    fontSize: rMS(12),
+    fontSize: rMS(14),
     fontWeight: '600',
   },
   selectedTextStyle: {
@@ -184,7 +182,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     paddingVertical: 15,
     borderRadius: 10,
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.themePrimary,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import DatePicker, {DatePickerProps} from 'react-native-date-picker';
 import {View, Modal, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import colors from '../../config/colors';
+import {rMS} from '../../config/responsive';
 
 interface DatePickerUIProps {
   handleCancelPressed: () => void;
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: colors.primary,
     borderRadius: 10,
-    padding: 20,
+    padding: rMS(20),
     alignItems: 'center',
   },
   datePicker: {
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelBtnContainer: {
-    borderColor: 'rgb(248,62,85)',
+    borderColor: colors.themePrimary,
     borderWidth: 1,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -97,15 +98,17 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   btnText: {
-    fontSize: 14,
-    color: '#fff',
+    fontSize: rMS(12),
+    fontWeight: '500',
+    color: colors.primary,
   },
   cancelBtnText: {
-    fontSize: 14,
-    color: 'rgb(248,62,85)',
+    fontSize: rMS(12),
+    color: colors.themePrimary,
+    fontWeight: '600',
   },
   okayBtnContainer: {
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.themePrimary,
     paddingHorizontal: 35,
     borderRadius: 8,
     paddingVertical: 6,

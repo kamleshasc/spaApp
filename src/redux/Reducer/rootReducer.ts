@@ -7,6 +7,7 @@ import commissionRuleReducer from './commissionRuleReducer';
 import invoiceReducer from './invoiceReducer';
 import bookingReducer from './bookingReducer';
 import authReducer from './authReducer';
+import customerReducer from './customerReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   Invoice: invoiceReducer,
   booking: bookingReducer,
   auth: authReducer,
+  customer: customerReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

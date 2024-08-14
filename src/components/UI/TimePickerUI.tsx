@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelBtnContainer: {
-    borderColor: 'rgb(248,62,85)',
+    borderColor: colors.themePrimary,
     borderWidth: 1,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
   },
   canelBtnText: {
     fontSize: 14,
-    color: 'rgb(248,62,85)',
+    color: colors.themePrimary,
   },
   okayBtnContainer: {
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.themePrimary,
     paddingHorizontal: 35,
     borderRadius: 8,
     paddingVertical: 6,

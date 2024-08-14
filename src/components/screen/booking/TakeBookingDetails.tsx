@@ -314,11 +314,12 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     alignItems: 'center',
     borderBottomWidth: 1,
+    borderColor: colors.themePrimary,
   },
   headerText: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.fontDark,
+    color: colors.themePrimary,
   },
   columnRowContainer: {
     flexDirection: 'row',
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelBtnContainer: {
-    borderColor: 'rgb(248,62,85)',
+    borderColor: colors.themePrimary,
     borderWidth: 1,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -358,10 +359,10 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    color: 'rgb(248,62,85)',
+    color: colors.themePrimary,
   },
   bookBtnContainer: {
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.themePrimary,
     paddingHorizontal: 35,
     borderRadius: 8,
     paddingVertical: 6,
