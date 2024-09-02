@@ -56,7 +56,6 @@ interface userInputsTypes {
   role: objValues;
   mobileNumber: objValues;
   dateOfjoining: objValues;
-  status: objValues;
   userImage: objValues;
   password: objValues;
 }
@@ -69,7 +68,6 @@ const initialInputs: userInputsTypes = {
   role: {value: '', isValid: true, message: ''},
   mobileNumber: {value: '', isValid: true, message: ''},
   dateOfjoining: {value: '', isValid: true, message: ''},
-  status: {value: '', isValid: true, message: ''},
   userImage: {value: '', isValid: true, message: ''},
   password: {value: '', isValid: true, message: ''},
 };
@@ -98,10 +96,12 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
     title,
     dateOfjoining,
     role,
-    status,
     userImage,
     password,
   } = inputs;
+  const [isEnabled, setIsEnabled] = React.useState(true);
+
+  const toggleSwitch = (value: any) => setIsEnabled(value);
 
   const fieldsKeys = [
     'firstName',
@@ -150,8 +150,8 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
       });
 
       let result: any = await dispatchUserEdit(uploadImg(formData)).unwrap();
-      if (result && result?.fileName) {
-        inputChangedHandler('userImage', result?.fileName || '');
+      if (result && result?.data) {
+        inputChangedHandler('userImage', result?.data || '');
       }
     } catch (error) {
       setShowMessage(true);
@@ -221,7 +221,7 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
         dateOfjoining: dateOfjoining.value,
         role: role.value,
         userImage: userImage.value,
-        status: status.value,
+        status: isEnabled ? 'Active' : 'DeActive',
       };
       if (password.value.length > 0) {
         payload.password = password.value;
@@ -248,8 +248,6 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
     let mobilenoMessage = '';
     let DOJIsValid = true;
     let DOJMessage = '';
-    let statusIsValid = true;
-    let statusMessage = '';
     let roleIsValid = true;
     let roleMessage = '';
     let userImgIsValid = true;
@@ -305,10 +303,6 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
       mobilenoIsValid = false;
     }
 
-    if (status.value.trim().length <= 0) {
-      statusIsValid = false;
-      statusMessage = 'Status is required.';
-    }
     if (role.value.trim().length <= 0) {
       roleIsValid = false;
       roleMessage = 'Role is required.';
@@ -325,7 +319,6 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
       !titleIsValid ||
       !mobilenoIsValid ||
       !DOJIsValid ||
-      !statusIsValid ||
       !userImgIsValid ||
       !roleIsValid ||
       !passwordIsValid
@@ -368,11 +361,6 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
             value: curInputs.dateOfjoining.value,
             isValid: DOJIsValid,
           },
-          status: {
-            message: statusMessage,
-            value: curInputs.status.value,
-            isValid: statusIsValid,
-          },
           role: {
             message: roleMessage,
             value: curInputs.role.value,
@@ -404,9 +392,12 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
     for (let key of keys) {
       // if (key == 'mobileNumber') {
       //   inputChangedHandler(key, formatMobileNumber(user[key]) || '');
-      // } else {
-      inputChangedHandler(key, user[key] || '');
-      // }
+      if (key == 'status') {
+        let statusCheck = user[key] === 'Active' ? true : false;
+        toggleSwitch(statusCheck);
+      } else {
+        inputChangedHandler(key, user[key] || '');
+      }
     }
   };
 
@@ -539,14 +530,15 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
             <Icon name="upload" size={30} color="black" />
           </UI.Input>
 
-          <UI.DropDown
-            data={statusData}
-            placeholder={'Status*'}
-            value={status.value}
-            isError={!status.isValid}
-            errorMsg={status.message}
-            onChange={onChangeStatus}
+          <UI.Radio
+            radioTitle="Active"
+            firstText={'Yes'}
+            secondText={'No'}
+            status={isEnabled}
+            firstTextPressed={() => toggleSwitch(true)}
+            secondTextPressed={() => toggleSwitch(false)}
           />
+
           <UI.Btn disabledBtn={isLoader} onPressBtn={() => checkValidation()}>
             Save
           </UI.Btn>

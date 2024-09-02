@@ -43,6 +43,7 @@ const CustomDropdown: React.FC<Props> = ({
         style={[style.dropdown, styles]}
         placeholderStyle={style.placeholderStyle}
         selectedTextStyle={style.selectedTextStyle}
+        itemTextStyle={style.selectedTextStyle}
         iconStyle={style.iconStyle}
         data={data}
         maxHeight={150}

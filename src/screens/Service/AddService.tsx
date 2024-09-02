@@ -58,10 +58,8 @@ export interface serviceInput {
   serviceName: singleObjString;
   subService: arrayService;
   category: singleObjString;
-  onsiteOffsite: singleObjString;
   selectedBranches: arrayString;
   selectedUsers: arrayString;
-  status: singleObjString;
   serviceImage: singleObjString;
   createdBy: singleObjString;
 }
@@ -69,10 +67,8 @@ export const initialInputs: serviceInput = {
   serviceName: {value: '', isValid: true, message: ''},
   subService: {value: [], isValid: true, message: ''},
   category: {value: '', isValid: true, message: ''},
-  onsiteOffsite: {value: '', isValid: true, message: ''},
   selectedBranches: {value: [], isValid: true, message: ''},
   selectedUsers: {value: [], isValid: true, message: ''},
-  status: {value: '', isValid: true, message: ''},
   serviceImage: {value: '', isValid: true, message: ''},
   createdBy: {value: '', isValid: true, message: ''},
 };
@@ -86,8 +82,6 @@ function AddService({navigation}: Props) {
     subService,
     selectedBranches,
     category,
-    onsiteOffsite,
-    status,
     selectedUsers,
     serviceImage,
     createdBy,
@@ -101,6 +95,11 @@ function AddService({navigation}: Props) {
   const [errorMessage, setErrorMessage] = React.useState<any>('');
   const [showCameraOptions, setShowCameraOptions] =
     React.useState<boolean>(false);
+  const [siteIsEnabled, setSiteIsEnabled] = React.useState(true);
+  const [isStatusEnabled, setIsStatusEnabled] = React.useState(true);
+
+  const toggleSwitch = (value: any) => setSiteIsEnabled(value);
+  const toggleStatusSwitch = (value: any) => setIsStatusEnabled(value);
 
   function inputChangedHandler(inputIdentifier: any, enteredValue: any): void {
     setInputs(curInputs => {
@@ -128,10 +127,10 @@ function AddService({navigation}: Props) {
         serviceName: serviceName.value,
         category: category.value,
         subService: subService.value,
-        onsiteOffsite: onsiteOffsite.value,
+        onsiteOffsite: siteIsEnabled ? 'On Site' : 'Off Site',
         selectedBranches: selectedBranches.value,
         selectedUsers: selectedUsers.value,
-        status: status.value,
+        status: isStatusEnabled ? 'Active' : 'DeActive',
         serviceImage: serviceImage.value,
         createdBy: createdBy.value,
       };
@@ -151,10 +150,6 @@ function AddService({navigation}: Props) {
     let branchMsg = '';
     let categoryIsvalid = true;
     let categoryMsg = '';
-    let siteIsvalid = true;
-    let siteMsg = '';
-    let statusIsvalid = true;
-    let statusMsg = '';
     let empIsvalid = true;
     let empMsg = '';
     let serviceIsvalid = true;
@@ -177,14 +172,6 @@ function AddService({navigation}: Props) {
       categoryIsvalid = false;
       categoryMsg = 'Category is required.';
     }
-    if (onsiteOffsite.value.length <= 0) {
-      siteIsvalid = false;
-      siteMsg = 'Site is required.';
-    }
-    if (status.value.length <= 0) {
-      statusIsvalid = false;
-      statusMsg = 'Status is required.';
-    }
     if (selectedUsers.value.length <= 0) {
       empIsvalid = false;
       empMsg = 'Assign Employee is required.';
@@ -206,8 +193,6 @@ function AddService({navigation}: Props) {
       !serviceNameIsvalid ||
       !branchIsvalid ||
       !categoryIsvalid ||
-      !siteIsvalid ||
-      !statusIsvalid ||
       !empIsvalid ||
       !serviceIsvalid ||
       !createdByIsvalid ||
@@ -235,16 +220,6 @@ function AddService({navigation}: Props) {
             message: categoryMsg,
             value: curInputs.category.value,
             isValid: categoryIsvalid,
-          },
-          onsiteOffsite: {
-            message: siteMsg,
-            value: curInputs.onsiteOffsite.value,
-            isValid: siteIsvalid,
-          },
-          status: {
-            message: statusMsg,
-            value: curInputs.status.value,
-            isValid: statusIsvalid,
           },
           selectedUsers: {
             message: empMsg,
@@ -384,17 +359,6 @@ function AddService({navigation}: Props) {
             selectedSubService={subService.value}
           />
 
-          <UI.DropDown
-            data={siteData}
-            placeholder={'Select Site*'}
-            value={onsiteOffsite.value}
-            isError={!onsiteOffsite.isValid}
-            errorMsg={onsiteOffsite.message}
-            onChange={value =>
-              inputChangedHandler('onsiteOffsite', value.value)
-            }
-          />
-
           <UI.DropDownMultiSelect
             data={data.map(value => {
               return {
@@ -411,13 +375,13 @@ function AddService({navigation}: Props) {
             errorMsg={selectedUsers.message}
           />
 
-          <UI.DropDown
-            data={statusData}
-            placeholder={'Select Status*'}
-            value={status.value}
-            isError={!status.isValid}
-            errorMsg={status.message}
-            onChange={value => inputChangedHandler('status', value.value)}
+          <UI.Radio
+            radioTitle="Site"
+            firstText={'On'}
+            secondText={'Off'}
+            status={siteIsEnabled}
+            firstTextPressed={() => toggleSwitch(true)}
+            secondTextPressed={() => toggleSwitch(false)}
           />
 
           <UI.Input
@@ -445,6 +409,15 @@ function AddService({navigation}: Props) {
             isError={!createdBy.isValid}
             errorMsg={createdBy.message}
             onChange={value => inputChangedHandler('createdBy', value.value)}
+          />
+
+          <UI.Radio
+            radioTitle="Active"
+            firstText={'Yes'}
+            secondText={'No'}
+            status={isStatusEnabled}
+            firstTextPressed={() => toggleStatusSwitch(true)}
+            secondTextPressed={() => toggleStatusSwitch(false)}
           />
 
           <View style={styles.btnContainer}>

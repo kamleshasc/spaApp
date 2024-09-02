@@ -2,6 +2,8 @@ import axios from 'axios';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {ImagePickerResponseObject} from '../components/UI/CustomModalImagePicker';
 
+const timeZone = 'Asia/Kolkata';
+
 export const DateFormateMMMMDDYYY = (value: any) => {
   const date = new Date(value);
   const month = date.toLocaleString('en-GB', {month: 'long'});
@@ -144,4 +146,62 @@ export const formatAndAddMinutes = (dateString: Date, minutesToAdd: string) => {
     originalDateFormatted,
     newDateFormatted,
   };
+};
+
+// export const getCurrentDateZone = () => {
+//   const options: any = {
+//     year: 'numeric',
+//     month: '2-digit',
+//     day: '2-digit',
+//     timeZone: timeZone,
+//   };
+
+//   const now = new Date();
+//   const formatter = new Intl.DateTimeFormat('en-CA', options); // 'en-CA' formats to YYYY-MM-DD
+//   return formatter.format(now);
+// };
+export const getCurrentDateZone = () => {
+  const options: any = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: timeZone,
+  };
+
+  const now = new Date();
+
+  // Format date and time according to the specified time zone
+  const formatter = new Intl.DateTimeFormat('en-CA', options);
+  const parts = formatter.formatToParts(now);
+
+  // Extract date and time parts
+  const year = parts.find(part => part.type === 'year')?.value;
+  const month = parts.find(part => part.type === 'month')?.value;
+  const day = parts.find(part => part.type === 'day')?.value;
+  const hour = parts.find(part => part.type === 'hour')?.value;
+  const minute = parts.find(part => part.type === 'minute')?.value;
+  const second = parts.find(part => part.type === 'second')?.value;
+
+  // Construct a date string in ISO format
+  const isoDateString = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+
+  // Return a new Date object, which will be in the local time zone of the environment
+  return new Date(isoDateString);
+};
+
+export const getCurrentTime = () => {
+  const options: any = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: timeZone,
+  };
+
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', options); // 'en-US' formats to HH:MM in 24-hour format
+  return formatter.format(now);
 };

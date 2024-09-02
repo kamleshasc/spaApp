@@ -7,9 +7,9 @@ interface customerDetails {
   lastName: string;
   email: string;
   mobileNumber: string;
-  dateOfjoining: string;
-  status: string;
-  userImage: string;
+  dateOfjoining?: string;
+  status?: string;
+  userImage?: string;
   password?: string;
 }
 

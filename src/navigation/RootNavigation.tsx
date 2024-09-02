@@ -40,6 +40,7 @@ export type RootStackParamList = {
   Loading: undefined;
   AddCustomer: undefined;
   EditCustomer: {customer: CustomerData};
+  SignUp: undefined;
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -51,19 +52,23 @@ type Nav = {
 
 function RootNavigation() {
   const {navigate} = useNavigation<Nav>();
+  const [loadingStatus, setLoadingStatus] = React.useState(true);
   const rootDispatch = useAppDispatch();
   const handleNavigation = async () => {
     try {
       const value = await AsyncStorage.getItem('userScreens');
       if (value) {
-        // setScreens(value);
         rootDispatch(loadUserScreens());
         rootDispatch(userDetails());
         navigate('DrawerNavigation');
+        setLoadingStatus(false);
+        return;
       } else {
         navigate('OnBoarding');
+        setLoadingStatus(false);
+        return;
       }
-      console.log(value, 'result');
+      // console.log(value, 'result');
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +92,7 @@ function RootNavigation() {
         },
         headerTintColor: colors.themePrimary,
       }}>
-      <Stack.Screen name="Loading" component={UI.Loader} />
+      {loadingStatus && <Stack.Screen name="Loading" component={UI.Loader} />}
       <Stack.Screen
         name="OnBoarding"
         component={SCREENS.ONBOARDINGSCREENS.onBoarding}
@@ -173,6 +178,7 @@ function RootNavigation() {
         component={SCREENS.CUSTOMERSCREENS.editCustemer}
         options={{headerShown: true}}
       />
+      <Stack.Screen name="SignUp" component={SCREENS.USER.signup} />
     </Stack.Navigator>
   );
 }

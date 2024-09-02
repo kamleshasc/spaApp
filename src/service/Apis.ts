@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
-// import {BASE_URL} from '@env';
+import {API_URL} from '@env';
 
-const BASE_URL = 'http://192.168.1.70:3200/api/v1';
+console.log(API_URL, 'API_URL');
 
 interface ApiProps {
   url: string;
@@ -19,9 +19,9 @@ export async function get({url, config = ''}: ApiProps) {
   let header = await getHeader(config);
 
   return await axios
-    .get(BASE_URL + url, header)
+    .get(API_URL + url, header)
     .then(response => {
-      return response.data;
+      return response?.data;
     })
     .catch(error => {
       throw error;
@@ -31,9 +31,9 @@ export async function get({url, config = ''}: ApiProps) {
 export async function deleteData({url, config = ''}: ApiProps) {
   let header = await getHeader(config);
   return await axios
-    .delete(BASE_URL + url, header)
+    .delete(API_URL + url, header)
     .then(response => {
-      return response.data;
+      return response?.data;
     })
     .catch(error => {
       throw error;
@@ -48,9 +48,9 @@ export async function put({
 }: ApiProps) {
   let header = await getHeader({config, hasFormData});
   return await axios
-    .put(BASE_URL + url, body, header)
+    .put(API_URL + url, body, header)
     .then(response => {
-      return response.data;
+      return response?.data;
     })
     .catch(error => {
       throw error;
@@ -65,9 +65,9 @@ export async function post({
 }: ApiProps): Promise<AxiosResponse | AxiosError> {
   let header = await getHeader({config, hasFormData});
   return await axios
-    .post(BASE_URL + url, body, header)
+    .post(API_URL + url, body, header)
     .then(response => {
-      return response.data;
+      return response?.data;
     })
     .catch(error => {
       throw error;

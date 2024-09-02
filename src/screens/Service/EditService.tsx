@@ -56,13 +56,16 @@ function EditService({route, navigation}: Props) {
   const [errorMessage, setErrorMessage] = React.useState<any>('');
   const [showCameraOptions, setShowCameraOptions] =
     React.useState<boolean>(false);
+  const [siteIsEnabled, setSiteIsEnabled] = React.useState(true);
+  const [isStatusEnabled, setIsStatusEnabled] = React.useState(true);
+
+  const toggleSwitch = (value: any) => setSiteIsEnabled(value);
+  const toggleStatusSwitch = (value: any) => setIsStatusEnabled(value);
 
   const {
     serviceName,
     selectedBranches,
     category,
-    onsiteOffsite,
-    status,
     selectedUsers,
     serviceImage,
     createdBy,
@@ -85,8 +88,8 @@ function EditService({route, navigation}: Props) {
         serviceName: serviceName.value,
         selectedBranches: selectedBranches.value,
         category: category.value,
-        onsiteOffsite: onsiteOffsite.value,
-        status: status.value,
+        onsiteOffsite: siteIsEnabled ? 'On Site' : 'Off Site',
+        status: isStatusEnabled ? 'Active' : 'DeActive',
         selectedUsers: selectedUsers.value,
         createdBy: createdBy.value,
         serviceImage: serviceImage.value,
@@ -111,10 +114,6 @@ function EditService({route, navigation}: Props) {
       let branchMsg = '';
       let categoryIsvalid = true;
       let categoryMsg = '';
-      let siteIsvalid = true;
-      let siteMsg = '';
-      let statusIsvalid = true;
-      let statusMsg = '';
       let empIsvalid = true;
       let empMsg = '';
 
@@ -130,14 +129,6 @@ function EditService({route, navigation}: Props) {
         categoryIsvalid = false;
         categoryMsg = 'Category is required.';
       }
-      if (onsiteOffsite.value.length <= 0) {
-        siteIsvalid = false;
-        siteMsg = 'Site is required.';
-      }
-      if (status.value.length <= 0) {
-        statusIsvalid = false;
-        statusMsg = 'Status is required.';
-      }
       if (selectedUsers.value.length <= 0) {
         empIsvalid = false;
         empMsg = 'Assign Employee is required.';
@@ -146,8 +137,6 @@ function EditService({route, navigation}: Props) {
         !serviceNameIsvalid ||
         !branchIsvalid ||
         !categoryIsvalid ||
-        !siteIsvalid ||
-        !statusIsvalid ||
         !empIsvalid
       ) {
         setInputs(curInputs => {
@@ -167,16 +156,6 @@ function EditService({route, navigation}: Props) {
               message: categoryMsg,
               value: curInputs.category.value,
               isValid: categoryIsvalid,
-            },
-            onsiteOffsite: {
-              message: siteMsg,
-              value: curInputs.onsiteOffsite.value,
-              isValid: siteIsvalid,
-            },
-            status: {
-              message: statusMsg,
-              value: curInputs.status.value,
-              isValid: statusIsvalid,
             },
             selectedUsers: {
               message: empMsg,
@@ -202,6 +181,12 @@ function EditService({route, navigation}: Props) {
       if (key == 'selectedUsers') {
         let users = service[key].map((value: any) => value._id);
         inputChangedHandler(key, users || '');
+      } else if (key == 'status') {
+        let serviceStatus = service[key] == 'Active' ? true : false;
+        toggleStatusSwitch(serviceStatus);
+      } else if (key == 'onsiteOffsite') {
+        let site = service[key] == 'On Site' ? true : false;
+        toggleSwitch(site);
       } else {
         inputChangedHandler(key, service[key] || '');
       }
@@ -339,17 +324,6 @@ function EditService({route, navigation}: Props) {
             }
           />
 
-          <UI.DropDown
-            data={siteData}
-            placeholder={'Select Site*'}
-            value={onsiteOffsite.value}
-            isError={!onsiteOffsite.isValid}
-            errorMsg={onsiteOffsite.message}
-            onChange={(value: any) =>
-              inputChangedHandler('onsiteOffsite', value.value)
-            }
-          />
-
           <UI.DropDownMultiSelect
             data={data.map(value => {
               return {
@@ -366,16 +340,15 @@ function EditService({route, navigation}: Props) {
             errorMsg={selectedUsers.message}
           />
 
-          <UI.DropDown
-            data={statusData}
-            placeholder={'Select Status*'}
-            value={status.value}
-            isError={!status.isValid}
-            errorMsg={status.message}
-            onChange={(value: any) =>
-              inputChangedHandler('status', value.value)
-            }
+          <UI.Radio
+            radioTitle="Site"
+            firstText={'On'}
+            secondText={'Off'}
+            status={siteIsEnabled}
+            firstTextPressed={() => toggleSwitch(true)}
+            secondTextPressed={() => toggleSwitch(false)}
           />
+         
           <UI.Input
             showIcon={true}
             disableInput={true}
@@ -401,6 +374,15 @@ function EditService({route, navigation}: Props) {
             isError={!createdBy.isValid}
             errorMsg={createdBy.message}
             onChange={value => inputChangedHandler('createdBy', value.value)}
+          />
+
+          <UI.Radio
+            radioTitle="Active"
+            firstText={'Yes'}
+            secondText={'No'}
+            status={isStatusEnabled}
+            firstTextPressed={() => toggleStatusSwitch(true)}
+            secondTextPressed={() => toggleStatusSwitch(false)}
           />
 
           <View style={styles.btnContainer}>

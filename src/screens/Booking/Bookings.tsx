@@ -20,7 +20,12 @@ import {RootStackParamList} from '../../navigation/RootNavigation';
 import TakeBookingDetails from '../../components/screen/booking/TakeBookingDetails';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchSubService} from '../../redux/Action/serviceAction';
-import {DateFormateMMMMDDYYY, DateToYYYYMMDD} from '../../config/helper';
+import {
+  DateFormateMMMMDDYYY,
+  DateToYYYYMMDD,
+  getCurrentDateZone,
+  // getCurrentTimeZone,
+} from '../../config/helper';
 import {fetchBookingDetails} from '../../redux/Action/bookingAction';
 import {clearGetBookingErrorMsg} from '../../redux/Reducer/bookingReducer/getBookingSlice';
 
@@ -36,12 +41,12 @@ const initialDropDownValue: dropDownValue = {
   value: '',
   label: '',
 };
-const initialSelectedDate = new Date();
+const initialSelectedDate = getCurrentDateZone();
 
 function Bookings({navigation}: BookingType) {
   const {width, height} = useWindowDimensions();
   const [selectedDate, setSelectedDate] =
-    React.useState<Date>(initialSelectedDate);
+    React.useState<any>(initialSelectedDate);
   const [showDate, setShowDate] = React.useState(false);
   const [showBooking, setShowBooking] = React.useState(false);
   const [selectedService, setSelectedService] =
@@ -50,6 +55,8 @@ function Bookings({navigation}: BookingType) {
   const {data: SubServiceData, isLoader} = useAppSelector(
     state => state.service.getSubService,
   );
+  console.log(initialSelectedDate);
+
   const {
     data,
     isLoader: getbookingStatus,
@@ -153,7 +160,7 @@ function Bookings({navigation}: BookingType) {
         {showDate && (
           <UI.DatePick
             options={{
-              minimumDate: new Date(),
+              minimumDate: initialSelectedDate,
             }}
             dateValue={selectedDate}
             handleCancelPressed={() => setShowDate(false)}

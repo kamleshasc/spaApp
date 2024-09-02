@@ -34,10 +34,6 @@ const roleData = [
   {label: 'Team Lead', value: 'Team Lead'},
   {label: 'Normal User', value: 'Normal User'},
 ];
-const statusData = [
-  {label: 'Active', value: 'Active'},
-  {label: 'Deactive', value: 'Deactive'},
-];
 
 interface objValues {
   value: any;
@@ -86,6 +82,8 @@ function AddUser({navigation}: Props): React.JSX.Element {
   const {isError, isLoader, errorMsg} = useSelector(
     (state: RootState) => state.user.addUser,
   );
+  const [isEnabled, setIsEnabled] = React.useState(true);
+  const toggleSwitch = (value: any) => setIsEnabled(value);
 
   const dispatchUser = useAppDispatch();
 
@@ -215,7 +213,7 @@ function AddUser({navigation}: Props): React.JSX.Element {
         dateOfjoining: dateOfjoining.value,
         role: role.value,
         userImage: userImage.value,
-        status: status.value,
+        status: isEnabled ? 'Active' : 'DeActive',
         password: password.value,
       };
 
@@ -506,15 +504,15 @@ function AddUser({navigation}: Props): React.JSX.Element {
             errorMsg={userImage.message}>
             <Icon name="upload" size={30} color="black" />
           </UI.Input>
-
-          <UI.DropDown
-            data={statusData}
-            placeholder={'Status*'}
-            value={status.value}
-            isError={!status.isValid}
-            errorMsg={status.message}
-            onChange={onChangeStatus}
+          <UI.Radio
+            radioTitle="Active"
+            firstText={'Yes'}
+            secondText={'No'}
+            status={isEnabled}
+            firstTextPressed={() => toggleSwitch(true)}
+            secondTextPressed={() => toggleSwitch(false)}
           />
+
           <UI.Btn disabledBtn={isLoader} onPressBtn={() => checkValidation()}>
             Submit
           </UI.Btn>
@@ -550,5 +548,45 @@ const style = StyleSheet.create({
     fontSize: 22,
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deactiveContainer: {
+    height: rMS(25),
+    width: rMS(25),
+    backgroundColor: colors.borderColor,
+    borderRadius: 20,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deactiveInnerContainer: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+  },
+  radioText: {
+    marginLeft: 5,
+    fontSize: rMS(12),
+    fontWeight: '500',
+    color: colors.fontDark,
+  },
+  activeContainer: {
+    height: rMS(25),
+    width: rMS(25),
+    backgroundColor: colors.themePrimary,
+    borderRadius: 20,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeinnerContainer: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 10,
   },
 });

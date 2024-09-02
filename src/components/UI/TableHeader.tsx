@@ -27,6 +27,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({headers}) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingLeft: rMS(7),
     flexDirection: 'row',
     backgroundColor: colors.themePrimary,
   },

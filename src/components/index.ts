@@ -1,9 +1,11 @@
 import CustomButton from './UI/CustomButton';
 import CustomDropdown from './UI/CustomDropdown';
 import CustomDropdownMultiSelect from './UI/CustomDropdownMultiSelect';
+import CustomHeader from './UI/CustomHeader';
 import CustomInput from './UI/CustomInput';
 import CustomLoading from './UI/CustomLoading';
 import CustomModalImagePicker from './UI/CustomModalImagePicker';
+import CustomRadio from './UI/CustomRadio';
 import DatePickerUI from './UI/DatePickerUI';
 import TableHeader from './UI/TableHeader';
 import TableItem from './UI/TableItem';
@@ -25,6 +27,8 @@ const UI = {
   Input: CustomInput,
   ImagePickerModal: CustomModalImagePicker,
   Loader: CustomLoading,
+  Radio: CustomRadio,
+  Header: CustomHeader,
 };
 
 const SCREEN = {

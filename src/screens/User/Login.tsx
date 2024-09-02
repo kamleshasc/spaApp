@@ -130,6 +130,10 @@ function Login({navigation}: loginProps) {
     handleLogin();
   };
 
+  const signUp = () => {
+    navigation.navigate('SignUp');
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -177,7 +181,7 @@ function Login({navigation}: loginProps) {
             </TouchableOpacity>
             <View style={styles.signUpContainer}>
               <Text style={styles.noAccountText}>Don't have an account?</Text>
-              <TouchableOpacity style={styles.signUpButton}>
+              <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
                 <Text style={styles.signUpText}>Sign UP</Text>
               </TouchableOpacity>
             </View>

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {rMS, rS} from '../../config/responsive';
 import colors from '../../config/colors';
+import {IMAGE_URL} from '@env';
 
 interface TableItemProps {
   name?: string | number;
@@ -16,6 +17,7 @@ interface TableItemProps {
   bunchData?: any[];
   link?: string;
   onLinkPress?: () => void;
+  showImg?: boolean;
 }
 
 const TableItem: React.FC<TableItemProps> = ({
@@ -23,6 +25,7 @@ const TableItem: React.FC<TableItemProps> = ({
   ImgUrl,
   bunchData,
   link,
+  showImg,
   onLinkPress,
 }) => {
   const {width, height} = useWindowDimensions();
@@ -32,24 +35,27 @@ const TableItem: React.FC<TableItemProps> = ({
         styles.container,
         {width: width > 820 || height > 820 ? rS(83) : rS(100)},
       ]}>
-      {ImgUrl ? (
+      {showImg && (
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
-            source={{
-              uri: `http://192.168.1.70:3200/images/${ImgUrl}`,
-            }}
+            source={
+              ImgUrl
+                ? {uri: `${IMAGE_URL}${ImgUrl}`}
+                : require('../../assets/images/no_user.png')
+            }
           />
         </View>
-      ) : bunchData && bunchData?.length > 0 ? (
+      )}
+      {bunchData && bunchData?.length > 0 && (
         <Text style={styles.text}>{bunchData?.toString()}</Text>
-      ) : link && link?.length > 0 ? (
+      )}
+      {link && link?.length > 0 && (
         <TouchableOpacity style={styles.linkContainer} onPress={onLinkPress}>
           <Text style={styles.textLink}>{link}</Text>
         </TouchableOpacity>
-      ) : (
-        <Text style={styles.text}>{name}</Text>
       )}
+      {name && <Text style={styles.text}>{name}</Text>}
     </View>
   );
 };

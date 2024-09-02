@@ -70,12 +70,11 @@ function Customer({navigation}: CustomerProp) {
     return (
       <UI.TableR
         onPress={() => navigation.navigate('EditCustomer', {customer: item})}>
-        <UI.TableI ImgUrl={item?.userImage} />
+        <UI.TableI showImg={true} ImgUrl={item?.userImage} />
         <UI.TableI name={`${item?.firstName}`} />
         <UI.TableI name={`${item?.lastName}`} />
         <UI.TableI name={item?.email} />
         <UI.TableI name={item?.mobileNumber} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item?.dateOfjoining)} />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
       </UI.TableR>
@@ -93,12 +92,11 @@ function Customer({navigation}: CustomerProp) {
           <View style={style.fullScreen}>
             <UI.TableH
               headers={[
-                'Customer Image',
+                '',
                 'First Name',
                 'Last Name',
                 'Email',
                 'Phone',
-                'Joined',
                 'Created Date',
                 'Updated Date',
               ]}

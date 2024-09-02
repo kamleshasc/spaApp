@@ -21,7 +21,7 @@ export const siteData = [
 
 export const statusData = [
   {label: 'Active', value: 'Active'},
-  {label: 'Inactive', value: 'Inactive'},
+  {label: 'Deactive', value: 'Deactive'},
 ];
 
 export const categoryData = [

@@ -125,9 +125,9 @@ function AddCustomer({navigation}: addCustomerProp) {
     }
   };
 
-  const onChangeStatus = (value: {value: any}) => {
-    inputChangedHandler('status', value.value);
-  };
+  // const onChangeStatus = (value: {value: any}) => {
+  //   inputChangedHandler('status', value.value);
+  // };
 
   const handleDateChange = (value: Date) => {
     setShowDate(false);
@@ -167,10 +167,10 @@ function AddCustomer({navigation}: addCustomerProp) {
     let emailMessage = '';
     let mobilenoIsValid = true;
     let mobilenoMessage = '';
-    let DOJIsValid = true;
-    let DOJMessage = '';
-    let statusIsValid = true;
-    let statusMessage = '';
+    // let DOJIsValid = true;
+    // let DOJMessage = '';
+    // let statusIsValid = true;
+    // let statusMessage = '';
     let passwordIsValid = true;
     let passwordMessage = '';
 
@@ -191,10 +191,10 @@ function AddCustomer({navigation}: addCustomerProp) {
       emailIsValid = false;
     }
 
-    if (String(dateOfjoining.value).trim().length <= 0) {
-      DOJIsValid = false;
-      DOJMessage = 'Date of Joining is required.';
-    }
+    // if (String(dateOfjoining.value).trim().length <= 0) {
+    //   DOJIsValid = false;
+    //   DOJMessage = 'Date of Joining is required.';
+    // }
 
     if (
       mobileNumber.value.trim().length > 0 &&
@@ -221,18 +221,18 @@ function AddCustomer({navigation}: addCustomerProp) {
       passwordMessage = 'Password must have at least 6 characters';
     }
 
-    if (status.value.trim().length <= 0) {
-      statusIsValid = false;
-      statusMessage = 'Status is required.';
-    }
+    // if (status.value.trim().length <= 0) {
+    //   statusIsValid = false;
+    //   statusMessage = 'Status is required.';
+    // }
 
     if (
       !firstnameIsValid ||
       !lastnameIsValid ||
       !emailIsValid ||
       !mobilenoIsValid ||
-      !DOJIsValid ||
-      !statusIsValid ||
+      // !DOJIsValid ||
+      // !statusIsValid ||
       !passwordIsValid
     ) {
       setInputs(curInputs => {
@@ -263,16 +263,16 @@ function AddCustomer({navigation}: addCustomerProp) {
             value: curInputs.mobileNumber.value,
             isValid: mobilenoIsValid,
           },
-          dateOfjoining: {
-            message: DOJMessage,
-            value: curInputs.dateOfjoining.value,
-            isValid: DOJIsValid,
-          },
-          status: {
-            message: statusMessage,
-            value: curInputs.status.value,
-            isValid: statusIsValid,
-          },
+          // dateOfjoining: {
+          //   message: DOJMessage,
+          //   value: curInputs.dateOfjoining.value,
+          //   isValid: DOJIsValid,
+          // },
+          // status: {
+          //   message: statusMessage,
+          //   value: curInputs.status.value,
+          //   isValid: statusIsValid,
+          // },
         };
       });
       return;
@@ -352,7 +352,7 @@ function AddCustomer({navigation}: addCustomerProp) {
             isError={!password.isValid}
             errorMsg={password.message}
           />
-          <UI.Input
+          {/* <UI.Input
             showIcon={true}
             disableInput={true}
             textInputConfig={{
@@ -366,7 +366,7 @@ function AddCustomer({navigation}: addCustomerProp) {
             errorMsg={dateOfjoining.message}
             iconPressed={() => setShowDate(true)}>
             <Icon name="calendar" size={30} color="black" />
-          </UI.Input>
+          </UI.Input> */}
 
           <UI.Input
             showIcon={true}
@@ -379,14 +379,14 @@ function AddCustomer({navigation}: addCustomerProp) {
             <Icon name="upload" size={30} color="black" />
           </UI.Input>
 
-          <UI.DropDown
+          {/* <UI.DropDown
             data={statusData}
             placeholder={'Status*'}
             value={status.value}
             isError={!status.isValid}
             errorMsg={status.message}
             onChange={onChangeStatus}
-          />
+          /> */}
           <UI.Btn onPressBtn={checkValidation}>Add</UI.Btn>
         </View>
       </ScrollView>

@@ -77,7 +77,7 @@ function Services({navigation}: Props): React.JSX.Element {
   const renderItem = ({item}: {item: ServiceData}) => {
     return (
       <UI.TableR onPress={() => onPressService(item)}>
-        <UI.TableI ImgUrl={item.serviceImage} />
+        <UI.TableI showImg={true} ImgUrl={item.serviceImage} />
         <UI.TableI name={item.serviceName} />
         <UI.TableI name={item.category} />
         <UI.TableI bunchData={item.subService.map(value => `${value.name}`)} />
@@ -106,7 +106,7 @@ function Services({navigation}: Props): React.JSX.Element {
         <View style={style.fullScreen}>
           <UI.TableH
             headers={[
-              'Service Image',
+              '',
               'Service',
               'Category',
               'Sub Service',

@@ -80,23 +80,26 @@ function Clients({navigation}: ClientProps): React.JSX.Element {
         onPress={() => {
           navigation.navigate('EditClient', {client: item});
         }}>
+        <UI.TableI showImg={true} ImgUrl={''} />
         <UI.TableI
           name={`${item?.prefix || ''} ${item?.firstName || ''} ${
-            item.lastName || ''
+            item?.lastName || ''
           }`}
         />
-        <UI.TableI name={item.email} />
-        <UI.TableI name={item.mobileNumber} />
-        <UI.TableI name={item.addressLineOne} />
-        <UI.TableI name={item.addressLineTwo} />
-        <UI.TableI name={item.country} />
-        <UI.TableI name={item.state} />
-        <UI.TableI name={item.city} />
+        <UI.TableI name={item?.email} />
+        <UI.TableI name={item?.mobileNumber} />
+        <UI.TableI name={item?.addressLineOne} />
+        <UI.TableI name={item?.addressLineTwo} />
+        <UI.TableI name={item?.country} />
+        <UI.TableI name={item?.state} />
+        <UI.TableI name={item?.city} />
         <UI.TableI
-          name={`${item.owner?.firstName || ''} ${item.owner?.lastName || ''}`}
+          name={`${item?.owner?.firstName || ''} ${
+            item?.owner?.lastName || ''
+          }`}
         />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.createdAt)} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.updatedAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
       </UI.TableR>
     );
   };
@@ -112,6 +115,7 @@ function Clients({navigation}: ClientProps): React.JSX.Element {
         <View style={style.fullScreen}>
           <UI.TableH
             headers={[
+              '',
               'Client Name',
               'Email',
               'Mobile',

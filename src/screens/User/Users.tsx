@@ -83,18 +83,18 @@ function Users({navigation}: Props) {
         onPress={() => {
           onPressUser(item);
         }}>
-        <UI.TableI ImgUrl={item.userImage} />
-        <UI.TableI name={item.firstName} />
-        <UI.TableI name={item.lastName} />
-        <UI.TableI name={item.title} />
+        <UI.TableI showImg={true} ImgUrl={item?.userImage} />
+        <UI.TableI name={item?.firstName} />
+        <UI.TableI name={item?.lastName} />
+        <UI.TableI name={item?.title} />
         {/* <UI.TableI name={formatMobileNumber(item.mobileNumber)} /> */}
-        <UI.TableI name={item.mobileNumber} />
-        <UI.TableI name={item.email} />
-        <UI.TableI name={item.dateOfjoining} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.createdAt)} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.updatedAt)} />
-        <UI.TableI name={item.role} />
-        <UI.TableI name={item.status} />
+        <UI.TableI name={item?.mobileNumber} />
+        <UI.TableI name={item?.email} />
+        <UI.TableI name={item?.dateOfjoining} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
+        <UI.TableI name={item?.role} />
+        <UI.TableI name={item?.status} />
       </UI.TableR>
     );
   }
@@ -110,7 +110,7 @@ function Users({navigation}: Props) {
         <View style={style.fullScreen}>
           <UI.TableH
             headers={[
-              'User Image',
+              '',
               'First Name',
               'Last Name',
               'Title',

@@ -87,10 +87,10 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
     let emailMessage = '';
     let mobilenoIsValid = true;
     let mobilenoMessage = '';
-    let DOJIsValid = true;
-    let DOJMessage = '';
-    let statusIsValid = true;
-    let statusMessage = '';
+    // let DOJIsValid = true;
+    // let DOJMessage = '';
+    // let statusIsValid = true;
+    // let statusMessage = '';
     let passwordIsValid = true;
     let passwordMessage = '';
 
@@ -111,10 +111,10 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
       emailIsValid = false;
     }
 
-    if (dateOfjoining.value.trim().length <= 0) {
-      DOJIsValid = false;
-      DOJMessage = 'Date of Joining is required.';
-    }
+    // if (dateOfjoining.value.trim().length <= 0) {
+    //   DOJIsValid = false;
+    //   DOJMessage = 'Date of Joining is required.';
+    // }
 
     if (
       mobileNumber.value.trim().length > 0 &&
@@ -133,18 +133,18 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
       mobilenoIsValid = false;
     }
 
-    if (status.value.trim().length <= 0) {
-      statusIsValid = false;
-      statusMessage = 'Status is required.';
-    }
+    // if (status.value.trim().length <= 0) {
+    //   statusIsValid = false;
+    //   statusMessage = 'Status is required.';
+    // }
 
     if (
       !firstnameIsValid ||
       !lastnameIsValid ||
       !emailIsValid ||
       !mobilenoIsValid ||
-      !DOJIsValid ||
-      !statusIsValid ||
+      // !DOJIsValid ||
+      // !statusIsValid ||
       !passwordIsValid
     ) {
       setInputs(curInputs => {
@@ -170,16 +170,16 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
             value: curInputs.mobileNumber.value,
             isValid: mobilenoIsValid,
           },
-          dateOfjoining: {
-            message: DOJMessage,
-            value: curInputs.dateOfjoining.value,
-            isValid: DOJIsValid,
-          },
-          status: {
-            message: statusMessage,
-            value: curInputs.status.value,
-            isValid: statusIsValid,
-          },
+          // dateOfjoining: {
+          //   message: DOJMessage,
+          //   value: curInputs.dateOfjoining.value,
+          //   isValid: DOJIsValid,
+          // },
+          // status: {
+          //   message: statusMessage,
+          //   value: curInputs.status.value,
+          //   isValid: statusIsValid,
+          // },
         };
       });
       return;
@@ -217,14 +217,10 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
         type: image.type,
       });
       let result: any = await editDispatch(uploadServiceImg(formData)).unwrap();
-      console.log(result, '===result===');
-
       inputChangedHandler('userImage', result?.data || '');
     } catch (error) {
-      console.log(error, 'uploading customerrrr');
-
-      // setMessageStatus(true);
-      // setErrorMessage(error);
+      setMessageStatus(true);
+      setErrorMessage(error);
     }
   };
 
@@ -328,7 +324,7 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
             isError={!mobileNumber.isValid}
             errorMsg={mobileNumber.message}
           />
-          <UI.Input
+          {/* <UI.Input
             showIcon={true}
             disableInput={true}
             textInputConfig={{
@@ -342,7 +338,7 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
             errorMsg={dateOfjoining.message}
             iconPressed={() => setShowDate(true)}>
             <Icon name="calendar" size={30} color="black" />
-          </UI.Input>
+          </UI.Input> */}
 
           <UI.Input
             showIcon={true}
@@ -355,14 +351,14 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
             <Icon name="upload" size={30} color="black" />
           </UI.Input>
 
-          <UI.DropDown
+          {/* <UI.DropDown
             data={statusData}
             placeholder={'Status*'}
             value={status.value}
             isError={!status.isValid}
             errorMsg={status.message}
             onChange={onChangeStatus}
-          />
+          /> */}
           <UI.Btn disabledBtn={isLoader} onPressBtn={checkValidation}>
             Save
           </UI.Btn>

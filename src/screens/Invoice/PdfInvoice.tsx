@@ -17,6 +17,7 @@ import {fetchPdfById} from '../../redux/Action/invoiceAction';
 import {UI} from '../../components';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import { API_URL } from '@env';
 
 type PdfInvoiceProp = StackScreenProps<RootStackParamList, 'PdfInvoice'>;
 
@@ -65,7 +66,7 @@ function PdfInvoice({navigation, route}: PdfInvoiceProp) {
       ReactNativeBlobUtil.config(configOptions || {})
         .fetch(
           'GET',
-          `http://192.168.1.70:3200/api/v1/invoices/pdf/download/${invoiceId}`,
+          `${API_URL}/invoices/pdf/download/${invoiceId}`,
           {},
         )
         .then(res => {
