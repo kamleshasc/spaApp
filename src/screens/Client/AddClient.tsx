@@ -1,13 +1,30 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
 import {UI} from '../../components';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchGetUser} from '../../redux/Action/userAction';
-import {fetchAddClient, fetchClient} from '../../redux/Action/clientAction';
+import {
+  clientUploadImage,
+  fetchAddClient,
+  fetchClient,
+} from '../../redux/Action/clientAction';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const prefixData = [
   {
@@ -46,6 +63,7 @@ export interface clientInput {
   city: objValue;
   prefix: objValue;
   owner: objValue;
+  clientImg: objValue;
 }
 
 export const initialInputs: clientInput = {
@@ -60,6 +78,7 @@ export const initialInputs: clientInput = {
   city: {value: '', isValid: true, message: ''},
   prefix: {value: '', isValid: true, message: ''},
   owner: {value: '', isValid: true, message: ''},
+  clientImg: {value: '', isValid: true, message: ''},
 };
 
 type addClientProps = NativeStackScreenProps<RootStackParamList, 'AddClient'>;
@@ -88,6 +107,7 @@ function AddClient({navigation}: addClientProps) {
     city,
     prefix,
     owner,
+    clientImg,
   } = inputs;
   const reg =
     /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|international|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
@@ -120,6 +140,7 @@ function AddClient({navigation}: addClientProps) {
         city: city.value,
         prefix: prefix.value,
         owner: owner.value,
+        clientImg: clientImg.value,
       };
       const result = await dispatchAddClient(fetchAddClient(body)).unwrap();
       if (result) {
@@ -302,6 +323,78 @@ function AddClient({navigation}: addClientProps) {
     }
   }, [isLoader]);
 
+  const clientUploadImg = async (imgPath: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri:
+          Platform.OS === 'android'
+            ? imgPath.uri
+            : imgPath.uri.replace('file://', ''),
+        name: imgPath.fileName,
+        type: imgPath.type,
+      });
+
+      let result: any = await dispatchAddClient(
+        clientUploadImage(formData),
+      ).unwrap();
+      if (result && result?.data) {
+        inputChangedHandler('clientImg', result?.data || '');
+      }
+    } catch (error) {
+      setError(true);
+      setErrorMessage(error);
+    }
+  };
+
+  const onImageGalleryClick = () => {
+    try {
+      let options: ImageLibraryOptions = {
+        mediaType: 'photo',
+        quality: 1,
+      };
+      launchImageLibrary(options, (response: ImagePickerResponse) => {
+        setErrorMessage('');
+        if (response.didCancel) {
+          setError(true);
+          setErrorMessage('Image Not Selected');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          setError(true);
+          setErrorMessage('Camera Not Avaliable');
+          return;
+        } else if (response.errorCode == 'permission') {
+          setError(true);
+          setErrorMessage('This Application Needs Camera Permission');
+          return;
+        } else if (response.errorCode == 'others') {
+          setError(true);
+          setErrorMessage(response.errorMessage);
+          return;
+        }
+        const responseResult = response.assets;
+        if (!responseResult) {
+          setError(true);
+          setErrorMessage('Image is not supported.');
+          return;
+        }
+        const file = responseResult['0'];
+        if (
+          file.type !== 'image/jpeg' &&
+          file.type !== 'image/jpg' &&
+          file.type !== 'image/png'
+        ) {
+          setError(true);
+          setErrorMessage('Only .jpeg,.jpg and .png Format Are Supported ');
+          return;
+        }
+        clientUploadImg(file);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -420,6 +513,18 @@ function AddClient({navigation}: addClientProps) {
             errorMsg={owner.message}
             onChange={value => inputChangedHandler('owner', value.value)}
           />
+          <UI.Input
+            showIcon={true}
+            disableInput={true}
+            textInputConfig={{
+              value: clientImg.value,
+              placeholder: 'Upload Img',
+            }}
+            iconPressed={() => onImageGalleryClick()}
+            isError={!clientImg.isValid}
+            errorMsg={clientImg.message}>
+            <Icon name="upload" size={30} color="black" />
+          </UI.Input>
           <View style={styles.btnContainer}>
             <UI.Btn
               disabledBtn={isLoader || userLoader}

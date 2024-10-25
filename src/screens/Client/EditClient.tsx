@@ -1,5 +1,12 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import colors from '../../config/colors';
 import {UI} from '../../components';
 import {rMS} from '../../config/responsive';
@@ -8,7 +15,17 @@ import {clientInput, initialInputs} from './AddClient';
 import {fetchGetUser} from '../../redux/Action/userAction';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
-import {fetchClient, fetchUpdateClient} from '../../redux/Action/clientAction';
+import {
+  clientUploadImage,
+  fetchClient,
+  fetchUpdateClient,
+} from '../../redux/Action/clientAction';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 
 const prefixData = [
   {
@@ -56,6 +73,7 @@ function EditClient({navigation, route}: EditProps) {
     city,
     prefix,
     owner,
+    clientImg,
   } = inputs;
   const reg =
     /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|international|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
@@ -72,6 +90,7 @@ function EditClient({navigation, route}: EditProps) {
     'city',
     'prefix',
     'owner',
+    'clientImg',
   ];
 
   const inputChangedHandler = (inputIdentifier: any, enteredValue: any) => {
@@ -102,6 +121,7 @@ function EditClient({navigation, route}: EditProps) {
         city: city.value,
         prefix: prefix.value,
         owner: owner.value,
+        clientImg: clientImg.value,
       };
       const result = await dispatchEditClient(
         fetchUpdateClient({clientId, payload}),
@@ -300,6 +320,78 @@ function EditClient({navigation, route}: EditProps) {
     }
   }, [isLoader]);
 
+  const clientUploadImg = async (imgPath: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri:
+          Platform.OS === 'android'
+            ? imgPath.uri
+            : imgPath.uri.replace('file://', ''),
+        name: imgPath.fileName,
+        type: imgPath.type,
+      });
+
+      let result: any = await dispatchEditClient(
+        clientUploadImage(formData),
+      ).unwrap();
+      if (result && result?.data) {
+        inputChangedHandler('clientImg', result?.data || '');
+      }
+    } catch (error) {
+      setError(true);
+      setErrorMessage(error);
+    }
+  };
+
+  const onImageGalleryClick = () => {
+    try {
+      let options: ImageLibraryOptions = {
+        mediaType: 'photo',
+        quality: 1,
+      };
+      launchImageLibrary(options, (response: ImagePickerResponse) => {
+        setErrorMessage('');
+        if (response.didCancel) {
+          setError(true);
+          setErrorMessage('Image Not Selected');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          setError(true);
+          setErrorMessage('Camera Not Avaliable');
+          return;
+        } else if (response.errorCode == 'permission') {
+          setError(true);
+          setErrorMessage('This Application Needs Camera Permission');
+          return;
+        } else if (response.errorCode == 'others') {
+          setError(true);
+          setErrorMessage(response.errorMessage);
+          return;
+        }
+        const responseResult = response.assets;
+        if (!responseResult) {
+          setError(true);
+          setErrorMessage('Image is not supported.');
+          return;
+        }
+        const file = responseResult['0'];
+        if (
+          file.type !== 'image/jpeg' &&
+          file.type !== 'image/jpg' &&
+          file.type !== 'image/png'
+        ) {
+          setError(true);
+          setErrorMessage('Only .jpeg,.jpg and .png Format Are Supported ');
+          return;
+        }
+        clientUploadImg(file);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -417,6 +509,18 @@ function EditClient({navigation, route}: EditProps) {
             errorMsg={owner.message}
             onChange={value => inputChangedHandler('owner', value.value)}
           />
+          <UI.Input
+            showIcon={true}
+            disableInput={true}
+            textInputConfig={{
+              value: clientImg.value,
+              placeholder: 'Upload Img',
+            }}
+            iconPressed={() => onImageGalleryClick()}
+            isError={!clientImg.isValid}
+            errorMsg={clientImg.message}>
+            <Icon name="upload" size={30} color="black" />
+          </UI.Input>
           <View style={styles.btnContainer}>
             <UI.Btn
               disabledBtn={isLoader || userLoader}

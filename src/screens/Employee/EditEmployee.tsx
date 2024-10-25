@@ -72,9 +72,9 @@ const initialInputs: userInputsTypes = {
   password: {value: '', isValid: true, message: ''},
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'EditUser'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'EditEmployee'>;
 
-function EditUser({route, navigation}: Props): React.JSX.Element {
+function EditEmployee({route, navigation}: Props): React.JSX.Element {
   const {user} = route.params;
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [inputs, setInputs] = React.useState<userInputsTypes>(initialInputs);
@@ -425,7 +425,7 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
 
         <View style={style.subContainer}>
           <View style={style.titleContainer}>
-            <Text style={style.titleContent}>Edit User</Text>
+            <Text style={style.titleContent}>Edit Employee</Text>
           </View>
 
           <UI.Input
@@ -553,7 +553,7 @@ function EditUser({route, navigation}: Props): React.JSX.Element {
   );
 }
 
-export default EditUser;
+export default EditEmployee;
 
 const style = StyleSheet.create({
   container: {

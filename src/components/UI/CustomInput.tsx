@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   StyleSheet,
+  Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
@@ -19,6 +20,8 @@ interface CustomInputUIProps {
   iconPressed?: () => void;
   children?: React.ReactNode;
   stylesInput?: object;
+  showText?: boolean;
+  disableText?: boolean;
 }
 
 function CustomInput({
@@ -30,11 +33,16 @@ function CustomInput({
   iconPressed,
   children,
   stylesInput,
+  showText,
+  disableText,
 }: CustomInputUIProps) {
   return (
     <>
       <View style={[styles.container, stylesInput]}>
-        <View style={{width: showIcon ? '85%' : '95%'}}>
+        <View
+          style={{
+            width: showIcon ? '85%' : showText ? '72%' : '95%',
+          }}>
           <TextInput
             style={styles.fontStyle}
             editable={!disableInput}
@@ -47,6 +55,29 @@ function CustomInput({
             style={styles.childrenContainer}
             onPress={iconPressed}>
             {children}
+          </TouchableOpacity>
+        )}
+        {showText && (
+          <TouchableOpacity
+            style={{
+              height: rMS(30),
+              width: rMS(70),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            disabled={disableText}
+            onPress={iconPressed}>
+            <Text
+              style={[
+                {
+                  fontSize: rMS(14),
+                  fontWeight: 'bold',
+                  color: colors.themePrimary,
+                },
+                disableText && {color: colors.fontLightGrey},
+              ]}>
+              Send OTP
+            </Text>
           </TouchableOpacity>
         )}
       </View>

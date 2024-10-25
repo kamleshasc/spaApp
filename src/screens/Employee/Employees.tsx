@@ -36,11 +36,11 @@ export interface UserData {
 }
 
 type Props = CompositeScreenProps<
-  DrawerScreenProps<DrawerNavigationParamList, 'Users'>,
+  DrawerScreenProps<DrawerNavigationParamList, 'Employees'>,
   StackScreenProps<RootStackParamList>
 >;
 
-function Users({navigation}: Props) {
+function Employees({navigation}: Props) {
   const dispatch = useAppDispatch();
   const {data, isLoader, isError, errorMsg} = useAppSelector(
     state => state.user.getUser,
@@ -51,7 +51,7 @@ function Users({navigation}: Props) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => navigation.navigate('AddUser')}
+          onPress={() => navigation.navigate('AddEmployee')}
           style={style.headerIconContainer}>
           <Icon name="adduser" size={30} color={colors.themePrimary} />
         </TouchableOpacity>
@@ -74,7 +74,7 @@ function Users({navigation}: Props) {
   }, [isLoader]);
 
   const onPressUser = (value: UserData) => {
-    navigation.navigate('EditUser', {user: value});
+    navigation.navigate('EditEmployee', {user: value});
   };
 
   function renderItem({item}: {item: UserData}) {
@@ -90,7 +90,7 @@ function Users({navigation}: Props) {
         {/* <UI.TableI name={formatMobileNumber(item.mobileNumber)} /> */}
         <UI.TableI name={item?.mobileNumber} />
         <UI.TableI name={item?.email} />
-        <UI.TableI name={item?.dateOfjoining} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.dateOfjoining)} />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
         <UI.TableI name={item?.role} />
@@ -139,7 +139,7 @@ function Users({navigation}: Props) {
   );
 }
 
-export default Users;
+export default Employees;
 
 const style = StyleSheet.create({
   container: {

@@ -11,6 +11,7 @@ interface customerDetails {
   status?: string;
   userImage?: string;
   password?: string;
+  otp?: any;
 }
 
 interface UpdateCustomerParams {
@@ -23,8 +24,6 @@ export const fetchGetCustomer = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const res = await get({url: '/users/customer'});
-      console.log(res,'get customer');
-      
       if (res.success) {
         return res.data;
       } else {

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -10,7 +11,6 @@ import {
 import colors from '../../config/colors';
 import {rMS, rV} from '../../config/responsive';
 import {UI} from '../../components';
-import React from 'react';
 import {
   loadUserScreens,
   loginUser,
@@ -90,21 +90,21 @@ function Login({navigation}: loginProps) {
     let loginMsg = '';
     let passwordIsValid = true;
     let passwordMsg = '';
-    if (inputs.email.value.trim().length <= 0) {
+    if (inputs?.email?.value?.trim()?.length <= 0) {
       loginIsValid = false;
       loginMsg = 'Email ID is required.';
     } else if (
-      inputs.email.value.trim().length > 0 &&
-      !reg.test(inputs.email.value)
+      inputs?.email?.value?.trim()?.length > 0 &&
+      !reg.test(inputs?.email?.value)
     ) {
       loginIsValid = false;
       loginMsg = 'Invalid Email ID.';
     }
 
-    if (inputs.password.value.trim().length <= 0) {
+    if (inputs?.password?.value?.trim()?.length <= 0) {
       passwordIsValid = false;
       passwordMsg = 'Password is required.';
-    } else if (inputs.password.value.trim().length < 6) {
+    } else if (inputs?.password?.value?.trim()?.length < 6) {
       passwordIsValid = false;
       passwordMsg = 'Password must have at least 6 characters';
     }
@@ -154,8 +154,8 @@ function Login({navigation}: loginProps) {
                 value: inputs?.email?.value,
                 onChangeText: value => inputsHandler('email', value),
               }}
-              isError={!inputs.email.isValid}
-              errorMsg={inputs.email.message}
+              isError={!inputs?.email?.isValid}
+              errorMsg={inputs?.email?.message}
             />
             <UI.Input
               textInputConfig={{
@@ -164,8 +164,8 @@ function Login({navigation}: loginProps) {
                 onChangeText: value => inputsHandler('password', value),
                 secureTextEntry: true,
               }}
-              isError={!inputs.password.isValid}
-              errorMsg={inputs.password.message}
+              isError={!inputs?.password?.isValid}
+              errorMsg={inputs?.password?.message}
             />
             <UI.Btn
               disabledBtn={isLoader}
@@ -176,7 +176,9 @@ function Login({navigation}: loginProps) {
               ]}>
               Login
             </UI.Btn>
-            <TouchableOpacity style={styles.forgotPasswordButton}>
+            <TouchableOpacity
+              style={styles.forgotPasswordButton}
+              onPress={() => navigation.navigate('Forgot')}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
             <View style={styles.signUpContainer}>

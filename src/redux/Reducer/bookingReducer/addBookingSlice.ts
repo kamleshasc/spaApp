@@ -34,7 +34,7 @@ export const addBookingSlice = createSlice({
       })
       .addCase(newBooking.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoader = false;
-        state.errorMsg = action.payload;
+        state.data = action.payload;
       })
       .addCase(newBooking.rejected, (state, action: PayloadAction<any>) => {
         state.isLoader = false;

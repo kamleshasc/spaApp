@@ -18,7 +18,7 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import {DateFormateMMMMDDYYY, deformatMobileNumber} from '../../config/helper';
-import {useAppDispatch} from '../../hooks/storeHook';
+import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {
   fetchAddUser,
   fetchGetUser,
@@ -27,6 +27,7 @@ import {
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
 import {UI} from '../../components';
+import {signUpOtp} from '../../redux/Action/otpAction';
 
 const roleData = [
   {label: 'Super User', value: 'Super User'},
@@ -45,6 +46,7 @@ interface userInputsTypes {
   firstName: objValues;
   lastName: objValues;
   email: objValues;
+  otp: objValues;
   title: objValues;
   role: objValues;
   mobileNumber: objValues;
@@ -58,6 +60,7 @@ const initialInputs: userInputsTypes = {
   firstName: {value: '', isValid: true, message: ''},
   lastName: {value: '', isValid: true, message: ''},
   email: {value: '', isValid: true, message: ''},
+  otp: {value: '', isValid: true, message: ''},
   title: {value: '', isValid: true, message: ''},
   role: {value: '', isValid: true, message: ''},
   mobileNumber: {value: '', isValid: true, message: ''},
@@ -67,9 +70,9 @@ const initialInputs: userInputsTypes = {
   password: {value: '', isValid: true, message: ''},
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'AddUser'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'AddEmployee'>;
 
-function AddUser({navigation}: Props): React.JSX.Element {
+function AddEmployee({navigation}: Props): React.JSX.Element {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [inputs, setInputs] = React.useState<userInputsTypes>(initialInputs);
   const [showDate, setShowDate] = React.useState(false);
@@ -82,8 +85,11 @@ function AddUser({navigation}: Props): React.JSX.Element {
   const {isError, isLoader, errorMsg} = useSelector(
     (state: RootState) => state.user.addUser,
   );
+  const [otpSuccessStatus, setOtpSuccessStatus] =
+    React.useState<boolean>(false);
   const [isEnabled, setIsEnabled] = React.useState(true);
   const toggleSwitch = (value: any) => setIsEnabled(value);
+  const {isLoading: otpStatus} = useAppSelector(state => state.otp.signUpOtp);
 
   const dispatchUser = useAppDispatch();
 
@@ -102,9 +108,9 @@ function AddUser({navigation}: Props): React.JSX.Element {
     role,
     mobileNumber,
     dateOfjoining,
-    status,
     userImage,
     password,
+    otp,
   } = inputs;
 
   const handleDateChange = (value: Date) => {
@@ -202,7 +208,7 @@ function AddUser({navigation}: Props): React.JSX.Element {
     }
   };
 
-  const addUser = async () => {
+  const addEmployee = async () => {
     try {
       let payload = {
         firstName: firstName.value,
@@ -215,6 +221,7 @@ function AddUser({navigation}: Props): React.JSX.Element {
         userImage: userImage.value,
         status: isEnabled ? 'Active' : 'DeActive',
         password: password.value,
+        otp: otp.value,
       };
 
       await dispatchUser(fetchAddUser(payload)).unwrap();
@@ -239,14 +246,14 @@ function AddUser({navigation}: Props): React.JSX.Element {
     let mobilenoMessage = '';
     let DOJIsValid = true;
     let DOJMessage = '';
-    let statusIsValid = true;
-    let statusMessage = '';
     let roleIsValid = true;
     let roleMessage = '';
     let userImgIsValid = true;
     let userImgMessage = '';
     let passwordIsValid = true;
     let passwordMessage = '';
+    let otpIsValid = true;
+    let otpMessage = '';
 
     if (firstName.value.trim().length <= 0) {
       firstnameIsValid = false;
@@ -295,10 +302,6 @@ function AddUser({navigation}: Props): React.JSX.Element {
       mobilenoIsValid = false;
     }
 
-    if (status.value.trim().length <= 0) {
-      statusIsValid = false;
-      statusMessage = 'Status is required.';
-    }
     if (role.value.trim().length <= 0) {
       roleIsValid = false;
       roleMessage = 'Role is required.';
@@ -306,6 +309,13 @@ function AddUser({navigation}: Props): React.JSX.Element {
     if (userImage.value.trim().length <= 0) {
       userImgIsValid = false;
       userImgMessage = 'Upload Img is required.';
+    }
+    if (otp.value.trim().length <= 0) {
+      otpIsValid = false;
+      otpMessage = 'OTP is required.';
+    } else if (otp.value.trim().length < 6) {
+      otpIsValid = false;
+      otpMessage = 'OTP must have at least 6 characters.';
     }
 
     if (
@@ -315,10 +325,10 @@ function AddUser({navigation}: Props): React.JSX.Element {
       !titleIsValid ||
       !mobilenoIsValid ||
       !DOJIsValid ||
-      !statusIsValid ||
       !userImgIsValid ||
       !roleIsValid ||
-      !passwordIsValid
+      !passwordIsValid ||
+      !otp
     ) {
       setInputs(curInputs => {
         return {
@@ -337,6 +347,11 @@ function AddUser({navigation}: Props): React.JSX.Element {
             message: emailMessage,
             value: curInputs.email.value,
             isValid: emailIsValid,
+          },
+          otp: {
+            message: otpMessage,
+            value: curInputs.otp.value,
+            isValid: otpIsValid,
           },
           title: {
             message: titleMessage,
@@ -358,11 +373,6 @@ function AddUser({navigation}: Props): React.JSX.Element {
             value: curInputs.dateOfjoining.value,
             isValid: DOJIsValid,
           },
-          status: {
-            message: statusMessage,
-            value: curInputs.status.value,
-            isValid: statusIsValid,
-          },
           role: {
             message: roleMessage,
             value: curInputs.role.value,
@@ -377,7 +387,7 @@ function AddUser({navigation}: Props): React.JSX.Element {
       });
       return;
     }
-    addUser();
+    addEmployee();
   };
 
   const onChangeRole = (value: {value: any}) => {
@@ -386,6 +396,48 @@ function AddUser({navigation}: Props): React.JSX.Element {
 
   const onChangeStatus = (value: {value: any}) => {
     inputChangedHandler('status', value.value);
+  };
+
+  const emailOtpApi = async () => {
+    try {
+      const res = await dispatchUser(signUpOtp({email: email.value})).unwrap();
+      if (res.success) {
+        setShowMessage(true);
+        setOtpSuccessStatus(true);
+        setMessage(res?.message);
+      }
+    } catch (error) {
+      setShowMessage(true);
+      setMessage(error);
+    }
+  };
+
+  const checkEmailValidation = () => {
+    let emailIsValid = true;
+    let emailMsg = '';
+
+    if (email.value.trim().length <= 0) {
+      emailIsValid = false;
+      emailMsg = 'Email is required.';
+    } else if (email.value.trim().length > 0 && !reg.test(email.value)) {
+      emailMsg = 'Invalid Email.';
+      emailIsValid = false;
+    }
+
+    if (!emailIsValid) {
+      setInputs(curInputs => {
+        return {
+          ...curInputs,
+          email: {
+            message: emailMsg,
+            value: curInputs.email.value,
+            isValid: emailIsValid,
+          },
+        };
+      });
+      return;
+    }
+    emailOtpApi();
   };
 
   return (
@@ -401,7 +453,7 @@ function AddUser({navigation}: Props): React.JSX.Element {
 
         <View style={style.subContainer}>
           <View style={style.titleContainer}>
-            <Text style={style.titleContent}>Add New User</Text>
+            <Text style={style.titleContent}>Add New Employee</Text>
           </View>
 
           <UI.Input
@@ -432,8 +484,23 @@ function AddUser({navigation}: Props): React.JSX.Element {
               onChangeText: (value: any) => inputChangedHandler('email', value),
               value: email.value,
             }}
+            showText={true}
+            iconPressed={checkEmailValidation}
             isError={!email.isValid}
             errorMsg={email.message}
+            disableText={otpStatus}
+          />
+
+          <UI.Input
+            textInputConfig={{
+              placeholder: 'OTP*',
+              onChangeText: (value: any) => inputChangedHandler('otp', value),
+              value: otp.value,
+              keyboardType: 'number-pad',
+              maxLength: 6,
+            }}
+            isError={!otp.isValid}
+            errorMsg={otp.message}
           />
 
           <UI.Input
@@ -519,15 +586,18 @@ function AddUser({navigation}: Props): React.JSX.Element {
         </View>
       </ScrollView>
       <UI.Toast
+        Success={otpSuccessStatus}
         message={message}
         visible={showMessage}
-        onDismissSnackBar={() => setShowMessage(false)}
+        onDismissSnackBar={() => {
+          setShowMessage(false), setOtpSuccessStatus(false);
+        }}
       />
     </SafeAreaView>
   );
 }
 
-export default AddUser;
+export default AddEmployee;
 
 const style = StyleSheet.create({
   container: {

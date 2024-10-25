@@ -24,10 +24,8 @@ import {
   DateFormateMMMMDDYYY,
   DateToYYYYMMDD,
   getCurrentDateZone,
-  // getCurrentTimeZone,
 } from '../../config/helper';
 import {fetchBookingDetails} from '../../redux/Action/bookingAction';
-import {clearGetBookingErrorMsg} from '../../redux/Reducer/bookingReducer/getBookingSlice';
 
 type BookingType = CompositeScreenProps<
   DrawerScreenProps<DrawerNavigationParamList, 'Bookings'>,
@@ -55,7 +53,6 @@ function Bookings({navigation}: BookingType) {
   const {data: SubServiceData, isLoader} = useAppSelector(
     state => state.service.getSubService,
   );
-  console.log(initialSelectedDate);
 
   const {
     data,
@@ -144,6 +141,7 @@ function Bookings({navigation}: BookingType) {
       <SCREEN.BookingTimeList
         startTime={item?.serviceStartTime}
         endTime={item?.serviceEndTime}
+        expertName={item?.expertName}
         firstValue={index == 0}
         lastValue={index + 1 == data.length}
       />

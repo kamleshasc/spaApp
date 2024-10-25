@@ -8,6 +8,8 @@ import invoiceReducer from './invoiceReducer';
 import bookingReducer from './bookingReducer';
 import authReducer from './authReducer';
 import customerReducer from './customerReducer';
+import privacyPolicyReducer from './privacyPolicyReducer';
+import otpReducer from './otpReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   booking: bookingReducer,
   auth: authReducer,
   customer: customerReducer,
+  privacyPolicy: privacyPolicyReducer,
+  otp: otpReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

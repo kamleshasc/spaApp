@@ -88,16 +88,16 @@ function Invoice({navigation}: InvoiceType) {
         <UI.TableI name={item?.invoiceNumber} />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.dateOfInvoice)} />
         <UI.TableI
-          name={`${item?.client.firstName} ${item?.client.lastName}`}
+          name={`${item?.client?.firstName} ${item?.client?.lastName}`}
         />
         <UI.TableI
-          name={`${item?.employee.firstName} ${item?.employee.lastName}`}
+          name={`${item?.employee?.firstName} ${item?.employee?.lastName}`}
         />
         <UI.TableI name={item?.branch} />
         <UI.TableI
           link={'View Pdf'}
           onLinkPress={() =>
-            navigation.navigate('PdfInvoice', {invoiceId: item._id})
+            navigation.navigate('PdfInvoice', {invoiceId: item?._id})
           }
         />
         <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />

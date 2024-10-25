@@ -366,7 +366,7 @@ function EditCustomer({route, navigation}: EditCustomerProp) {
         <UI.Toast
           message={errorMessage}
           visible={messageStatus}
-          onDismissSnackBar={() => setErrorMessage(false)}
+          onDismissSnackBar={() => setMessageStatus(false)}
         />
       </ScrollView>
     </SafeAreaView>

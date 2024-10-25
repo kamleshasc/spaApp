@@ -12,7 +12,7 @@ import {statusData} from '../../config/data';
 import Icon from 'react-native-vector-icons/AntDesign';
 import React from 'react';
 import {ImagePickerResponseObject} from '../../components/UI/CustomModalImagePicker';
-import {useAppDispatch} from '../../hooks/storeHook';
+import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {uploadServiceImg} from '../../redux/Action/serviceAction';
 import {DateFormateMMMMDDYYY} from '../../config/helper';
 import {rMS} from '../../config/responsive';
@@ -22,6 +22,7 @@ import {
 } from '../../redux/Action/customerAction';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
+import {signUpOtp} from '../../redux/Action/otpAction';
 
 interface objValues {
   value: any;
@@ -33,6 +34,7 @@ export interface customerInputsTypes {
   firstName: objValues;
   lastName: objValues;
   email: objValues;
+  otp: objValues;
   mobileNumber: objValues;
   dateOfjoining: objValues;
   status: objValues;
@@ -44,6 +46,7 @@ export const initalCutomerInput: customerInputsTypes = {
   firstName: {value: '', isValid: true, message: ''},
   lastName: {value: '', isValid: true, message: ''},
   email: {value: '', isValid: true, message: ''},
+  otp: {value: '', isValid: true, message: ''},
   mobileNumber: {value: '', isValid: true, message: ''},
   dateOfjoining: {value: '', isValid: true, message: ''},
   status: {value: '', isValid: true, message: ''},
@@ -63,16 +66,23 @@ function AddCustomer({navigation}: addCustomerProp) {
   const [showCameraOptions, setShowCameraOptions] =
     React.useState<boolean>(false);
   const [messageStatus, setMessageStatus] = React.useState<boolean>(false);
+  const [otpSuccessStatus, setOtpSuccessStatus] =
+    React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<any>('');
   const dispatchAddCustomer = useAppDispatch();
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [showDate, setShowDate] = React.useState(false);
+  const {isLoading: otpStatus} = useAppSelector(state => state.otp.signUpOtp);
+  const {isLoader: addCustomerStatus} = useAppSelector(
+    state => state.customer.addCustomer,
+  );
   const reg =
     /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|international|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
   let numbers = /^\d+$/;
 
   const {
     email,
+    otp,
     dateOfjoining,
     firstName,
     lastName,
@@ -148,6 +158,7 @@ function AddCustomer({navigation}: addCustomerProp) {
         userImage: userImage.value,
         mobileNumber: mobileNumber.value,
         password: password.value,
+        otp: otp.value,
       };
       await dispatchAddCustomer(fetchAddCustomer(payload)).unwrap();
       dispatchAddCustomer(fetchGetCustomer());
@@ -173,6 +184,8 @@ function AddCustomer({navigation}: addCustomerProp) {
     // let statusMessage = '';
     let passwordIsValid = true;
     let passwordMessage = '';
+    let otpIsValid = true;
+    let otpMessage = '';
 
     if (firstName.value.trim().length <= 0) {
       firstnameIsValid = false;
@@ -221,6 +234,14 @@ function AddCustomer({navigation}: addCustomerProp) {
       passwordMessage = 'Password must have at least 6 characters';
     }
 
+    if (otp.value.trim().length <= 0) {
+      otpIsValid = false;
+      otpMessage = 'OTP is required.';
+    } else if (otp.value.trim().length < 6) {
+      otpIsValid = false;
+      otpMessage = 'OTP must have at least 6 characters.';
+    }
+
     // if (status.value.trim().length <= 0) {
     //   statusIsValid = false;
     //   statusMessage = 'Status is required.';
@@ -233,7 +254,8 @@ function AddCustomer({navigation}: addCustomerProp) {
       !mobilenoIsValid ||
       // !DOJIsValid ||
       // !statusIsValid ||
-      !passwordIsValid
+      !passwordIsValid ||
+      !otpIsValid
     ) {
       setInputs(curInputs => {
         return {
@@ -252,6 +274,11 @@ function AddCustomer({navigation}: addCustomerProp) {
             message: emailMessage,
             value: curInputs.email.value,
             isValid: emailIsValid,
+          },
+          otp: {
+            message: otpMessage,
+            value: curInputs.otp.value,
+            isValid: otpIsValid,
           },
           password: {
             message: passwordMessage,
@@ -278,6 +305,50 @@ function AddCustomer({navigation}: addCustomerProp) {
       return;
     }
     addCustomer();
+  };
+
+  const emailOtpApi = async () => {
+    try {
+      const res = await dispatchAddCustomer(
+        signUpOtp({email: email.value}),
+      ).unwrap();
+      if (res.success) {
+        setMessageStatus(true);
+        setOtpSuccessStatus(true);
+        setErrorMessage(res?.message);
+      }
+    } catch (error) {
+      setMessageStatus(true);
+      setErrorMessage(error);
+    }
+  };
+
+  const checkEmailValidation = () => {
+    let emailIsValid = true;
+    let emailMsg = '';
+
+    if (email.value.trim().length <= 0) {
+      emailIsValid = false;
+      emailMsg = 'Email is required.';
+    } else if (email.value.trim().length > 0 && !reg.test(email.value)) {
+      emailMsg = 'Invalid Email.';
+      emailIsValid = false;
+    }
+
+    if (!emailIsValid) {
+      setInputs(curInputs => {
+        return {
+          ...curInputs,
+          email: {
+            message: emailMsg,
+            value: curInputs.email.value,
+            isValid: emailIsValid,
+          },
+        };
+      });
+      return;
+    }
+    emailOtpApi();
   };
 
   return (
@@ -327,8 +398,22 @@ function AddCustomer({navigation}: addCustomerProp) {
               onChangeText: (value: any) => inputChangedHandler('email', value),
               value: email.value,
             }}
+            iconPressed={checkEmailValidation}
+            showText={true}
             isError={!email.isValid}
             errorMsg={email.message}
+            disableText={otpStatus}
+          />
+          <UI.Input
+            textInputConfig={{
+              placeholder: 'OTP*',
+              onChangeText: (value: any) => inputChangedHandler('otp', value),
+              value: otp.value,
+              keyboardType: 'decimal-pad',
+              maxLength: 6,
+            }}
+            isError={!otp.isValid}
+            errorMsg={otp.message}
           />
           <UI.Input
             textInputConfig={{
@@ -387,13 +472,18 @@ function AddCustomer({navigation}: addCustomerProp) {
             errorMsg={status.message}
             onChange={onChangeStatus}
           /> */}
-          <UI.Btn onPressBtn={checkValidation}>Add</UI.Btn>
+          <UI.Btn disabledBtn={addCustomerStatus} onPressBtn={checkValidation}>
+            Add
+          </UI.Btn>
         </View>
       </ScrollView>
       <UI.Toast
+        Success={otpSuccessStatus}
         message={errorMessage}
         visible={messageStatus}
-        onDismissSnackBar={() => setErrorMessage(false)}
+        onDismissSnackBar={() => {
+          setMessageStatus(false), setOtpSuccessStatus(false);
+        }}
       />
     </SafeAreaView>
   );

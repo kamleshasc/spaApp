@@ -1,13 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import colors from '../../../config/colors';
 import {UI} from '../..';
 import {durationData} from '../../../config/data';
 import {HelperText} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/AntDesign';
+import SubServiceItem from './SubServiceItem';
+
 type SubValues = {
   name: string;
-  price: any;
+  price: any | number;
   duration: string;
 };
 
@@ -58,44 +59,6 @@ const SubServiceWithList = ({
     }
     addedValues(inputs);
     setInputs(initialSubValues);
-  };
-
-  const SelectedSubService = ({
-    value,
-    selectedIndex,
-  }: {
-    value: SubValues;
-    selectedIndex: number;
-  }) => {
-    return (
-      <View style={styles.selectedSubServiceContainer}>
-        <View style={styles.selectedSubServiceInnerContainer}>
-          <View style={styles.selectedSubServiceDetailsContainer}>
-            <View style={styles.selectedSubServiceDetailRow}>
-              <Text style={styles.selectedSubServiceLabel}>Service:</Text>
-              <Text style={styles.selectedSubServiceValue} numberOfLines={2}>
-                {value?.name}
-              </Text>
-            </View>
-            <View style={styles.selectedSubServiceDetailRow}>
-              <Text style={styles.selectedSubServiceLabel}>Price:</Text>
-              <Text style={styles.selectedSubServiceValue} numberOfLines={2}>
-                {value?.price}
-              </Text>
-            </View>
-            <View style={styles.selectedSubServiceDetailRow}>
-              <Text style={styles.selectedSubServiceLabel}>Duration:</Text>
-              <Text style={styles.selectedSubServiceValue} numberOfLines={2}>
-                {value?.duration}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity onPress={() => deleteItemPressed(selectedIndex)}>
-            <Icon name="delete" size={30} color="red" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
   };
 
   return (
@@ -158,7 +121,11 @@ const SubServiceWithList = ({
       {selectedSubService &&
         selectedSubService.length > 0 &&
         selectedSubService.map((value, index) => (
-          <SelectedSubService value={value} selectedIndex={index} key={index} />
+          <SubServiceItem
+            value={value}
+            onPress={() => deleteItemPressed(index)}
+            key={index}
+          />
         ))}
     </>
   );
@@ -216,39 +183,5 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 13,
     fontWeight: '700',
-  },
-  selectedSubServiceContainer: {
-    marginBottom: 20,
-    marginHorizontal: 22,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    elevation: 5,
-    shadowColor: 'black',
-    padding: 10,
-    flex: 1,
-  },
-  selectedSubServiceInnerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  selectedSubServiceDetailsContainer: {
-    width: '85%',
-  },
-  selectedSubServiceDetailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-  },
-  selectedSubServiceLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.fontDark,
-    marginRight: 2,
-  },
-  selectedSubServiceValue: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: colors.fontDark,
   },
 });

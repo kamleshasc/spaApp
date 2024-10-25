@@ -9,8 +9,10 @@ import {
   formatAndAddMinutes,
 } from '../../../config/helper';
 import {HelperText} from 'react-native-paper';
-import {useAppDispatch} from '../../../hooks/storeHook';
+import {useAppDispatch, useAppSelector} from '../../../hooks/storeHook';
 import {newBooking} from '../../../redux/Action/bookingAction';
+import {rMS} from '../../../config/responsive';
+import {getEmployeeByServiceId} from '../../../redux/Action/serviceAction';
 
 interface inputString {
   value: string;
@@ -22,6 +24,7 @@ interface bookingInputs {
   phone: inputString;
   startTime: inputString;
   endTime: inputString;
+  employeeId: inputString;
 }
 
 const BookingIntialValue: bookingInputs = {
@@ -30,6 +33,7 @@ const BookingIntialValue: bookingInputs = {
   phone: {value: ''},
   startTime: {value: ''},
   endTime: {value: ''},
+  employeeId: {value: ''},
 };
 
 interface TakeBookingDetailsProps {
@@ -52,6 +56,9 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
   const [errorStatus, setErrorStatus] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<any>('');
   const dispatchBookingDetails = useAppDispatch();
+  const {data: employeeData} = useAppSelector(
+    state => state.service.getEmployeeByServiceId,
+  );
 
   const inputChangedHandler = (inputIdentifer: string, inputValue: any) => {
     setInputs(curInputs => {
@@ -86,6 +93,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
         phone: inputs.phone.value,
         serviceStartTime: inputs.startTime.value,
         serviceEndTime: inputs.endTime.value,
+        expertId: inputs.employeeId.value,
       };
       const result = await dispatchBookingDetails(newBooking(body)).unwrap();
       if (result) {
@@ -131,6 +139,10 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
       setErrorStatus(true);
       setErrorMessage('All fields are required.');
       return;
+    } else if (inputs.employeeId.value.trim().length <= 0) {
+      setErrorStatus(true);
+      setErrorMessage('Employee field is required.');
+      return;
     } else {
       // let body = {
       //   date: selectedDate,
@@ -147,6 +159,23 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
     setErrorStatus(false);
     setInputs(BookingIntialValue);
   };
+
+  const getEmployeeData = async () => {
+    try {
+      await dispatchBookingDetails(
+        getEmployeeByServiceId({serviceId: selectedDetails.parentId}),
+      ).unwrap();
+    } catch (error) {
+      setErrorStatus(true);
+      setErrorMessage(error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (selectedDetails) {
+      getEmployeeData();
+    }
+  }, [selectedDetails]);
 
   return (
     <View style={styles.root}>
@@ -180,6 +209,24 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
               </View>
             </View>
             <View style={styles.columnRowContainer}>
+              <View style={styles.fullWidth}>
+                <UI.DropDown
+                  styles={styles.selectEmployeeStyle}
+                  data={employeeData.map(value => {
+                    return {
+                      label: `${value?.firstName} ${value?.lastName}`,
+                      value: value?._id,
+                    };
+                  })}
+                  placeholder="Select Employee"
+                  value={inputs?.employeeId?.value}
+                  onChange={(value: any) =>
+                    inputChangedHandler('employeeId', value?.value)
+                  }
+                />
+              </View>
+            </View>
+            <View style={styles.columnRowContainer}>
               <View style={styles.fullScreen}>
                 <UI.Input
                   showIcon={false}
@@ -188,7 +235,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                     onChangeText: (value: any) =>
                       inputChangedHandler('name', value),
                     placeholder: 'Enter Full Name',
-                    value: inputs.name.value,
+                    value: inputs?.name?.value,
                   }}
                   stylesInput={styles.columnRowTextInputFull}>
                   <Icon name="calendar" size={28} color="black" />
@@ -202,7 +249,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                     onChangeText: (value: any) =>
                       inputChangedHandler('mail', value),
                     placeholder: 'Enter Email',
-                    value: inputs.mail.value,
+                    value: inputs?.mail?.value,
                   }}
                   stylesInput={styles.columnRowTextInputLeft}
                 />
@@ -214,7 +261,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                       inputChangedHandler('phone', value),
                     placeholder: 'Enter Phone No.',
                     keyboardType: 'decimal-pad',
-                    value: inputs.phone.value,
+                    value: inputs?.phone?.value,
                     maxLength: 10,
                   }}
                   stylesInput={styles.columnRowTextInputRight}
@@ -239,7 +286,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                   showIcon={true}
                   textInputConfig={{
                     placeholder: 'Select Time',
-                    value: inputs.startTime.value,
+                    value: inputs?.startTime?.value,
                   }}
                   stylesInput={styles.columnRowTextInputRight}>
                   <Icon name="calendar" size={28} color="black" />
@@ -381,5 +428,13 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 13,
     fontWeight: '700',
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  selectEmployeeStyle: {
+    marginBottom: 0,
+    marginHorizontal: 0,
+    paddingVertical: rMS(6),
   },
 });

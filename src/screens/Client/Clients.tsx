@@ -46,6 +46,7 @@ export interface ClientsData {
   owner: OwnerObject;
   createdAt: any;
   updatedAt: any;
+  clientImg: any;
 }
 
 function Clients({navigation}: ClientProps): React.JSX.Element {
@@ -80,7 +81,7 @@ function Clients({navigation}: ClientProps): React.JSX.Element {
         onPress={() => {
           navigation.navigate('EditClient', {client: item});
         }}>
-        <UI.TableI showImg={true} ImgUrl={''} />
+        <UI.TableI showImg={true} ImgUrl={item?.clientImg} />
         <UI.TableI
           name={`${item?.prefix || ''} ${item?.firstName || ''} ${
             item?.lastName || ''

@@ -36,7 +36,7 @@ const TableItem: React.FC<TableItemProps> = ({
         {width: width > 820 || height > 820 ? rS(83) : rS(100)},
       ]}>
       {showImg && (
-        <View style={styles.imageContainer}>
+        <View style={[styles.imageContainer]}>
           <Image
             style={styles.image}
             source={

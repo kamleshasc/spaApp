@@ -8,8 +8,7 @@ import {initialInputs, inputInvoice} from './AddInvoice';
 import {branchData} from '../../config/data';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigation/RootNavigation';
-import {fetchService, fetchSubService} from '../../redux/Action/serviceAction';
-import {fetchClient} from '../../redux/Action/clientAction';
+import {fetchSubService} from '../../redux/Action/serviceAction';
 import {fetchGetUser} from '../../redux/Action/userAction';
 import {DateFormateMMMMDDYYY} from '../../config/helper';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -17,6 +16,7 @@ import {
   fetchInvoice,
   fetchUpdateInvoice,
 } from '../../redux/Action/invoiceAction';
+import {fetchGetCustomer} from '../../redux/Action/customerAction';
 type EditInvoiceProp = StackScreenProps<RootStackParamList, 'EditInvoice'>;
 
 function EditInvoice({navigation, route}: EditInvoiceProp) {
@@ -28,7 +28,9 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
   const {data: subServiceData} = useAppSelector(
     state => state.service.getSubService,
   );
-  const {data: clientsData} = useAppSelector(state => state.client.getClient);
+  const {data: clientsData} = useAppSelector(
+    state => state.customer.getCustomer,
+  );
   const {data: usersData} = useAppSelector(state => state.user.getUser);
   const {errorMsg, isError, isLoader} = useAppSelector(
     state => state.Invoice.updateInvoice,
@@ -91,7 +93,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
   };
 
   const getAllDetails = async () => {
-    dispatchEditInvoice(fetchClient());
+    dispatchEditInvoice(fetchGetCustomer());
     dispatchEditInvoice(fetchGetUser());
     dispatchEditInvoice(fetchSubService());
     addInvoiceDetail(invoiceData);
@@ -320,12 +322,12 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
           <UI.DropDown
             data={usersData.map(val => {
               return {
-                label: `${val.firstName} ${val.lastName}`,
-                value: `${val._id}`,
+                label: `${val?.firstName} ${val?.lastName}`,
+                value: `${val?._id}`,
               };
             })}
             onChange={(value: any) =>
-              inputChangedHandler('employee', value.value)
+              inputChangedHandler('employee', value?.value)
             }
             placeholder={'Select Employee Name'}
             value={employee.value}

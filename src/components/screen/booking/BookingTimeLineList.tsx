@@ -8,6 +8,7 @@ interface BookingTimeLineListTypes {
   endTime: string;
   firstValue: boolean;
   lastValue: boolean;
+  expertName: string;
 }
 
 const BookingTimeLineList: React.FC<BookingTimeLineListTypes> = ({
@@ -15,6 +16,7 @@ const BookingTimeLineList: React.FC<BookingTimeLineListTypes> = ({
   endTime,
   firstValue,
   lastValue,
+  expertName,
 }) => {
   return (
     <View style={styles.flexDirection}>
@@ -24,21 +26,16 @@ const BookingTimeLineList: React.FC<BookingTimeLineListTypes> = ({
         </View>
       </View>
       <View style={styles.contentContainer}>
-        {firstValue && (
-          <View
-            style={{
-              height: 20,
-              width: 20,
-              backgroundColor: 'red',
-              borderRadius: 12,
-            }}
-          />
-        )}
+        {firstValue && <View style={styles.circleContainer} />}
         <View style={styles.contentSubContainer}>
           <View style={styles.contentWidthAccess}>
             <View style={styles.itemContainer}>
               <View style={styles.flexDirection}>
                 <Text style={styles.itemTitle}>Booked</Text>
+              </View>
+              <View style={styles.flexDirection}>
+                <Text style={styles.itemSubTitle}>Employee:-</Text>
+                <Text style={styles.itemValue}>{`${expertName}`}</Text>
               </View>
               <View style={styles.flexDirection}>
                 <Text style={styles.itemSubTitle}>Time Slot:-</Text>
@@ -49,16 +46,7 @@ const BookingTimeLineList: React.FC<BookingTimeLineListTypes> = ({
             </View>
           </View>
         </View>
-        {lastValue && (
-          <View
-            style={{
-              height: 20,
-              width: 20,
-              backgroundColor: 'red',
-              borderRadius: 12,
-            }}
-          />
-        )}
+        {lastValue && <View style={styles.circleContainer} />}
       </View>
     </View>
   );
@@ -75,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   timeSubContainer: {
-    backgroundColor: colors.secondaryDark,
+    backgroundColor: colors.themePrimary,
     padding: rMS(8),
     borderRadius: 10,
   },
@@ -90,7 +78,7 @@ const styles = StyleSheet.create({
   contentSubContainer: {
     flexDirection: 'row',
     borderLeftWidth: 1.5,
-    borderLeftColor: 'red',
+    borderLeftColor: colors.borderColor,
     marginLeft: 10,
     paddingTop: 4,
     paddingBottom: 10,
@@ -98,7 +86,7 @@ const styles = StyleSheet.create({
   contentWidthAccess: {
     // borderTopWidth: 2,
     borderBottomWidth: 1.5,
-    borderColor: 'grey',
+    borderColor: colors.borderGrey,
     borderStyle: 'dashed',
     width: '100%',
   },
@@ -128,5 +116,11 @@ const styles = StyleSheet.create({
     color: colors.fontDark,
     width: '90%',
     marginLeft: 5,
+  },
+  circleContainer: {
+    height: 20,
+    width: 20,
+    backgroundColor: colors.fontDark,
+    borderRadius: 12,
   },
 });

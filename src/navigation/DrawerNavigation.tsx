@@ -5,15 +5,14 @@ import {
 } from '@react-navigation/drawer';
 import colors from '../config/colors';
 import SCREENS from '../screens';
-import {useAppDispatch, useAppSelector} from '../hooks/storeHook';
-import {clearUserScreens, loadUserScreens} from '../redux/Action/authAction';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAppDispatch} from '../hooks/storeHook';
+import {loadUserScreens} from '../redux/Action/authAction';
 import {UI} from '../components';
 import CustomDrawerContent from './CustomDrawerContent';
 
 export type DrawerNavigationParamList = {
   Dashboard: undefined;
-  Users: undefined;
+  Employees: undefined;
   Services: undefined;
   Clients: undefined;
   Inventory: undefined;
@@ -21,6 +20,9 @@ export type DrawerNavigationParamList = {
   Invoices: undefined;
   Bookings: undefined;
   Customers: undefined;
+  Book: undefined;
+  MyBooking: undefined;
+  Profile: undefined;
 };
 
 export type DrawerNavigationPropList =
@@ -86,15 +88,18 @@ function DrawerNavigation() {
           component={SCREENS.DASHBOARD.dashboard}
         />
       )}
-      {screens.includes('Users') && (
-        <Drawer.Screen name="Users" component={SCREENS.USER.users} />
+      {screens.includes('Employees') && (
+        <Drawer.Screen
+          name="Employees"
+          component={SCREENS.EMPLOYEESCREENS.employees}
+        />
       )}
       {screens.includes('Services') && (
         <Drawer.Screen name="Services" component={SCREENS.SERVICE.services} />
       )}
-      {screens.includes('Clients') && (
+      {/* {screens.includes('Clients') && (
         <Drawer.Screen name="Clients" component={SCREENS.CLIENT.clients} />
-      )}
+      )} */}
       {screens.includes('Inventory') && (
         <Drawer.Screen
           name="Inventory"
@@ -125,6 +130,22 @@ function DrawerNavigation() {
           component={SCREENS.CUSTOMERSCREENS.customer}
         />
       )}
+      {screens.includes('Book') && (
+        <Drawer.Screen name="Book" component={SCREENS.BOOKSCREENS.book} />
+      )}
+      {screens.includes('MyBooking') && (
+        <Drawer.Screen
+          name="MyBooking"
+          component={SCREENS.BOOKSCREENS.myBooking}
+          options={{drawerLabel: 'My Bookings', title: 'My Bookings'}}
+        />
+      )}
+      {/* {screens.includes('MyBooking') && ( */}
+      <Drawer.Screen
+        name="Profile"
+        component={SCREENS.PROFILESCREENS.profile}
+      />
+      {/* )} */}
     </Drawer.Navigator>
   );
 }

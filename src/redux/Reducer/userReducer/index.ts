@@ -5,6 +5,7 @@ import addUserSlice from './addUserSlice';
 import uploadImgSlice from './uploadImgSlice';
 import screenSlice from './screenSlice';
 import userDetailSlice from './userDetailSlice';
+import getUserByIdSlice from './getUserByIdSlice';
 
 const userReducer = combineReducers({
   addUser: addUserSlice,
@@ -13,6 +14,7 @@ const userReducer = combineReducers({
   uploadImg: uploadImgSlice,
   screens: screenSlice,
   userDetails: userDetailSlice,
+  getUserById: getUserByIdSlice,
 });
 
 export default userReducer;

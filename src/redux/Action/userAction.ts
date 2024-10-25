@@ -6,13 +6,14 @@ interface userDetails {
   firstName: string;
   lastName: string;
   email: string;
-  title: string;
-  role: string;
-  mobileNumber: string;
-  dateOfjoining: string;
-  status: string;
-  userImage: string;
+  title?: string;
+  role?: string;
+  mobileNumber?: string;
+  dateOfjoining?: string;
+  status?: string;
+  userImage?: string;
   password?: string;
+  otp?: string;
 }
 
 interface UpdateUserParams {
@@ -25,10 +26,10 @@ export const fetchGetUser = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const res = await get({url: '/users'});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -61,10 +62,10 @@ export const fetchAddUser = createAsyncThunk(
         url: '/users',
         body: payload,
       });
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -83,6 +84,23 @@ export const uploadImg = createAsyncThunk(
         hasFormData: true,
       });
       return res;
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const getUserById = createAsyncThunk(
+  'userById',
+  async ({userId}: {userId: string}, {rejectWithValue}) => {
+    try {
+      const res = await get({url: `/users/${userId}`});
+      if (res?.success) {
+        return res?.data;
+      } else {
+        return rejectWithValue(res?.message);
+      }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
       return rejectWithValue(errorMessage);

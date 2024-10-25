@@ -108,3 +108,80 @@ export const fetchSubService = createAsyncThunk(
     }
   },
 );
+
+export const fetchExpertService = createAsyncThunk(
+  'getAllExpertService',
+  async (_, {rejectWithValue}) => {
+    try {
+      const res = await get({url: '/services/expert/all'});
+      // return res;
+      if (res.success) {
+        return res.data;
+      } else {
+        return rejectWithValue(res.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+interface getServiceByExpertID {
+  expertId: string;
+}
+
+export const fetchServiceByExpertId = createAsyncThunk(
+  'getServiceByExpertId',
+  async ({expertId}: getServiceByExpertID, {rejectWithValue}) => {
+    try {
+      const res = await get({url: `/services/expert/${expertId}`});
+      if (res.success) {
+        return res.data;
+      } else {
+        return rejectWithValue(res.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+interface getServiceByCategory {
+  name: string;
+}
+
+export const fetchServiceByCategory = createAsyncThunk(
+  'getServiceByCategory',
+  async ({name}: getServiceByCategory, {rejectWithValue}) => {
+    try {
+      const res = await get({url: `/services/getUserByCategory/${name}`});
+      if (res?.success) {
+        return res?.data;
+      } else {
+        return rejectWithValue(res?.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const getEmployeeByServiceId = createAsyncThunk(
+  'getEmployeeByServiceId',
+  async ({serviceId}: {serviceId: string}, {rejectWithValue}) => {
+    try {
+      const res = await get({url: `/services/assignedService/${serviceId}`});
+      if (res?.success) {
+        return res?.data;
+      } else {
+        return rejectWithValue(res?.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);

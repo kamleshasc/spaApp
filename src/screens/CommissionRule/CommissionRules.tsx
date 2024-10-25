@@ -73,22 +73,22 @@ function CommissionRules({navigation}: CommissionType) {
         onPress={() => {
           navigation.navigate('EditCommissionRule', {commissionRule: item});
         }}>
-        <UI.TableI name={item.name} />
+        <UI.TableI name={item?.name} />
         <UI.TableI name={item.criteria} />
-        <UI.TableI name={item.value.toFixed(2)} />
+        <UI.TableI name={`$${item?.value?.toFixed(2)}`} />
         <UI.TableI
-          bunchData={item.applicableUser.map(
-            value => value.firstName + ' ' + value.lastName,
+          bunchData={item?.applicableUser.map(
+            value => value?.firstName + ' ' + value?.lastName,
           )}
         />
         <UI.TableI
-          name={item.createdBy.firstName + ' ' + item.createdBy.lastName}
+          name={item?.createdBy?.firstName + ' ' + item?.createdBy?.lastName}
         />
         <UI.TableI
-          name={item.updatedBy.firstName + ' ' + item.updatedBy.lastName}
+          name={item?.updatedBy?.firstName + ' ' + item?.updatedBy?.lastName}
         />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.createdAt)} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.updatedAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
       </UI.TableR>
     );
   }

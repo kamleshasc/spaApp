@@ -6,35 +6,13 @@ export interface LoginState {
   isLoader: boolean;
   isError: boolean;
   errorMsg: any;
-  screens: any;
 }
-
-interface loginData {
-  refreshToken: string;
-  screens: string[];
-  token: string;
-  userDetails: any;
-  message: string;
-  statusCode: number;
-  success: boolean;
-}
-
-const intialDataState: loginData = {
-  refreshToken: '',
-  screens: [],
-  token: '',
-  userDetails: {},
-  message: '',
-  statusCode: 0,
-  success: false,
-};
 
 const initialState: LoginState = {
   data: null,
   isLoader: false,
   isError: false,
   errorMsg: '',
-  screens: [],
 };
 
 export const loginSlice = createSlice({
@@ -57,7 +35,6 @@ export const loginSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoader = false;
         state.data = action.payload;
-        state.screens = action.payload;
       })
       .addCase(
         loadUserScreens.fulfilled,

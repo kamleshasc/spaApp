@@ -4,31 +4,21 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
-import {useAppDispatch} from '../hooks/storeHook';
-import {clearUserScreens} from '../redux/Action/authAction';
 import colors from '../config/colors';
+import {useLogout} from '../hooks/useLogout';
 
 interface CustomDrawerContentProps extends DrawerContentComponentProps {}
 
-type Nav = {
-  replace: (value: string) => void;
-};
+// type Nav = {
+//   replace: (value: string) => void;
+// };
 
 const CustomDrawerContent: React.FC<CustomDrawerContentProps> = props => {
-  const {replace} = useNavigation<Nav>();
-  const dispatchCustomDrawerNavigation = useAppDispatch();
-
-  const clearScreens = async () => {
-    dispatchCustomDrawerNavigation(clearUserScreens());
-  };
-
+  // const {replace} = useNavigation<Nav>();
+  const logoutUser = useLogout();
   const handleLogout = () => {
-    // Add your logout logic here
-    setTimeout(() => {
-      clearScreens();
-    }, 500);
-    replace('Login');
+    logoutUser();
+    // replace('Login');
   };
 
   return (
@@ -43,7 +33,6 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = props => {
         />
       ))} */}
       <DrawerItemList {...props} />
-      {/* Logout button at the bottom */}
       <DrawerItem
         label="Logout"
         onPress={handleLogout}

@@ -5,21 +5,27 @@ import CUSTOMERSCREENS from './Customer';
 import DASHBOARD from './Dashboard';
 import INVENTORY from './Inventory';
 import INVOICESCREENS from './Invoice';
+import BOOKSCREENS from './Book';
 import ONBOARDINGSCREENS from './OnBoarding';
 import SERVICE from './Service';
-import USER from './User';
+import PROFILESCREENS from './Profile';
+import AUTHSCREENS from './Auth';
+import EMPLOYEESCREENS from './Employee';
 
 const SCREENS = {
   CLIENT,
   DASHBOARD,
   INVENTORY,
   SERVICE,
-  USER,
+  EMPLOYEESCREENS,
   COMMISSIONRULESCREENS,
   INVOICESCREENS,
   BOOKINGSCREENS,
   ONBOARDINGSCREENS,
   CUSTOMERSCREENS,
+  BOOKSCREENS,
+  PROFILESCREENS,
+  AUTHSCREENS,
 };
 
 export default SCREENS;

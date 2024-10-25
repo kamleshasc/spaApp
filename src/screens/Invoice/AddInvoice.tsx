@@ -5,14 +5,14 @@ import {rMS} from '../../config/responsive';
 import {SCREEN, UI} from '../../components';
 import {branchData} from '../../config/data';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
-import {fetchService, fetchSubService} from '../../redux/Action/serviceAction';
+import {fetchSubService} from '../../redux/Action/serviceAction';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {DateFormateMMMMDDYYY} from '../../config/helper';
-import {fetchClient} from '../../redux/Action/clientAction';
 import {fetchGetUser} from '../../redux/Action/userAction';
 import {fetchAddInvoice, fetchInvoice} from '../../redux/Action/invoiceAction';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {RootStackParamList} from '../../navigation/RootNavigation';
+import {fetchGetCustomer} from '../../redux/Action/customerAction';
 interface singleObjString {
   value: string;
   isValid: boolean;
@@ -58,7 +58,9 @@ function AddInvoice({navigation}: AddInvoiceProp) {
   const {data: subServicesData} = useAppSelector(
     state => state.service.getSubService,
   );
-  const {data: clientsData} = useAppSelector(state => state.client.getClient);
+  const {data: clientsData} = useAppSelector(
+    state => state.customer.getCustomer,
+  );
   const {data: usersData} = useAppSelector(state => state.user.getUser);
   const {errorMsg, isError, isLoader} = useAppSelector(
     state => state.Invoice.addInvoice,
@@ -108,7 +110,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
   };
 
   const getAllDetails = () => {
-    dispatchAddInvoice(fetchClient());
+    dispatchAddInvoice(fetchGetCustomer());
     dispatchAddInvoice(fetchGetUser());
     dispatchAddInvoice(fetchSubService());
   };
@@ -299,7 +301,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
           <UI.DropDown
             data={clientsData.map(val => {
               return {
-                label: `${val.prefix} ${val.firstName} ${val.lastName}`,
+                label: `${val.firstName} ${val.lastName}`,
                 value: `${val._id}`,
               };
             })}

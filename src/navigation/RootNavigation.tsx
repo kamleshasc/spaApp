@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/stack';
 import DrawerNavigation from './DrawerNavigation';
 import colors from '../config/colors';
-import {UserData} from '../screens/User/Users';
+import {UserData} from '../screens/Employee/Employees';
 import {ServiceData} from '../screens/Service/Services';
 import SCREENS from '../screens';
 import {ClientsData} from '../screens/Client/Clients';
@@ -19,10 +19,22 @@ import {useAppDispatch} from '../hooks/storeHook';
 import {loadUserScreens, userDetails} from '../redux/Action/authAction';
 import {CustomerData} from '../screens/Customer/Customer';
 
+interface BookingTimeLine {
+  date: any;
+  expertId: string;
+  serviceId: string;
+  parentId: string;
+  name: string;
+  mail: string;
+  phone: string;
+  duration: string;
+  serviceName: string;
+}
+
 export type RootStackParamList = {
   DrawerNavigation: undefined;
-  AddUser: undefined;
-  EditUser: {user: UserData};
+  AddEmployee: undefined;
+  EditEmployee: {user: UserData};
   AddService: undefined;
   EditService: {service: ServiceData};
   AddClient: undefined;
@@ -41,6 +53,14 @@ export type RootStackParamList = {
   AddCustomer: undefined;
   EditCustomer: {customer: CustomerData};
   SignUp: undefined;
+  BookingUser: {expertId: string; selectedDate: string};
+  BookingTimeLine: {payload: BookingTimeLine};
+  EmployeeList: {serviceName: string};
+  EditProfile: {userId: string};
+  ChangePassword: undefined;
+  PrivacyPolicy: undefined;
+  Forgot: undefined;
+  ResetPassword: {userId: string};
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -102,15 +122,15 @@ function RootNavigation() {
         component={SCREENS.ONBOARDINGSCREENS.welcome}
       />
       <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
-      <Stack.Screen name="Login" component={SCREENS.USER.login} />
+      <Stack.Screen name="Login" component={SCREENS.AUTHSCREENS.login} />
       <Stack.Screen
-        name="AddUser"
-        component={SCREENS.USER.addUser}
+        name="AddEmployee"
+        component={SCREENS.EMPLOYEESCREENS.addEmployee}
         options={{headerShown: true}}
       />
       <Stack.Screen
-        name="EditUser"
-        component={SCREENS.USER.editUser}
+        name="EditEmployee"
+        component={SCREENS.EMPLOYEESCREENS.editEmployee}
         options={{headerShown: true}}
       />
       <Stack.Screen
@@ -178,7 +198,36 @@ function RootNavigation() {
         component={SCREENS.CUSTOMERSCREENS.editCustemer}
         options={{headerShown: true}}
       />
-      <Stack.Screen name="SignUp" component={SCREENS.USER.signup} />
+      <Stack.Screen name="SignUp" component={SCREENS.AUTHSCREENS.signup} />
+      <Stack.Screen
+        name="BookingUser"
+        component={SCREENS.BOOKSCREENS.bookingUser}
+      />
+      <Stack.Screen
+        name="BookingTimeLine"
+        component={SCREENS.BOOKSCREENS.timeLine}
+      />
+      <Stack.Screen
+        name="EmployeeList"
+        component={SCREENS.DASHBOARD.employeeList}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={SCREENS.PROFILESCREENS.editProfile}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={SCREENS.PROFILESCREENS.changePassword}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={SCREENS.PROFILESCREENS.privacyPolicy}
+      />
+      <Stack.Screen name="Forgot" component={SCREENS.AUTHSCREENS.forgot} />
+      <Stack.Screen
+        name="ResetPassword"
+        component={SCREENS.AUTHSCREENS.resetPassword}
+      />
     </Stack.Navigator>
   );
 }

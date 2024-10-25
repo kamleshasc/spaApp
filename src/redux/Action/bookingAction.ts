@@ -32,7 +32,9 @@ interface BookingDetails {
   phone: string;
   serviceStartTime: string;
   serviceEndTime: string;
+  expertId: string;
 }
+
 export const newBooking = createAsyncThunk(
   'newBooking',
   async (body: BookingDetails, {rejectWithValue}) => {
@@ -42,6 +44,76 @@ export const newBooking = createAsyncThunk(
         return res.data;
       } else {
         return rejectWithValue(res.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+interface UserBookingDetails {
+  date: string;
+  serviceId: string;
+  expertId: string;
+  parentId: string;
+  name: string;
+  mail: string;
+  phone: string;
+  serviceStartTime: string;
+  serviceEndTime: string;
+}
+
+export const customerBooking = createAsyncThunk(
+  'customerBooking',
+  async (body: UserBookingDetails, {rejectWithValue}) => {
+    try {
+      const res: any = await post({url: '/bookings/user', body});
+      if (res.success) {
+        return res.data;
+      } else {
+        return rejectWithValue(res.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+interface getBookingByExpertId {
+  date: any;
+  expertId: string;
+}
+
+export const getBookingByExpertId = createAsyncThunk(
+  'getBookingByExpertId',
+  async ({date, expertId}: getBookingByExpertId, {rejectWithValue}) => {
+    try {
+      const res = await get({
+        url: `/bookings/expertStatus/${date}/${expertId}`,
+      });
+      if (res.success) {
+        return res.data;
+      } else {
+        return rejectWithValue(res.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const getMyBookings = createAsyncThunk(
+  'getMyBookings',
+  async (_, {rejectWithValue}) => {
+    try {
+      const res = await get({url: `/bookings/myBookings`});
+      if (res?.success) {
+        return res?.data;
+      } else {
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);

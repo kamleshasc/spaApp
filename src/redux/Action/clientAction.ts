@@ -31,6 +31,7 @@ interface clientDetais {
   city: string;
   prefix: string;
   owner: string;
+  clientImg?: string;
 }
 
 export const fetchAddClient = createAsyncThunk(
@@ -73,6 +74,23 @@ export const fetchUpdateClient = createAsyncThunk(
       } else {
         return rejectWithValue(res.message);
       }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const clientUploadImage = createAsyncThunk(
+  'clientUploadImage',
+  async (payload: FormData, {rejectWithValue}) => {
+    try {
+      const res = await post({
+        url: '/clients/uploadImg',
+        body: payload,
+        hasFormData: true,
+      });
+      return res;
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
       return rejectWithValue(errorMessage);
