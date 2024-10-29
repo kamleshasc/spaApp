@@ -47,8 +47,36 @@ const TableItem: React.FC<TableItemProps> = ({
           />
         </View>
       )}
-      {bunchData && bunchData?.length > 0 && (
-        <Text style={styles.text}>{bunchData?.toString()}</Text>
+      {bunchData && bunchData?.length > 1 ? (
+        bunchData.map((value, index) => (
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderRadius: 8,
+              paddingVertical: 3,
+              paddingHorizontal: 8,
+              marginVertical: 2,
+            }}>
+            <Text style={[styles.text, {fontSize: rMS(11)}]} key={index}>
+              {`${value}`}
+            </Text>
+          </View>
+        ))
+      ) : bunchData && bunchData?.length > 0 ? (
+        <View
+          style={{
+            borderWidth: 0.5,
+            borderRadius: 8,
+            paddingVertical: 3,
+            paddingHorizontal: 8,
+            marginVertical: 2,
+          }}>
+          <Text style={[styles.text, {fontSize: rMS(11)}]}>
+            {bunchData?.toString()}
+          </Text>
+        </View>
+      ) : (
+        <></>
       )}
       {link && link?.length > 0 && (
         <TouchableOpacity style={styles.linkContainer} onPress={onLinkPress}>
@@ -67,6 +95,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     minHeight: 60,
+    paddingVertical: rMS(4),
   },
   imageContainer: {
     height: 50,

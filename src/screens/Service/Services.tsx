@@ -77,20 +77,22 @@ function Services({navigation}: Props): React.JSX.Element {
   const renderItem = ({item}: {item: ServiceData}) => {
     return (
       <UI.TableR onPress={() => onPressService(item)}>
-        <UI.TableI showImg={true} ImgUrl={item.serviceImage} />
-        <UI.TableI name={item.serviceName} />
-        <UI.TableI name={item.category} />
-        <UI.TableI bunchData={item.subService.map(value => `${value.name}`)} />
-        <UI.TableI bunchData={item.selectedBranches} />
-        <UI.TableI name={item.onsiteOffsite} />
-        <UI.TableI name={item.status} />
+        <UI.TableI showImg={true} ImgUrl={item?.serviceImage} />
+        <UI.TableI name={item?.serviceName} />
+        <UI.TableI name={item?.category} />
         <UI.TableI
-          bunchData={item.selectedUsers.map(
-            value => `${value.firstName} ${value.lastName}`,
+          bunchData={item?.subService.map(value => `${value?.name}`)}
+        />
+        <UI.TableI bunchData={item?.selectedBranches} />
+        <UI.TableI name={item?.onsiteOffsite} />
+        <UI.TableI name={item?.status} />
+        <UI.TableI
+          bunchData={item?.selectedUsers?.map(
+            value => `${value?.firstName} ${value?.lastName}`,
           )}
         />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.createdAt)} />
-        <UI.TableI name={DateFormateMMMMDDYYY(item.updatedAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.createdAt)} />
+        <UI.TableI name={DateFormateMMMMDDYYY(item?.updatedAt)} />
       </UI.TableR>
     );
   };
@@ -121,7 +123,7 @@ function Services({navigation}: Props): React.JSX.Element {
           <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item, index) => item._id.toString()}
+            keyExtractor={item => item?._id?.toString()}
           />
         </View>
       </ScrollView>

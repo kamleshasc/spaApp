@@ -175,7 +175,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
         <View style={style.serviceItemContainer}>
           <TouchableOpacity
             style={style.serviceSubItemContainer}
-            onPress={() => handleOnServicePress('Facial')}>
+            onPress={() => handleOnServicePress('Facials')}>
             <View style={style.serviceItemImgContainer}>
               <Image
                 tintColor={colors.themePrimary}
@@ -187,7 +187,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
           </TouchableOpacity>
           <TouchableOpacity
             style={style.serviceSubItemContainer}
-            onPress={() => handleOnServicePress('Massage')}>
+            onPress={() => handleOnServicePress('Massages')}>
             <View style={style.serviceItemImgContainer}>
               <Image
                 tintColor={colors.themePrimary}
@@ -201,7 +201,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
         <View style={style.serviceItemContainer}>
           <TouchableOpacity
             style={style.serviceSubItemContainer}
-            onPress={() => handleOnServicePress('Therapist')}>
+            onPress={() => handleOnServicePress('Therapies')}>
             <View style={style.serviceItemImgContainer}>
               <Image
                 tintColor={colors.themePrimary}
@@ -213,7 +213,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
           </TouchableOpacity>
           <TouchableOpacity
             style={style.serviceSubItemContainer}
-            onPress={() => handleOnServicePress('Body-Sculpting')}>
+            onPress={() => handleOnServicePress('Special Occasions')}>
             <View style={style.serviceItemImgContainer}>
               <Image
                 tintColor={colors.themePrimary}

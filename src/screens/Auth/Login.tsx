@@ -141,7 +141,7 @@ function Login({navigation}: loginProps) {
           <ImageBackground
             style={styles.imageBackground}
             source={require('../../assets/images/login.jpg')}>
-            <View style={styles.imageOverlay} />
+            {/* <View style={styles.imageOverlay} /> */}
           </ImageBackground>
         </View>
         <View style={styles.contentContainer}>
@@ -225,8 +225,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    // flex: 1,
+    // backgroundColor: 'rgba(0,0,0,0.4)',
   },
   contentContainer: {
     flex: 1,

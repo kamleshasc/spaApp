@@ -14,7 +14,14 @@ const CategoryList = ({userImage, name, onPress}: CategoryList) => {
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: IMAGE_URL + userImage}} />
+        <Image
+          style={styles.image}
+          source={
+            userImage.length > 0
+              ? {uri: IMAGE_URL + userImage}
+              : require('../../../assets/images/no_user.png')
+          }
+        />
       </View>
       <Text style={styles.nameText} numberOfLines={1}>
         {name}

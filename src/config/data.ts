@@ -25,10 +25,10 @@ export const statusData = [
 ];
 
 export const categoryData = [
-  {label: 'Facial', value: 'Facial'},
-  {label: 'Massage', value: 'Massage'},
-  {label: 'Therapist', value: 'Therapist'},
-  {label: 'Body-Sculpting', value: 'Body-Sculpting'},
+  {label: 'Facials', value: 'Facials'},
+  {label: 'Massages', value: 'Massages'},
+  {label: 'Therapies', value: 'Therapies'},
+  {label: 'Special Occasions', value: 'Special Occasions'},
 ];
 
 export const unitData = [
