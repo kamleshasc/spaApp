@@ -49,29 +49,15 @@ const TableItem: React.FC<TableItemProps> = ({
       )}
       {bunchData && bunchData?.length > 1 ? (
         bunchData.map((value, index) => (
-          <View
-            style={{
-              borderWidth: 0.5,
-              borderRadius: 8,
-              paddingVertical: 3,
-              paddingHorizontal: 8,
-              marginVertical: 2,
-            }}>
-            <Text style={[styles.text, {fontSize: rMS(11)}]} key={index}>
+          <View style={styles.textListContainer}>
+            <Text style={[styles.text, styles.textListItem]} key={index}>
               {`${value}`}
             </Text>
           </View>
         ))
       ) : bunchData && bunchData?.length > 0 ? (
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderRadius: 8,
-            paddingVertical: 3,
-            paddingHorizontal: 8,
-            marginVertical: 2,
-          }}>
-          <Text style={[styles.text, {fontSize: rMS(11)}]}>
+        <View style={styles.textListContainer} key={bunchData.toString()}>
+          <Text style={[styles.text, styles.textListItem]}>
             {bunchData?.toString()}
           </Text>
         </View>
@@ -124,6 +110,16 @@ const styles = StyleSheet.create({
     fontSize: rMS(13),
     fontWeight: '500',
     textDecorationLine: 'underline',
+  },
+  textListContainer: {
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    marginVertical: 2,
+  },
+  textListItem: {
+    fontSize: rMS(11),
   },
 });
 
