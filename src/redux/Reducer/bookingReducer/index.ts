@@ -4,6 +4,7 @@ import addBookingSlice from './addBookingSlice';
 import userBookingSlice from './userBookingSlice';
 import getBookinByExpertIdSlice from './getBookinByExpertIdSlice';
 import getMyBookingSlice from './getMyBookingSlice';
+import deleteBookingSlice from './deleteBookingSlice';
 
 const bookingReducer = combineReducers({
   getBooking: getBookingSlice,
@@ -11,6 +12,7 @@ const bookingReducer = combineReducers({
   userBooking: userBookingSlice,
   getBookingSlotByExpert: getBookinByExpertIdSlice,
   getMyBooking: getMyBookingSlice,
+  deleteBooking: deleteBookingSlice,
 });
 
 export default bookingReducer;

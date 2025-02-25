@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   FlatList,
-  SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -107,7 +105,7 @@ function Invoice({navigation}: InvoiceType) {
   }
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <FlatList
         onRefresh={() => getInvoice()}
         refreshing={isLoader}
@@ -141,7 +139,7 @@ function Invoice({navigation}: InvoiceType) {
         message={errorMessage}
         onDismissSnackBar={() => setShowError(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

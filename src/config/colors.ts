@@ -11,4 +11,11 @@ export default {
   themePrimary: '#E8BDA5',
   borderColor: '#CFD6DC',
   borderGrey: 'grey',
-};
+  placeholder:'#73777B',
+  lightYellow : '#ffea61',
+  darkYellow : '#ffd400',
+  purple :'#B771E5',
+  green : '#77B254',
+  red : '#ff0000',
+  black:'#000000'
+}

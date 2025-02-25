@@ -4,7 +4,6 @@ import {
   Image,
   Platform,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +11,13 @@ import {
   View,
 } from 'react-native';
 import colors from '../../config/colors';
-import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {
+  PERMISSIONS,
+  RESULTS,
+  checkMultiple,
+  openSettings,
+  requestMultiple,
+} from 'react-native-permissions';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
@@ -29,6 +34,7 @@ import {
   DateToYYYYMMDD,
   getCurrentDateZone,
   getCurrentDateZoneToString,
+  getDateInNewYorkTimeZoneMoment,
 } from '../../config/helper';
 import {fetchExpertService} from '../../redux/Action/serviceAction';
 import {clearGetAllExpertErrorMsg} from '../../redux/Reducer/serviceReducer/getAllExpertSlice';
@@ -53,7 +59,8 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
   const [errorMessage, setErrorMessage] = React.useState<any>('');
   const [errorStatus, setErrorStatus] = React.useState<boolean>(false);
   const [loader, setLoader] = React.useState<boolean>(false);
-  const currentDate = getCurrentDateZone();
+  const currentDate = getDateInNewYorkTimeZoneMoment();
+  
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -67,27 +74,52 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
     });
   }, [navigation, userDetails]);
 
-  const requestPermissions = async () => {
-    const cameraPermission = await request(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA,
-    );
-    // const photoLibraryPermission = await request(
-    //   Platform.OS === 'ios'
-    //     ? PERMISSIONS.IOS.PHOTO_LIBRARY
-    //     : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    // );
+  const handlePermissions = async (permissions: any) => {
+    requestMultiple(permissions)
+      .then(res => {
+        const isPermissionDenied = Object.values(res).some(
+          value => value === RESULTS.BLOCKED,
+        );
+        if (isPermissionDenied) {
+          Alert.alert(
+            'Permissions Required',
+            'The app needs camera and media permissions to function properly. Please allow them in app settings.',
+            [
+              {
+                text: 'Open Settings',
+                onPress: () => {
+                  openSettings().catch(() => {
+                    Alert.alert('Error', 'Error opening settings.');
+                  });
+                },
+              },
+            ],
+          );
+        }
+      })
+      .catch(() => {
+        Alert.alert('Error', 'Error requesting permissions.');
+      });
+  };
 
-    if (
-      cameraPermission !== RESULTS.GRANTED
-      // photoLibraryPermission !== RESULTS.GRANTED
-    ) {
-      Alert.alert(
-        'Permissions required',
-        'This app needs camera and photo library access to function correctly.',
-      );
-    }
+  const checkAndRequestPermissions = () => {
+    const permissions: any = Platform.select({
+      ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.PHOTO_LIBRARY,PERMISSIONS.IOS.MEDIA_LIBRARY],
+      android: [
+        PERMISSIONS.ANDROID.CAMERA,
+        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+      ],
+    });
+
+    // const permissions = [PERMISSIONS.IOS.CAMERA,PERMISSIONS.IOS.PHOTO_LIBRARY,PERMISSIONS.IOS.MEDIA_LIBRARY];
+
+    checkMultiple(permissions)
+      .then(() => {
+        handlePermissions(permissions);
+      })
+      .catch(() => {
+        Alert.alert('Error', 'Error requesting permissions.');
+      });
   };
 
   const fetchApis = async () => {
@@ -104,7 +136,8 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
   };
 
   React.useEffect(() => {
-    requestPermissions();
+    // checkPermissions();
+    checkAndRequestPermissions();
   }, []);
 
   React.useEffect(() => {
@@ -156,7 +189,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
   });
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -236,7 +269,6 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
           {!bookingIsLoader && userData.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {userData.map((item, index) => {
-                // if (index < 3) {
                 return (
                   <SCREEN.ExpertsList
                     imgUrl={item?.userImage}
@@ -245,7 +277,6 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
                     key={index}
                   />
                 );
-                // }
               })}
             </ScrollView>
           ) : (
@@ -266,7 +297,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
         <View style={style.bookingListContainer}>
           {upcomingBookingData.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {upcomingBookingData.map((item, index) => {
+              {upcomingBookingData.map((item: any, index: any) => {
                 return (
                   <SCREEN.DashboardBookingItem
                     onPress={handleBookingPressed}
@@ -293,7 +324,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
         visible={errorStatus}
         onDismissSnackBar={() => clearErrorMesseage()}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -342,9 +373,19 @@ const style = StyleSheet.create({
     borderColor: colors.themePrimary,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: rMS(3),
     borderRadius: rMS(8),
     margin: rMS(10),
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: rMS(2)},
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   serviceItemImgContainer: {
     height: rMS(50),

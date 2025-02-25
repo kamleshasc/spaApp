@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
 import {SCREEN, UI} from '../../components';
@@ -291,7 +291,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.headerContainer}>
@@ -318,6 +318,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
             value={client.value}
             isError={!client.isValid}
             errorMsg={client.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={usersData.map(val => {
@@ -333,6 +334,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
             value={employee.value}
             isError={!employee.isValid}
             errorMsg={employee.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={branchData}
@@ -343,6 +345,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
             value={branch.value}
             isError={!branch.isValid}
             errorMsg={branch.message}
+            styles={styles.dropdownStyle}
           />
           <SCREEN.DropDownWithList
             selectedServices={selectedServices}
@@ -417,7 +420,7 @@ function EditInvoice({navigation, route}: EditInvoiceProp) {
         visible={showError}
         onDismissSnackBar={() => setShowError(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -497,5 +500,15 @@ const styles = StyleSheet.create({
   itemFont: {
     fontSize: 14,
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

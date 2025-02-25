@@ -12,6 +12,7 @@ import {SCREEN, UI} from '../../components';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchPrivacyPolicy} from '../../redux/Action/privacyPolicyAction';
 import {rMS} from '../../config/responsive';
+import WebView from 'react-native-webview';
 
 type PrivacyPolicyProps = NativeStackScreenProps<
   RootStackParamList,
@@ -41,13 +42,13 @@ function PrivacyPolicy({navigation}: PrivacyPolicyProps) {
 
   return (
     <SafeAreaView style={styles.root}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <UI.Header
           onPress={() => navigation.goBack()}
           headerName={'Privacy Policy'}
           showHeaderName={false}
         />
-        <View style={{paddingHorizontal: rMS(18)}}>
+        {/* <View style={{paddingHorizontal: rMS(18)}}>
           {isLoader ? (
             <SCREEN.PrivacyPolicyLoader />
           ) : data.length > 0 ? (
@@ -55,8 +56,9 @@ function PrivacyPolicy({navigation}: PrivacyPolicyProps) {
           ) : (
             <SCREEN.PrivacyPolicyNotFound />
           )}
-        </View>
-      </ScrollView>
+        </View> */}
+      {/* </ScrollView> */}
+      <WebView style={{flex:1}} source={{uri:'https://thebonemechanics.com/spa-policies/'}} />
       <UI.Toast
         message={errorMessage}
         visible={errorStatus}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {UI} from '../../components';
 import {criteriaData} from '../../config/data';
@@ -13,6 +13,7 @@ import {
   fetchCommissionRules,
   fetchUpdateCommissionRules,
 } from '../../redux/Action/commissionRuleAction';
+import useDeviceType from '../../hooks/useDeviceType';
 
 type EditCommissionProps = StackScreenProps<
   RootStackParamList,
@@ -33,6 +34,8 @@ function EditCommission({navigation, route}: EditCommissionProps) {
   );
   const {name, criteria, applicableUser, value, updatedBy} = inputs;
   const keyFields = ['name', 'criteria', 'applicableUser', 'value'];
+  const {isTablet} = useDeviceType();
+  const marginTop = isTablet ? rMS(8) : rMS(5);
 
   const fetchCommission = (commission: any) => {
     const keys = Object.keys(commission).filter(
@@ -201,6 +204,7 @@ function EditCommission({navigation, route}: EditCommissionProps) {
             value={criteria.value}
             isError={!criteria.isValid}
             errorMsg={criteria.message}
+            styles={styles.dropdownStyle}
           />
 
           <UI.DropDownMultiSelect
@@ -228,6 +232,7 @@ function EditCommission({navigation, route}: EditCommissionProps) {
             }}
             isError={!value.isValid}
             errorMsg={value.message}
+            stylesInput={[{marginTop}]}
           />
 
           <UI.DropDown
@@ -242,6 +247,7 @@ function EditCommission({navigation, route}: EditCommissionProps) {
             isError={!updatedBy?.isValid}
             errorMsg={updatedBy?.message}
             onChange={value => inputChangedHandler('updatedBy', value.value)}
+            styles={styles.dropdownStyle}
           />
 
           <View style={styles.btnContainer}>
@@ -280,8 +286,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

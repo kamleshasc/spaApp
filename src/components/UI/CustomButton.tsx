@@ -1,7 +1,8 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
+import useDeviceType from '../../hooks/useDeviceType';
 
 interface CustomButttonUIProps {
   children?: React.ReactNode;
@@ -16,39 +17,46 @@ function CustomButton({
   onPressBtn,
   styles,
 }: CustomButttonUIProps) {
+  const {os, isTablet} = useDeviceType();
+
+  const containerHeight =  os === 'ios' ? (isTablet ? 65 : 45) : isTablet ? 65 : 50;
+
   return (
-    // <View style={[{marginBottom: 20}, styles]}>
     <TouchableOpacity
       disabled={disabledBtn}
       style={[
-        {
-          paddingVertical: rMS(10),
-          borderRadius: 30,
-          backgroundColor: colors.themePrimary,
-          marginHorizontal: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 20,
-        },
-        disabledBtn && {backgroundColor: '#E5E6EB'},
+        innerStyle.container,
+        disabledBtn && innerStyle.disableStyle,
         styles,
+        {height:containerHeight}
       ]}
       onPress={onPressBtn}>
       <Text
-        style={[
-          {
-            fontSize: rMS(16),
-            // lineHeight: 22,
-            fontWeight: '700',
-            color: colors.fontLight,
-          },
-          disabledBtn && {color: colors.fontLight},
-        ]}>
+        style={[innerStyle.fontText, disabledBtn && {color: colors.fontLight}]}>
         {children}
       </Text>
     </TouchableOpacity>
-    // </View>
   );
 }
 
 export default CustomButton;
+
+const innerStyle = StyleSheet.create({
+  container: {
+    // paddingVertical: rMS(10),
+    borderRadius: 30,
+    backgroundColor: colors.themePrimary,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  fontText: {
+    fontSize: rMS(16),
+    fontWeight: '700',
+    color: colors.fontLight,
+  },
+  disableStyle: {
+    backgroundColor: '#E5E6EB',
+  },
+});

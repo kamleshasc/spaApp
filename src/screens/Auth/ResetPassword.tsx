@@ -110,7 +110,7 @@ function ResetPassword({navigation, route}: ResetPasswordProps) {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <UI.Header
         onPress={() => {
           navigation.goBack();
@@ -152,7 +152,7 @@ function ResetPassword({navigation, route}: ResetPasswordProps) {
         message={message}
         onDismissSnackBar={() => setMessageStatus(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

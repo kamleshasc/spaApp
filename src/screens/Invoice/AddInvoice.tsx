@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
 import {SCREEN, UI} from '../../components';
@@ -285,7 +285,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.headerContainer}>
@@ -312,6 +312,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
             value={client.value}
             isError={!client.isValid}
             errorMsg={client.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={usersData.map(val => {
@@ -327,6 +328,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
             value={employee.value}
             isError={!employee.isValid}
             errorMsg={employee.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={branchData}
@@ -337,6 +339,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
             value={branch.value}
             isError={!branch.isValid}
             errorMsg={branch.message}
+            styles={styles.dropdownStyle}
           />
           <SCREEN.DropDownWithList
             selectedServices={selectedServices}
@@ -411,7 +414,7 @@ function AddInvoice({navigation}: AddInvoiceProp) {
         visible={showError}
         onDismissSnackBar={() => setShowError(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -442,7 +445,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
   },
@@ -491,5 +494,15 @@ const styles = StyleSheet.create({
   itemFont: {
     fontSize: 14,
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

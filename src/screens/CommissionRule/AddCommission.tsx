@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {UI} from '../../components';
 import {criteriaData} from '../../config/data';
@@ -12,6 +12,7 @@ import {
 } from '../../redux/Action/commissionRuleAction';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigation/RootNavigation';
+import useDeviceType from '../../hooks/useDeviceType';
 
 interface objValues {
   value: any;
@@ -53,6 +54,8 @@ function AddCommission({navigation}: addCommissionProp) {
   const {errorMsg, isError, isLoader} = useAppSelector(
     state => state.commissionRule.addCommission,
   );
+  const {isTablet} = useDeviceType();
+  const marginTop = isTablet ? rMS(8) : rMS(5);
 
   React.useEffect(() => {
     dispatchAddCommission(fetchGetUser());
@@ -177,7 +180,7 @@ function AddCommission({navigation}: addCommissionProp) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.headerContainer}>
@@ -202,6 +205,7 @@ function AddCommission({navigation}: addCommissionProp) {
             value={criteria.value}
             isError={!criteria.isValid}
             errorMsg={criteria.message}
+            styles={styles.dropdownStyle}
           />
 
           <UI.DropDownMultiSelect
@@ -227,6 +231,7 @@ function AddCommission({navigation}: addCommissionProp) {
               keyboardType: 'number-pad',
               onChangeText: (value: any) => inputChangedHandler('value', value),
             }}
+            stylesInput={[{marginTop}]} 
             isError={!value.isValid}
             errorMsg={value.message}
           />
@@ -243,6 +248,7 @@ function AddCommission({navigation}: addCommissionProp) {
             isError={!createdBy?.isValid}
             errorMsg={createdBy?.message}
             onChange={value => inputChangedHandler('createdBy', value.value)}
+            styles={styles.dropdownStyle}
           />
 
           <View style={styles.btnContainer}>
@@ -259,7 +265,7 @@ function AddCommission({navigation}: addCommissionProp) {
         message={errorMessage}
         onDismissSnackBar={() => setShowError(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -284,8 +290,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

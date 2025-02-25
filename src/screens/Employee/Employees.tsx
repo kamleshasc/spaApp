@@ -100,7 +100,7 @@ function Employees({navigation}: Props) {
   }
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <ScrollView
         style={style.fullScreen}
         horizontal={true}
@@ -135,7 +135,7 @@ function Employees({navigation}: Props) {
         message={errorMsg}
         onDismissSnackBar={() => setShowError(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

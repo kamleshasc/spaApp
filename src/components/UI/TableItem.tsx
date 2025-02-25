@@ -18,6 +18,8 @@ interface TableItemProps {
   link?: string;
   onLinkPress?: () => void;
   showImg?: boolean;
+  showCheck?: boolean;
+  tickedStatus?: boolean;
 }
 
 const TableItem: React.FC<TableItemProps> = ({
@@ -27,6 +29,8 @@ const TableItem: React.FC<TableItemProps> = ({
   link,
   showImg,
   onLinkPress,
+  showCheck,
+  tickedStatus,
 }) => {
   const {width, height} = useWindowDimensions();
   return (
@@ -35,6 +39,23 @@ const TableItem: React.FC<TableItemProps> = ({
         styles.container,
         {width: width > 820 || height > 820 ? rS(83) : rS(100)},
       ]}>
+      {showCheck && (
+        <View
+          style={{
+            height: rMS(20),
+            width: rMS(20),
+            borderRadius: rMS(2),
+            borderWidth: rMS(1.5),
+            borderColor: colors.themePrimary,
+            padding: rMS(2),
+          }}>
+          <View
+            style={[
+              {height: '100%', width: '100%', borderRadius: rMS(2)},
+              tickedStatus && {backgroundColor: colors.themePrimary},
+            ]}></View>
+        </View>
+      )}
       {showImg && (
         <View style={[styles.imageContainer]}>
           <Image
@@ -49,7 +70,7 @@ const TableItem: React.FC<TableItemProps> = ({
       )}
       {bunchData && bunchData?.length > 1 ? (
         bunchData.map((value, index) => (
-          <View style={styles.textListContainer}>
+          <View style={styles.textListContainer} key={index}>
             <Text style={[styles.text, styles.textListItem]} key={index}>
               {`${value}`}
             </Text>

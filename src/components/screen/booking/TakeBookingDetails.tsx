@@ -1,12 +1,18 @@
 import React from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import colors from '../../../config/colors';
 import {UI} from '../..';
-import Icon from 'react-native-vector-icons/AntDesign';
-import TimePickerUI from '../../UI/TimePickerUI';
 import {
+  addDurationToTime,
   DateFormateMMMMDDYYY,
-  formatAndAddMinutes,
+  generateTimeSlots,
 } from '../../../config/helper';
 import {HelperText} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../../../hooks/storeHook';
@@ -25,6 +31,9 @@ interface bookingInputs {
   startTime: inputString;
   endTime: inputString;
   employeeId: inputString;
+  selectedId: inputString;
+  selectedParentId: inputString;
+  duration: inputString;
 }
 
 const BookingIntialValue: bookingInputs = {
@@ -34,6 +43,9 @@ const BookingIntialValue: bookingInputs = {
   startTime: {value: ''},
   endTime: {value: ''},
   employeeId: {value: ''},
+  selectedId: {value: ''},
+  selectedParentId: {value: ''},
+  duration: {value: ''},
 };
 
 interface TakeBookingDetailsProps {
@@ -51,7 +63,6 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
   selectedDate,
   selectedDetails,
 }) => {
-  const [showTime, setShowTime] = React.useState(false);
   const [inputs, setInputs] = React.useState<bookingInputs>(BookingIntialValue);
   const [errorStatus, setErrorStatus] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<any>('');
@@ -59,6 +70,11 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
   const {data: employeeData} = useAppSelector(
     state => state.service.getEmployeeByServiceId,
   );
+  const {data: subServiceData} = useAppSelector(
+    state => state.service.getSubService,
+  );
+
+  const timeSlot = generateTimeSlots('09:00', '18:00');
 
   const inputChangedHandler = (inputIdentifer: string, inputValue: any) => {
     setInputs(curInputs => {
@@ -73,28 +89,20 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
     }
   };
 
-  const handleTimeChange = (value: Date) => {
-    let splitDuration = selectedDetails.duration.split(' ')[0];
-    let time = formatAndAddMinutes(value, splitDuration);
-
-    inputChangedHandler('startTime', time.originalDateFormatted);
-    inputChangedHandler('endTime', time.newDateFormatted);
-    setShowTime(false);
-  };
-
   const handleBookings = async () => {
     try {
       let body = {
         date: selectedDate,
-        serviceId: selectedDetails.id,
-        parentId: selectedDetails.parentId,
-        name: inputs.name.value,
-        mail: inputs.mail.value,
-        phone: inputs.phone.value,
-        serviceStartTime: inputs.startTime.value,
-        serviceEndTime: inputs.endTime.value,
-        expertId: inputs.employeeId.value,
+        serviceId: inputs?.selectedId?.value,
+        parentId: inputs?.selectedParentId?.value,
+        name: inputs?.name?.value,
+        mail: inputs?.mail?.value,
+        phone: inputs?.phone?.value,
+        serviceStartTime: inputs?.startTime?.value,
+        serviceEndTime: inputs?.endTime?.value,
+        expertId: inputs?.employeeId?.value,
       };
+
       const result = await dispatchBookingDetails(newBooking(body)).unwrap();
       if (result) {
         okayPressed();
@@ -107,50 +115,48 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
   };
 
   const checkValidation = () => {
-    const reg =
-      /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|international|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-    const number = /^\d+$/;
+    try {
+      const reg =
+        /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|international|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+      const number = /^\d+$/;
 
-    if (inputs.name.value.trim().length <= 0) {
-      setErrorStatus(true);
-      setErrorMessage('All fields are required.');
-      return;
-    } else if (inputs.mail.value.trim().length <= 0) {
-      setErrorStatus(true);
-      setErrorMessage('All fields are required.');
-      return;
-    } else if (
-      inputs.mail.value.trim().length > 0 &&
-      !reg.test(inputs.mail.value)
-    ) {
-      setErrorStatus(true);
-      setErrorMessage('Invalid Email.');
-    } else if (inputs.phone.value.trim().length <= 0) {
-      setErrorStatus(true);
-      setErrorMessage('All fields are required.');
-      return;
-    } else if (
-      inputs.phone.value.trim().length < 10 ||
-      !number.test(inputs.phone.value)
-    ) {
-      setErrorStatus(true);
-      setErrorMessage('Phone no is invalid.');
-    } else if (inputs.startTime.value.trim().length <= 0) {
-      setErrorStatus(true);
-      setErrorMessage('All fields are required.');
-      return;
-    } else if (inputs.employeeId.value.trim().length <= 0) {
-      setErrorStatus(true);
-      setErrorMessage('Employee field is required.');
-      return;
-    } else {
-      // let body = {
-      //   date: selectedDate,
-      //   name: inputs.name.value,
-      //   mail: inputs.mail.value,
-      //   phone: inputs.phone.value,
-      // };
-      handleBookings();
+      if (inputs?.name?.value?.trim().length <= 0) {
+        setErrorStatus(true);
+        setErrorMessage('All fields are required.');
+        return;
+      } else if (inputs?.mail?.value?.trim().length <= 0) {
+        setErrorStatus(true);
+        setErrorMessage('All fields are required.');
+        return;
+      } else if (
+        inputs?.mail?.value?.trim().length > 0 &&
+        !reg.test(inputs?.mail?.value)
+      ) {
+        setErrorStatus(true);
+        setErrorMessage('Invalid Email.');
+      } else if (inputs?.phone?.value?.trim().length <= 0) {
+        setErrorStatus(true);
+        setErrorMessage('All fields are required.');
+        return;
+      } else if (
+        inputs?.phone?.value?.trim().length < 10 ||
+        !number.test(inputs?.phone?.value)
+      ) {
+        setErrorStatus(true);
+        setErrorMessage('Phone no is invalid.');
+      } else if (inputs?.startTime?.value?.trim().length <= 0) {
+        setErrorStatus(true);
+        setErrorMessage('All fields are required.');
+        return;
+      } else if (inputs?.employeeId?.value?.trim().length <= 0) {
+        setErrorStatus(true);
+        setErrorMessage('Employee field is required.');
+        return;
+      } else {
+        handleBookings();
+      }
+    } catch (error) {
+      console.log(error, 'error');
     }
   };
 
@@ -160,10 +166,10 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
     setInputs(BookingIntialValue);
   };
 
-  const getEmployeeData = async () => {
+  const getEmployeeData = async (id: any) => {
     try {
       await dispatchBookingDetails(
-        getEmployeeByServiceId({serviceId: selectedDetails.parentId}),
+        getEmployeeByServiceId({serviceId: id}),
       ).unwrap();
     } catch (error) {
       setErrorStatus(true);
@@ -171,11 +177,27 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
     }
   };
 
-  React.useEffect(() => {
-    if (selectedDetails) {
-      getEmployeeData();
-    }
-  }, [selectedDetails]);
+  const handleOnChangeTime = (value: {value: string}) => {
+    let splitDuration = inputs.duration.value.split(' ')[0];
+    let time = addDurationToTime(value.value, Number(splitDuration));
+
+    inputChangedHandler('startTime', time.originalTime);
+    inputChangedHandler('endTime', time.updatedTime);
+  };
+
+  const handleOnchangeService = (value: any) => {
+    let indexSubService = subServiceData.findIndex(
+      (s_data: any) => s_data.id == value.value,
+    );
+
+    inputChangedHandler('selectedId', subServiceData[indexSubService]?.id);
+    inputChangedHandler(
+      'selectedParentId',
+      subServiceData[indexSubService]?.parentId,
+    );
+    inputChangedHandler('duration', subServiceData[indexSubService].duration);
+    getEmployeeData(subServiceData[indexSubService]?.parentId);
+  };
 
   return (
     <View style={styles.root}>
@@ -188,13 +210,17 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
 
             <View style={styles.columnRowContainer}>
               <View style={styles.fullScreen}>
-                <UI.Input
-                  disableInput={true}
-                  textInputConfig={{
-                    placeholder: 'Service Name',
-                    value: selectedDetails?.name,
-                  }}
-                  stylesInput={styles.columnRowTextInputLeft}
+                <UI.DropDown
+                  data={subServiceData.map(value => {
+                    return {
+                      label: value.name,
+                      value: value.id,
+                    };
+                  })}
+                  onChange={(value: any) => handleOnchangeService(value)}
+                  placeholder={'Select Service'}
+                  value={inputs?.selectedId?.value}
+                  styles={[styles.dropdownStyle, {marginRight: rMS(5)}]}
                 />
               </View>
               <View style={styles.fullScreen}>
@@ -229,17 +255,14 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
             <View style={styles.columnRowContainer}>
               <View style={styles.fullScreen}>
                 <UI.Input
-                  showIcon={false}
-                  iconPressed={() => setShowTime(true)}
                   textInputConfig={{
                     onChangeText: (value: any) =>
                       inputChangedHandler('name', value),
                     placeholder: 'Enter Full Name',
                     value: inputs?.name?.value,
                   }}
-                  stylesInput={styles.columnRowTextInputFull}>
-                  <Icon name="calendar" size={28} color="black" />
-                </UI.Input>
+                  stylesInput={styles.columnRowTextInputFull}
+                />
               </View>
             </View>
             <View style={styles.columnRowContainer}>
@@ -259,7 +282,7 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                   textInputConfig={{
                     onChangeText: (value: any) =>
                       inputChangedHandler('phone', value),
-                    placeholder: 'Enter Phone No.',
+                    placeholder: 'Enter Phone No',
                     keyboardType: 'decimal-pad',
                     value: inputs?.phone?.value,
                     maxLength: 10,
@@ -274,23 +297,25 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
                   disableInput={true}
                   textInputConfig={{
                     placeholder: 'Duration',
-                    value: String(selectedDetails?.duration),
+                    value: inputs?.duration?.value,
                   }}
                   stylesInput={styles.columnRowTextInputLeft}
                 />
               </View>
               <View style={styles.fullScreen}>
-                <UI.Input
-                  iconPressed={() => setShowTime(true)}
-                  disableInput={true}
-                  showIcon={true}
-                  textInputConfig={{
-                    placeholder: 'Select Time',
-                    value: inputs?.startTime?.value,
-                  }}
-                  stylesInput={styles.columnRowTextInputRight}>
-                  <Icon name="calendar" size={28} color="black" />
-                </UI.Input>
+                <UI.DropDown
+                  data={timeSlot.map(value => {
+                    return {
+                      label: value.label,
+                      value: value.value,
+                    };
+                  })}
+                  onChange={(value: any) => handleOnChangeTime(value)}
+                  placeholder={'Select Time'}
+                  value={inputs?.startTime?.value}
+                  styles={styles.dropdownStyle}
+                />
+                {/* </View> */}
               </View>
             </View>
             {errorStatus && (
@@ -305,14 +330,16 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
             )}
             <View style={styles.btnContainer}>
               <TouchableOpacity
-                style={styles.cancelBtnContainer}
+                style={[styles.cancelBtnContainer]}
+                // disabled={isLoader}
                 onPress={() => {
                   cancelPressed(), clearAll();
                 }}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.bookBtnContainer}
+                style={[styles.bookBtnContainer]}
+                // disabled={isLoader}
                 onPress={checkValidation}>
                 <Text style={styles.bookBtnText}>Book</Text>
               </TouchableOpacity>
@@ -320,14 +347,6 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
           </View>
         </View>
       </Modal>
-
-      {showTime && (
-        <TimePickerUI
-          dateValue={selectedDate}
-          handleCancelPressed={() => setShowTime(false)}
-          handleOkayPressed={value => handleTimeChange(value)}
-        />
-      )}
     </View>
   );
 };
@@ -364,7 +383,7 @@ const styles = StyleSheet.create({
     borderColor: colors.themePrimary,
   },
   headerText: {
-    fontSize: 18,
+    fontSize: rMS(14),
     fontWeight: '600',
     color: colors.themePrimary,
   },
@@ -397,27 +416,29 @@ const styles = StyleSheet.create({
   cancelBtnContainer: {
     borderColor: colors.themePrimary,
     borderWidth: 1,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    paddingVertical: 6,
+    paddingHorizontal: rMS(20),
+    borderRadius: rMS(8),
+    paddingVertical: rMS(6),
     alignItems: 'center',
     alignSelf: 'center',
     marginRight: 15,
   },
   cancelBtnText: {
-    fontSize: 14,
+    fontSize: rMS(13),
     color: colors.themePrimary,
+    fontWeight: '500',
   },
   bookBtnContainer: {
     backgroundColor: colors.themePrimary,
-    paddingHorizontal: 35,
-    borderRadius: 8,
-    paddingVertical: 6,
+    paddingHorizontal: rMS(35),
+    borderRadius: rMS(8),
+    paddingVertical: rMS(6),
     alignItems: 'center',
     alignSelf: 'center',
   },
   bookBtnText: {
-    fontSize: 14,
+    fontSize: rMS(14),
+    fontWeight: '600',
     color: '#fff',
   },
   errorContainer: {
@@ -436,5 +457,27 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginHorizontal: 0,
     paddingVertical: rMS(6),
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(12),
+      },
+      android: {
+        paddingLeft: rMS(14),
+      },
+    }),
+  },
+  dropdownStyle: {
+    marginBottom: 0,
+    marginHorizontal: 0,
+    paddingVertical: rMS(3),
+    paddingRight: 5,
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

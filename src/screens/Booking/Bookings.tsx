@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   FlatList,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -24,8 +25,14 @@ import {
   DateFormateMMMMDDYYY,
   DateToYYYYMMDD,
   getCurrentDateZone,
+  getDateInNewYorkTimeZone,
+  getDateInNewYorkTimeZoneMoment,
 } from '../../config/helper';
-import {fetchBookingDetails} from '../../redux/Action/bookingAction';
+import {
+  deleteBoooking,
+  fetchBookingDetails,
+} from '../../redux/Action/bookingAction';
+import CancelBookingModal from '../../components/UI/CancelBookingModal';
 
 type BookingType = CompositeScreenProps<
   DrawerScreenProps<DrawerNavigationParamList, 'Bookings'>,
@@ -39,7 +46,9 @@ const initialDropDownValue: dropDownValue = {
   value: '',
   label: '',
 };
-const initialSelectedDate = getCurrentDateZone();
+// const initialSelectedDate = getCurrentDateZone();
+// const initialSelectedDate = getDateInNewYorkTimeZone()
+const initialSelectedDate = getDateInNewYorkTimeZoneMoment();
 
 function Bookings({navigation}: BookingType) {
   const {width, height} = useWindowDimensions();
@@ -53,6 +62,12 @@ function Bookings({navigation}: BookingType) {
   const {data: SubServiceData, isLoader} = useAppSelector(
     state => state.service.getSubService,
   );
+  const {isLoader: delteBookingLoader} = useAppSelector(
+    state => state.booking.deleteBooking,
+  );
+  const [cancelBookingModalStatus, setCancelBookingModalStatus] =
+    React.useState<boolean>(false);
+  const [bookingDetails, setBookingDetails] = React.useState<any>();
 
   const {
     data,
@@ -61,7 +76,7 @@ function Bookings({navigation}: BookingType) {
     errorMsg,
   } = useAppSelector(state => state.booking.getBooking);
   const [errorMessage, setErrorMessage] = React.useState<any>('');
-  const [errorStatus, setErrorStatus] = React.useState(false);
+  const [errorStatus, setErrorStatus] = React.useState<boolean>(false);
   const [selectedAllService, setSelectedAllService] = React.useState<any>();
 
   React.useLayoutEffect(() => {
@@ -81,9 +96,9 @@ function Bookings({navigation}: BookingType) {
   }, []);
 
   React.useEffect(() => {
-    if (selectedService.value.length > 0) {
+    if (selectedService?.value?.length > 0) {
       fetchBookings();
-      setServiceDetails(selectedService.value);
+      setServiceDetails(selectedService?.value);
     }
   }, [selectedService, selectedDate]);
 
@@ -97,12 +112,12 @@ function Bookings({navigation}: BookingType) {
   const getServiceType = async () => {
     try {
       const result = await bookingDispatch(fetchSubService()).unwrap();
-      if (result && result.length && selectedService.value.length <= 0) {
-        let body = {
-          label: result[0].name,
-          value: result[0].id,
+      if (result && result?.length && selectedService?.value?.length <= 0) {
+        let defaultService = {
+          label: 'All',
+          value: 'all',
         };
-        setSelectedService(body);
+        setSelectedService(defaultService);
       }
     } catch (error) {
       setErrorStatus(true);
@@ -111,7 +126,11 @@ function Bookings({navigation}: BookingType) {
   };
 
   const setServiceDetails = (id: string) => {
-    let filterValue = SubServiceData.find(value => value.id == id);
+    if (id === 'all') {
+      setSelectedAllService(SubServiceData);
+      return;
+    }
+    let filterValue = SubServiceData.find(value => value?.id == id);
     setSelectedAllService(filterValue);
   };
 
@@ -121,14 +140,16 @@ function Bookings({navigation}: BookingType) {
 
   const handleDateChange = (value: any) => {
     setSelectedDate(value);
-    setShowDate(false);
+    setTimeout(() => {
+      setShowDate(false);
+    }, 1000);
   };
 
   const fetchBookings = async () => {
     try {
       let date = DateToYYYYMMDD(selectedDate);
       await bookingDispatch(
-        fetchBookingDetails({serviceId: selectedService.value, date}),
+        fetchBookingDetails({serviceId: selectedService?.value, date}),
       ).unwrap();
     } catch (error) {
       setErrorStatus(true);
@@ -136,14 +157,23 @@ function Bookings({navigation}: BookingType) {
     }
   };
 
+  const handleShowCancelBookingModal = (value: any) => {
+    setCancelBookingModalStatus(true);
+    setBookingDetails(value);
+  };
+
   const renderItem = ({item, index}: any) => {
     return (
       <SCREEN.BookingTimeList
+        cancelPressed={() => handleShowCancelBookingModal(item)}
         startTime={item?.serviceStartTime}
         endTime={item?.serviceEndTime}
         expertName={item?.expertName}
         firstValue={index == 0}
-        lastValue={index + 1 == data.length}
+        lastValue={index + 1 == data?.length}
+        itemColour={item?.itemColour}
+        isDeleted={item?.isDeleted}
+        customerName={item?.name}
       />
     );
   };
@@ -152,9 +182,34 @@ function Bookings({navigation}: BookingType) {
     return <UI.Loader />;
   }
 
+  const handleCancelBookingModal = () => {
+    setCancelBookingModalStatus(false);
+    setBookingDetails({});
+  };
+  const handleOkayBookingModal = async (id: string) => {
+    try {
+      await bookingDispatch(deleteBoooking({id: id})).unwrap();
+      setCancelBookingModalStatus(false);
+      fetchBookings();
+    } catch (error) {
+      setErrorStatus(true);
+      setErrorMessage(error?.toString());
+    }
+  };
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.fullScreen}>
+        {cancelBookingModalStatus && (
+          <CancelBookingModal
+            btnStatus={delteBookingLoader}
+            bookingId={bookingDetails?._id}
+            customerName={bookingDetails?.name}
+            date={bookingDetails.date.split('T')[0]}
+            handleCancelPressed={() => handleCancelBookingModal()}
+            handleOkayPressed={(id: string) => handleOkayBookingModal(id)}
+            time={`${bookingDetails?.serviceStartTime} - ${bookingDetails?.serviceEndTime}`}
+          />
+        )}
         {showDate && (
           <UI.DatePick
             options={{
@@ -185,19 +240,22 @@ function Bookings({navigation}: BookingType) {
                 style={[
                   styles.rootBookingContainer,
                   {
-                    height: rMS(100, height >= 800 && width > 600 ? 0.7 : 3),
+                    height: rMS(100, height >= 750 && width > 600 ? 0.7 : 3),
                   },
                 ]}>
                 <View style={styles.serviceConatiner}>
                   <Text style={styles.serviceText}>Service Type:</Text>
                   <View style={styles.fullScreen}>
                     <UI.DropDown
-                      data={SubServiceData.map(value => {
-                        return {
-                          label: value.name,
-                          value: value.id,
-                        };
-                      })}
+                      data={[
+                        {label: 'All', value: 'all'},
+                        ...SubServiceData.map(value => {
+                          return {
+                            label: value.name,
+                            value: value.id,
+                          };
+                        }),
+                      ]}
                       onChange={(value: any) => handleOnChangeService(value)}
                       placeholder={'Select Service'}
                       value={selectedService.value}
@@ -337,6 +395,14 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginHorizontal: 0,
     paddingVertical: rMS(3),
-    paddingRight: 5,
+    paddingRight: rMS(10),
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(12),
+      },
+      android: {
+        paddingLeft: rMS(14),
+      },
+    }),
   },
 });

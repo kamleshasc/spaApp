@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
@@ -33,7 +33,7 @@ function Profile({navigation}: SettingsProps) {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <View style={styles.subContainer}>
         <View style={styles.profilePicContainer}>
           <View
@@ -77,7 +77,7 @@ function Profile({navigation}: SettingsProps) {
         />
         <SCREEN.ProfileOption name={'Logout'} onPress={() => logoutProfile()} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -100,8 +100,18 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    elevation: 5,
     backgroundColor: colors.primary,
+    ...Platform.select({
+      android: {
+        elevation: rMS(2),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(2),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   profilePicSubContainer: {
     height: rMS(100),

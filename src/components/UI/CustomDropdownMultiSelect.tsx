@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import colors from '../../config/colors';
 import {HelperText} from 'react-native-paper';
 import {rMS} from '../../config/responsive';
+import useDeviceType from '../../hooks/useDeviceType';
 
 interface Option {
   label: string;
@@ -28,6 +29,9 @@ const CustomDropdownMultiSelect: React.FC<Props> = ({
   isError,
   errorMsg,
 }) => {
+  const {isTablet} = useDeviceType();
+  const height = isTablet ? 70 : 50;
+
   const renderItem = (item: {label: any}) => {
     return (
       <View style={styles.item}>
@@ -40,7 +44,7 @@ const CustomDropdownMultiSelect: React.FC<Props> = ({
     <>
       <View style={styles.container}>
         <MultiSelect
-          style={styles.dropdown}
+          style={[styles.dropdown,{height}]}
           iconColor="black"
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
@@ -60,7 +64,7 @@ const CustomDropdownMultiSelect: React.FC<Props> = ({
                 onPress={() => unSelect && unSelect(item)}>
                 <View style={styles.selectedStyle}>
                   <Text style={styles.textSelectedStyle}>{item.label}</Text>
-                  <Icon color="black" name="delete" size={17} />
+                  <Icon color="black" name="delete" size={rMS(15)} />
                 </View>
               </TouchableOpacity>
             );
@@ -88,21 +92,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 10,
-    paddingLeft: 14,
-    paddingRight: 5,
+    paddingHorizontal:rMS(12)
   },
   placeholderStyle: {
-    fontSize: rMS(14),
-    fontWeight: '600',
+    fontSize: rMS(13),
+    fontWeight: '500',
+    color: colors.placeholder,
   },
   selectedTextStyle: {
     fontSize: rMS(14),
-    fontWeight: '600',
+    fontWeight: '400',
     color: colors.fontDark,
   },
   iconStyle: {
-    width: 40,
-    height: 40,
+    width: rMS(30),
+    height: rMS(30),
   },
   item: {
     paddingVertical: 12,
@@ -121,15 +125,16 @@ const styles = StyleSheet.create({
   textSelectedStyle: {
     backgroundColor: 'white',
     marginRight: 5,
-    fontSize: 16,
+    fontSize: rMS(13),
+    color:colors.fontDark
   },
   renderContainer: {
     backgroundColor: 'white',
     shadowColor: '#000',
     marginTop: 8,
     marginRight: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: rMS(12),
+    paddingVertical: rMS(8),
     shadowOffset: {
       width: 0,
       height: 1,

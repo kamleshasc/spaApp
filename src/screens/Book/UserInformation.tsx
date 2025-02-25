@@ -1,4 +1,4 @@
-import {Image, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, Platform, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import colors from '../../config/colors';
 import {UI} from '../../components';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
@@ -56,8 +56,7 @@ function UserInformation({navigation, route}: UserInformationProp) {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.fullscreen}>
+    <View style={styles.root}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <UI.Header
             onPress={() => navigation.goBack()}
@@ -109,10 +108,7 @@ function UserInformation({navigation, route}: UserInformationProp) {
               onChange={(value: any) => handleService(value?.value)}
               placeholder={'Select Service'}
               value={selectedService?.serviceId || ''}
-              styles={{
-                paddingVertical: rMS(8),
-                paddingLeft: 15,
-              }}
+              styles={styles.inputStyle}
             />
             <UI.Input
               disableInput={true}
@@ -141,8 +137,7 @@ function UserInformation({navigation, route}: UserInformationProp) {
             </View>
           </View>
         </ScrollView>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -177,4 +172,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: rMS(20),
   },
+  inputStyle:{
+    ...Platform.select({
+      ios:{
+        paddingLeft: rMS(13),
+      },
+      android:{
+        paddingLeft: rMS(15),
+      }
+    })
+  }
 });

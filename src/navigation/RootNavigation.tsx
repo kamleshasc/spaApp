@@ -18,6 +18,7 @@ import {UI} from '../components';
 import {useAppDispatch} from '../hooks/storeHook';
 import {loadUserScreens, userDetails} from '../redux/Action/authAction';
 import {CustomerData} from '../screens/Customer/Customer';
+import {GetBookingsListData} from '../screens/Payments/GetBookingsList';
 
 interface BookingTimeLine {
   date: any;
@@ -61,6 +62,8 @@ export type RootStackParamList = {
   PrivacyPolicy: undefined;
   Forgot: undefined;
   ResetPassword: {userId: string};
+  PaymentMethod: undefined;
+  SalesReportPdf: {startDate: string; endDate: string; s_type: string};
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -88,7 +91,6 @@ function RootNavigation() {
         setLoadingStatus(false);
         return;
       }
-      // console.log(value, 'result');
     } catch (error) {
       console.log(error);
     }
@@ -103,14 +105,19 @@ function RootNavigation() {
       screenOptions={{
         headerShown: false,
         headerStyle: {
+          height: 55,
           backgroundColor: colors.primary,
           borderBottomWidth: 1,
           borderBottomColor: colors.themePrimary,
         },
         headerTitleStyle: {
+          fontSize: 21,
+          fontWeight: '600',
           color: colors.themePrimary,
         },
+        headerTitleAlign: 'left',
         headerTintColor: colors.themePrimary,
+        headerBackTitleVisible: false,
       }}>
       {loadingStatus && <Stack.Screen name="Loading" component={UI.Loader} />}
       <Stack.Screen
@@ -227,6 +234,15 @@ function RootNavigation() {
       <Stack.Screen
         name="ResetPassword"
         component={SCREENS.AUTHSCREENS.resetPassword}
+      />
+      <Stack.Screen
+        name="PaymentMethod"
+        component={SCREENS.PAYMENTSCREENS.paymentMethods}
+      />
+      <Stack.Screen
+        name="SalesReportPdf"
+        options={{headerShown: true, title: 'Report PDF'}}
+        component={SCREENS.REPORTSCREENS.salesReportPdf}
       />
     </Stack.Navigator>
   );

@@ -11,6 +11,8 @@ import SERVICE from './Service';
 import PROFILESCREENS from './Profile';
 import AUTHSCREENS from './Auth';
 import EMPLOYEESCREENS from './Employee';
+import PAYMENTSCREENS from './Payments';
+import REPORTSCREENS from './Report';
 
 const SCREENS = {
   CLIENT,
@@ -26,6 +28,8 @@ const SCREENS = {
   BOOKSCREENS,
   PROFILESCREENS,
   AUTHSCREENS,
+  PAYMENTSCREENS,
+  REPORTSCREENS
 };
 
 export default SCREENS;

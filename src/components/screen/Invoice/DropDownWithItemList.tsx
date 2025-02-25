@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import colors from '../../../config/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {HelperText} from 'react-native-paper';
 import {rMS} from '../../../config/responsive';
+import useDeviceType from '../../../hooks/useDeviceType';
 type Service = {
   name: string;
   duration: string;
@@ -34,6 +35,9 @@ function DropDownWithItemList({
   errorMsg,
 }: DropDownWithItemListProps) {
   const [dropDownValue, setDropDownValue] = React.useState<string>('');
+  const {isTablet} = useDeviceType();
+  const height = isTablet ? 70 : 50;
+
   const renderItem = (item: DataItem) => {
     return (
       <View style={styles.itemContainer}>
@@ -68,12 +72,12 @@ function DropDownWithItemList({
             <View style={styles.tableItemQuestionSecondType}>
               <Text style={styles.tableItemQuestionText}>Price:</Text>
               <Text style={styles.tableItemValueText} numberOfLines={1}>
-                {serviceValue?.price.toFixed(2)}
+                {`$ ${serviceValue?.price.toFixed(2)}`}
               </Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => deleteItem(selectedIndex)}>
-            <Icon name="delete" size={30} color="red" />
+            <Icon name="delete" size={rMS(22)} color="red" />
           </TouchableOpacity>
         </View>
       </View>
@@ -95,9 +99,10 @@ function DropDownWithItemList({
     <>
       <View style={styles.container}>
         <Dropdown
-          style={[styles.dropdown]}
+          style={[styles.dropdown,{height}]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
+          itemTextStyle={styles.itemTextStyle}
           iconStyle={styles.iconStyle}
           data={data}
           maxHeight={150}
@@ -155,16 +160,24 @@ const styles = StyleSheet.create({
     flex: 0.7,
   },
   placeholderStyle: {
-    fontSize: rMS(14),
-    fontWeight: '600',
+    fontSize: rMS(13),
+    fontWeight: '500',
+    color:colors.placeholder
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: rMS(14),
+    fontWeight: '500',
+    color: colors.fontDark,
+  },
+  itemTextStyle:{
+    // paddingVertical:10,
+    fontSize: rMS(14),
+    fontWeight: '500',
     color: colors.fontDark,
   },
   iconStyle: {
-    width: 40,
-    height: 40,
+    width: rMS(30),
+    height: rMS(30),
   },
   itemContainer: {
     paddingVertical: 12,
@@ -176,20 +189,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   itemFont: {
-    fontSize: 14,
-    color: colors.fontDark,
+    fontSize: rMS(14),
+    color: colors.fontDark, 
+    fontWeight:'400'
   },
   btnContainer: {
-    paddingVertical: 15,
-    borderRadius: 10,
+    paddingVertical: rMS(15),
+    borderRadius: rMS(10),
     backgroundColor: colors.themePrimary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   btnText: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '500',
+    fontSize: rMS(13),
+    fontWeight:'bold',
     color: colors.fontLight,
   },
   tableListContainer: {
@@ -197,10 +210,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 22,
     backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 5,
     shadowColor: 'black',
     padding: 10,
     flex: 1,
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   tableListSubContainer: {
     flexDirection: 'row',
@@ -216,13 +239,13 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   tableItemQuestionText: {
-    fontSize: rMS(12),
+    fontSize: rMS(13),
     fontWeight: '600',
     color: colors.fontDark,
     marginRight: 2,
   },
   tableItemValueText: {
-    fontSize: rMS(11),
+    fontSize: rMS(12),
     fontWeight: '500',
     color: colors.fontDark,
   },

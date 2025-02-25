@@ -6,7 +6,7 @@ import {rMS} from '../../config/responsive';
 
 interface DatePickerUIProps {
   handleCancelPressed: () => void;
-  handleOkayPressed: (date: Date) => void;
+  handleOkayPressed: (date: any) => void;
   dateValue: Date;
   options?: any;
 }
@@ -16,10 +16,10 @@ const DatePickerUI: React.FC<DatePickerUIProps> = ({
   handleOkayPressed,
   dateValue,
   options,
-}) => {
+}) => {  
   const [date, setDate] = useState(dateValue);
 
-  const handleDateChange = (newDate: Date) => {
+  const handleDateChange = (newDate: any) => {
     setDate(newDate);
   };
 

@@ -10,7 +10,7 @@ import RootNavigation, {
 } from './src/navigation/RootNavigation';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
-import {StatusBar} from 'react-native';
+import {LogBox, StatusBar} from 'react-native';
 import colors from './src/config/colors';
 
 export const navigationRef =
@@ -22,6 +22,8 @@ export function navigate(
 ) {
   navigationRef.current?.dispatch(StackActions.replace(name, params));
 }
+
+LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']);
 
 export function resetTo(
   name: keyof RootStackParamList,

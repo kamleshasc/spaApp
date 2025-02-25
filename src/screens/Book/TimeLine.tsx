@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Modal,
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -19,7 +20,6 @@ import {
   DateFormateMMMMDDYYY,
   formatAndAddMinutes,
   generateTimeSlots,
-  getCurrentDateZone,
 } from '../../config/helper';
 import {RootStackParamList} from '../../navigation/RootNavigation';
 import {CompositeScreenProps} from '@react-navigation/native';
@@ -38,36 +38,12 @@ import moment from 'moment';
 import Timetable from 'react-native-calendar-timetable';
 import {clearGetBookingByExpertIdErrorMsg} from '../../redux/Reducer/bookingReducer/getBookinByExpertIdSlice';
 
-const bookings = [
-  {
-    startTime: '09:00',
-    endTime: '10:00',
-    service: 'Service v1',
-  },
-  {
-    startTime: '09:50',
-    endTime: '10:00',
-    service: 'Service v2',
-  },
-  {
-    startTime: '09:00',
-    endTime: '10:00',
-    service: 'Service v2',
-  },
-  {
-    startTime: '11:00',
-    endTime: '12:00',
-    service: 'Service v2',
-  },
-];
-
 type BookingProps = CompositeScreenProps<
   StackScreenProps<RootStackParamList, 'BookingTimeLine'>,
   DrawerScreenProps<DrawerNavigationParamList>
 >;
 
 function YourComponent({style, item, dayIndex, daysTotal, index}: any) {
-  console.log(style, 'style===', item, 'iteetetet', index, 'index');
 
   return (
     <View
@@ -78,30 +54,32 @@ function YourComponent({style, item, dayIndex, daysTotal, index}: any) {
         elevation: 5,
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf: 'center',
+        maxWidth: '40%',
         // padding: 5,
         // marginTop:2
         // marginLeft: 0,
-        alignSelf: 'center',
         // left: 0,
         // flex: 0.5,
-        maxWidth: '35%',
       }}>
       <View style={{flexDirection: 'row'}}>
-        <Text
+        {/* <Text
           style={{
             fontSize: rMS(12),
             fontWeight: '600',
             color: '#fff',
             marginRight: 5,
-          }}>
+          }} numberOfLines={1}>
           Service:
-        </Text>
-        <Text style={{fontSize: rMS(12), fontWeight: '600', color: '#fff'}}>
+        </Text> */}
+        <Text
+          style={{fontSize: rMS(12), fontWeight: '600', color: '#fff'}}
+          numberOfLines={1}>
           {item.title}
         </Text>
       </View>
       <View style={{flexDirection: 'row'}}>
-        <Text
+        {/* <Text
           style={{
             fontSize: rMS(12),
             fontWeight: '600',
@@ -109,7 +87,7 @@ function YourComponent({style, item, dayIndex, daysTotal, index}: any) {
             marginRight: 5,
           }}>
           {'Time:'}
-        </Text>
+        </Text> */}
         <Text style={{fontSize: rMS(12), fontWeight: '500', color: '#fff'}}>
           <Text>{item.startTime}</Text>
           <Text>-</Text>
@@ -138,7 +116,7 @@ function TimeLine({navigation, route}: BookingProps) {
   );
 
   const handleOnPressOkay = () => {
-    setSuccessModal(false);
+    setSuccessModal(false)
     navigation.navigate('Book');
   };
 
@@ -244,8 +222,6 @@ function TimeLine({navigation, route}: BookingProps) {
       endTime: event.serviceEndTime,
     };
   });
-
-  const BookTime = convertDateStringToDateWithZone(payload?.date);
 
   const clearErrorMsg = () => {
     dispatchTimeLine(clearGetBookingByExpertIdErrorMsg());
@@ -366,7 +342,8 @@ function TimeLine({navigation, route}: BookingProps) {
           // stickyHours={true}
           items={itemsData}
           renderItem={props => <YourComponent {...props} />}
-          date={BookTime}
+          // date={BookTime}
+          date={payload.date}
           // range={range}
         />
         <View style={styles.bottomSpacing} />
@@ -423,6 +400,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     paddingVertical: rMS(3),
     paddingRight: 5,
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
   bookButton: {
     marginHorizontal: 20,

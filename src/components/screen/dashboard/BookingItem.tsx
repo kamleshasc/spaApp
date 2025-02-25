@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Platform, Pressable, StyleSheet, Text, View} from 'react-native';
 import {rMS} from '../../../config/responsive';
 import colors from '../../../config/colors';
 
@@ -23,7 +23,7 @@ const BookingItem = ({
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
           <Text style={styles.contentTitle}>{`Service: `}</Text>
-          <Text style={styles.contentValue}>{service}</Text>
+          <Text style={styles.contentValue} numberOfLines={1}>{service}</Text>
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.contentTitle}>{`Date: `}</Text>
@@ -51,9 +51,19 @@ const styles = StyleSheet.create({
     width: rMS(200),
     marginHorizontal: rMS(10),
     borderRadius: rMS(10),
-    elevation: rMS(3),
     marginTop: 4,
     marginVertical: rMS(10),
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   subContainer: {
     marginHorizontal: 10,
@@ -61,19 +71,33 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     paddingHorizontal: 12,
+    width:'90%',
+    alignSelf:'center',
   },
   contentContainer: {
     flexDirection: 'row',
     marginTop: rMS(3),
+    width:'96%',
   },
   contentTitle: {
-    fontSize: rMS(12),
-    fontWeight: '700',
     color: colors.fontDark,
+    ...Platform.select({
+      android: {
+        width:'43%',
+        fontSize: rMS(12),
+        fontWeight: '700',
+      },
+      ios:{
+        width:'40%',
+        fontSize: rMS(11),
+        fontWeight: '600',
+      }
+    })
   },
   contentValue: {
     fontSize: rMS(12),
     fontWeight: '500',
     color: colors.fontDark,
+    width:'66%',
   },
 });

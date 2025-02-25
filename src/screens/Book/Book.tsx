@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -19,6 +20,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigation/RootNavigation';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchExpertService} from '../../redux/Action/serviceAction';
+import useDeviceType from '../../hooks/useDeviceType';
 
 type BookProps = CompositeScreenProps<
   DrawerScreenProps<DrawerNavigationParamList, 'Book'>,
@@ -31,6 +33,7 @@ function Book({navigation}: BookProps) {
   const [selectedDate, setSelectedDate] = React.useState(currentDateString);
   const [errorStatus, setErrorStatus] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<any>('');
+  const {isTablet} = useDeviceType();
 
   const dispatchBook = useAppDispatch();
   const {data, isError, errorMsg, isLoader} = useAppSelector(
@@ -85,8 +88,9 @@ function Book({navigation}: BookProps) {
         refreshControl={
           <RefreshControl refreshing={isLoader} onRefresh={onRefresh} />
         }>
-        <View style={styles.flexScreen}>
-          <View style={styles.flexScreen}>
+        <>
+          <View
+            style={[styles.flexScreen, {marginTop: rMS(5, isTablet ? 3 : 2)}]}>
             <Text style={styles.selectExpertText}>Select Employee</Text>
             <View style={styles.expertListContainer}>
               <ScrollView
@@ -113,7 +117,7 @@ function Book({navigation}: BookProps) {
               </ScrollView>
             </View>
           </View>
-          <View style={styles.flexScreen}>
+          <View style={[styles.flexScreen, {marginTop: rMS(5, 2)}]}>
             <Text style={styles.selectDateText}>Select Date</Text>
             <Calendar
               enableSwipeMonths={false}
@@ -134,35 +138,54 @@ function Book({navigation}: BookProps) {
               theme={{
                 arrowColor: colors.themePrimary,
                 todayTextColor: colors.themePrimary,
-                textDisabledColor: colors.fontDark,
+                textDisabledColor: colors.fontDarkGrey,
                 // textDayFontSize: rMS(13), // day font size
-                textMonthFontSize: rMS(15), // month font size
+                // textMonthFontSize: rMS(15), // month font size
                 // textDayHeaderFontSize: rMS(9), // day header (Mon, Tue, etc.)
-                textMonthFontWeight: '700',
-                textDayHeaderFontWeight: '700',
-                textDayFontWeight: '500',
+                // textMonthFontWeight: '700',
+                // textDayHeaderFontWeight: '700',
+                // textDayFontWeight: '700',
+                // textDayFontSize: isTablet ? rMS(10) : rMS(12), // month font size
+                // textDayHeaderFontSize: isTablet ? -20 : rMS(12),
                 textSectionTitleColor: colors.themePrimary,
+                textDayHeaderFontWeight: '500',
+                ...Platform.select({
+                  ios: {
+                    // textMonthFontSize: rMS(18), // month font size
+                    // day header (Mon, Tue, etc.)
+                    textDayFontWeight: '500',
+                    textMonthFontWeight: '500',
+                  },
+                  android: {
+                    // textMonthFontSize: rMS(16), // month font size
+                    // textDayFontSize: rMS(12), // month font size
+                    // textDayHeaderFontSize: rMS(13), // day header (Mon, Tue, etc.)
+                    textDayFontWeight: '700',
+                    textMonthFontWeight: '700',
+                  },
+                }),
               }}
             />
-            <View
-              style={{
-                // height: '100%',
-                // backgroundColor: 'red',
-                maxWidth: 600,
-                minWidth: rMS(340),
-                // flexDirection: 'row',
-                marginVertical: rMS(20),
-                alignSelf: 'center',
-              }}>
-              <UI.Btn
-                styles={{marginBottom: 0, marginHorizontal: 0}}
-                disabledBtn={selectedExpert == null ? true : false}
-                onPressBtn={onPressNext}>
-                Next
-              </UI.Btn>
-            </View>
           </View>
-        </View>
+          <View
+            style={{
+              // flex:1,
+              // height: '100%',
+              marginTop: rMS(20, isTablet ? 3 : 2),
+              maxWidth: 600,
+              minWidth: rMS(340),
+              // flexDirection: 'row',
+              marginVertical: rMS(20),
+              alignSelf: 'center',
+            }}>
+            <UI.Btn
+              styles={{marginBottom: 0, marginHorizontal: 0}}
+              disabledBtn={selectedExpert == null ? true : false}
+              onPressBtn={onPressNext}>
+              Next
+            </UI.Btn>
+          </View>
+        </>
       </ScrollView>
       <UI.Toast
         visible={errorStatus}
@@ -185,7 +208,14 @@ const styles = StyleSheet.create({
   },
   selectExpertText: {
     fontSize: rMS(18),
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontWeight: '600',
+      },
+      android: {
+        fontWeight: '700',
+      },
+    }),
     color: colors.fontDark,
     marginTop: rV(12),
     marginLeft: rMS(12),
@@ -199,7 +229,15 @@ const styles = StyleSheet.create({
   },
   selectDateText: {
     fontSize: rMS(18),
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontWeight: '600',
+      },
+      android: {
+        fontWeight: '700',
+      },
+    }),
+    // fontWeight: '700',
     color: colors.fontDark,
     marginTop: rV(12),
     marginLeft: rMS(12),

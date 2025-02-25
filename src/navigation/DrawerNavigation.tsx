@@ -23,6 +23,8 @@ export type DrawerNavigationParamList = {
   Book: undefined;
   MyBooking: undefined;
   Profile: undefined;
+  Payment: undefined;
+  SalesReport: undefined;
 };
 
 export type DrawerNavigationPropList =
@@ -34,8 +36,6 @@ function DrawerNavigation() {
   const [screens, setScreens] = React.useState<any>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   // const {data, screens} = useAppSelector(state => state.auth.login);
-  // console.log(data, 'data ==========>>>>');
-  // console.log(data?.data?.screens, 'screens ==========>>>>');
 
   const dispatchDrawerNavigation = useAppDispatch();
   // React.useEffect(() => {
@@ -70,13 +70,17 @@ function DrawerNavigation() {
       drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: {
+          height: 55,
           backgroundColor: colors.primary,
           borderBottomWidth: 1,
           borderBottomColor: colors.themePrimary,
         },
         headerTitleStyle: {
+          fontSize: 21,
+          fontWeight: '600',
           color: colors.themePrimary,
         },
+        headerTitleAlign: 'left',
         headerTintColor: colors.themePrimary,
         drawerActiveBackgroundColor: colors.themePrimary,
         drawerActiveTintColor: colors.primary,
@@ -140,12 +144,19 @@ function DrawerNavigation() {
           options={{drawerLabel: 'My Bookings', title: 'My Bookings'}}
         />
       )}
-      {/* {screens.includes('MyBooking') && ( */}
+      <Drawer.Screen
+        name="Payment"
+        component={SCREENS.PAYMENTSCREENS.getBookings}
+      />
+      <Drawer.Screen
+        name="SalesReport"
+        options={{drawerLabel: 'Sales Report', title: 'Sales Report'}}
+        component={SCREENS.REPORTSCREENS.salesReport}
+      />
       <Drawer.Screen
         name="Profile"
         component={SCREENS.PROFILESCREENS.profile}
       />
-      {/* )} */}
     </Drawer.Navigator>
   );
 }

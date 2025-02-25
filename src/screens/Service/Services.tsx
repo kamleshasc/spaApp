@@ -74,9 +74,9 @@ function Services({navigation}: Props): React.JSX.Element {
     navigation.navigate('EditService', {service: value});
   };
 
-  const renderItem = ({item}: {item: ServiceData}) => {
+  const renderItem = ({item, index}: {item: ServiceData; index: any}) => {
     return (
-      <UI.TableR onPress={() => onPressService(item)}>
+      <UI.TableR onPress={() => onPressService(item)} key={index}>
         <UI.TableI showImg={true} ImgUrl={item?.serviceImage} />
         <UI.TableI name={item?.serviceName} />
         <UI.TableI name={item?.category} />
@@ -98,7 +98,7 @@ function Services({navigation}: Props): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <ScrollView
         style={style.fullScreen}
         refreshControl={
@@ -132,7 +132,7 @@ function Services({navigation}: Props): React.JSX.Element {
         message={errorMsg}
         onDismissSnackBar={() => serviceDispatch(clearGetServiceErrorMsg())}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

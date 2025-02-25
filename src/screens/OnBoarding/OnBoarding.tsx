@@ -1,6 +1,7 @@
 import {
   Image,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -48,13 +49,17 @@ function OnBoarding({navigation}: onBoardingProps) {
     if (nextScreen < 2) {
       setNextScreen(nextScreen + 1);
     } else {
-      navigation.replace('Welcome');
+      navigation.replace('Login');
       setNextScreen(0);
     }
   };
 
   return (
     <SafeAreaView style={styles.rootContainer}>
+      <StatusBar
+        backgroundColor={colors.themePrimary}
+        barStyle={'light-content'}
+      />
       <View style={styles.rootContainer}>
         <View style={styles.subContainer}>
           <View style={styles.imageContainer}>

@@ -94,7 +94,7 @@ function CommissionRules({navigation}: CommissionType) {
   }
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <FlatList
         onRefresh={() => getCommissionRule()}
         refreshing={isLoader}
@@ -130,7 +130,7 @@ function CommissionRules({navigation}: CommissionType) {
           dispatchGetCommissionRule(clearGetCommissionRuleErrorMsg())
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

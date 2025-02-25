@@ -169,7 +169,7 @@ function Forgot({navigation}: forgotProps) {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.primary}}>
+    <View style={styles.root}>
       <UI.Header
         onPress={() => {
           navigation.goBack();
@@ -220,13 +220,16 @@ function Forgot({navigation}: forgotProps) {
           setMessageStatus(false), setOtpSuccessStatus(false);
         }}
       />
-      {/* </View> */}
-    </SafeAreaView>
+    </View>
   );
 }
 
 export default Forgot;
 const styles = StyleSheet.create({
+  root:{
+    flex: 1, 
+    backgroundColor: colors.primary
+  },
   content: {
     flex: 1,
     alignSelf: 'center',

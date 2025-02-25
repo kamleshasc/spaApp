@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
 import {UI} from '../../components';
@@ -225,7 +225,7 @@ function AddInventory({navigation}: AddInventoryProp) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.headerContainer}>
@@ -248,6 +248,7 @@ function AddInventory({navigation}: AddInventoryProp) {
             value={unit.value}
             isError={!unit.isValid}
             errorMsg={unit.message}
+            styles={styles.dropdownStyle}
           />
 
           <UI.Input
@@ -288,6 +289,7 @@ function AddInventory({navigation}: AddInventoryProp) {
             value={String(stock.value)}
             isError={!stock.isValid}
             errorMsg={stock.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={userData.map(value => {
@@ -303,6 +305,7 @@ function AddInventory({navigation}: AddInventoryProp) {
             value={createdBy.value}
             isError={!createdBy.isValid}
             errorMsg={createdBy.message}
+            styles={styles.dropdownStyle}
           />
           <View style={styles.btnContainer}>
             <UI.Btn
@@ -320,7 +323,7 @@ function AddInventory({navigation}: AddInventoryProp) {
           setShowError(false), dispatchAddInventory(clearAddInventoryData());
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -345,8 +348,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

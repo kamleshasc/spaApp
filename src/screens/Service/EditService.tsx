@@ -305,14 +305,6 @@ function EditService({route, navigation}: Props) {
             errorMsg={selectedBranches.message}
           />
 
-          <SubServiceWithList
-            addedValues={value => addService(value)}
-            deleteItemPressed={deleteValue => deleteService(deleteValue)}
-            errorMsg={subService.message}
-            isError={!subService.isValid}
-            selectedSubService={subService.value}
-          />
-
           <UI.DropDown
             data={categoryData}
             placeholder={'Select Category*'}
@@ -322,6 +314,15 @@ function EditService({route, navigation}: Props) {
             onChange={(value: any) =>
               inputChangedHandler('category', value.value)
             }
+            styles={styles.dropdownStyle}
+          />
+
+          <SubServiceWithList
+            addedValues={value => addService(value)}
+            deleteItemPressed={deleteValue => deleteService(deleteValue)}
+            errorMsg={subService.message}
+            isError={!subService.isValid}
+            selectedSubService={subService.value}
           />
 
           <UI.DropDownMultiSelect
@@ -348,7 +349,7 @@ function EditService({route, navigation}: Props) {
             firstTextPressed={() => toggleSwitch(true)}
             secondTextPressed={() => toggleSwitch(false)}
           />
-         
+
           <UI.Input
             showIcon={true}
             disableInput={true}
@@ -374,6 +375,7 @@ function EditService({route, navigation}: Props) {
             isError={!createdBy.isValid}
             errorMsg={createdBy.message}
             onChange={value => inputChangedHandler('createdBy', value.value)}
+            styles={styles.dropdownStyle}
           />
 
           <UI.Radio
@@ -422,8 +424,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Snackbar} from 'react-native-paper';
+import { rMS } from '../../config/responsive';
 
 interface ToastMessageProps {
   Success?: boolean;
@@ -30,7 +31,7 @@ function ToastMessage({
         icon={'undo'}
         style={barStyles}
         theme={{colors: {inversePrimary: 'white', surface: 'white'}}}>
-        {message}
+        <Text style={styles.fontStyle}>{message}</Text>
       </Snackbar>
     </View>
   );
@@ -50,4 +51,7 @@ const styles = StyleSheet.create({
   successStyle: {
     backgroundColor: 'green',
   },
+  fontStyle:{
+    fontSize: rMS(13), color: 'white',fontWeight:'600'
+  }
 });

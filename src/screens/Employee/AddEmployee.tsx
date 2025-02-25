@@ -546,6 +546,7 @@ function AddEmployee({navigation}: Props): React.JSX.Element {
             isError={!role.isValid}
             errorMsg={role.message}
             onChange={onChangeRole}
+            styles={style.dropdownStyle}
           />
 
           <UI.Input
@@ -615,7 +616,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   titleContent: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
   },
@@ -659,4 +660,7 @@ const style = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 10,
   },
+  dropdownStyle:{
+    paddingLeft:rMS(12)
+  }
 });

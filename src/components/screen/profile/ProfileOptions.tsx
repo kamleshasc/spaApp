@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../../../config/colors';
 import useDimensionListener from '../../../hooks/useDimensionListener';
 import {rMS} from '../../../config/responsive';
@@ -35,11 +35,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.primary,
     borderRadius: 15,
-    elevation: 4,
     paddingLeft: 20,
     paddingRight: 10,
     paddingVertical: 8,
     marginBottom: 12,
+    ...Platform.select({
+      android: {
+        elevation: rMS(2),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(2),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   nameContainer: {
     width: '100%',

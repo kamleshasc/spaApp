@@ -17,10 +17,15 @@ import BookingTimeLineList from './screen/booking/BookingTimeLineList';
 import BookingItem from './screen/dashboard/BookingItem';
 import CategoryList from './screen/dashboard/CategoryList';
 import BookedItem from './screen/mybooking/BookedItem';
+import PaymentOption from './screen/payment/PaymentOption';
+import ServiceList from './screen/payment/ServiceList';
 import PrivacyPolicyDetails from './screen/privacyPolicy/PrivacyPolicyDetails';
 import PrivacyPolicyLoader from './screen/privacyPolicy/PrivacyPolicyLoader';
 import PrivacyPolicyNotFound from './screen/privacyPolicy/PrivacyPolicyNotFound';
 import ProfileOptions from './screen/profile/ProfileOptions';
+import SalesBtnOptions from './screen/salesReport/SalesBtnOptions';
+import SalesDetailsList from './screen/salesReport/SalesDetailsList';
+import SalesOverAllDetails from './screen/salesReport/SalesOverAllDetails';
 import SubServiceWithList from './screen/service/SubServiceWithList';
 
 const UI = {
@@ -51,6 +56,11 @@ const SCREEN = {
   PrivacyPolicyLoader: PrivacyPolicyLoader,
   PrivacyPolicyNotFound: PrivacyPolicyNotFound,
   ProfileOption: ProfileOptions,
+  ServiceDetailList: ServiceList,
+  PaymentOption: PaymentOption,
+  SalesDetailsList: SalesDetailsList,
+  SalesReportOption: SalesBtnOptions,
+  SalesOverAll: SalesOverAllDetails,
 };
 
 export {UI, SCREEN};

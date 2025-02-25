@@ -1,4 +1,6 @@
 import {
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -283,9 +285,11 @@ function SignUp({navigation}: SignUpProps) {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
       <View style={styles.fullScreen}>
-        <ScrollView showsVerticalScrollIndicator={false} >
+        <ScrollView showsVerticalScrollIndicator={false}>
           <UI.Header onPress={signUp} />
           <View style={styles.content}>
             <View style={styles.titleContainer}>
@@ -416,7 +420,7 @@ function SignUp({navigation}: SignUpProps) {
           }}
         />
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -429,6 +433,7 @@ const styles = StyleSheet.create({
   },
   fullScreen: {
     flex: 1,
+    backgroundColor: colors.primary,
     // alignSelf: 'center',
     // maxWidth: 600,
   },
@@ -441,7 +446,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginLeft: rMS(21),
     marginBottom: rMS(40),
-    maxWidth: 340,
+    maxWidth: '70%',
   },
   titleText: {
     fontSize: rMS(25),

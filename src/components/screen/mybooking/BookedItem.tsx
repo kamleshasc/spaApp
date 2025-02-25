@@ -1,6 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import colors from '../../../config/colors';
 import {rMS} from '../../../config/responsive';
+import {
+  getDateInNewYorkTimeZoneMoment,
+  getItPastDate,
+} from '../../../config/helper';
 
 type BookedItemProp = {
   date: any;
@@ -9,6 +20,8 @@ type BookedItemProp = {
   endTime: string;
   expertName: string;
   status: boolean;
+  cancelPressed: () => void;
+  isCancelBooking: boolean;
 };
 
 const BookedItem = ({
@@ -18,10 +31,31 @@ const BookedItem = ({
   endTime,
   expertName,
   status,
+  cancelPressed,
+  isCancelBooking,
 }: BookedItemProp) => {
+
+  const isPastDate = getItPastDate(date);
+
   return (
-    <View style={[styles.root, status && styles.statusContainer]}>
+    <View
+      style={[
+        styles.root,
+        isCancelBooking
+          ? {backgroundColor: colors.red}
+          : status && styles.statusContainer,
+      ]}>
       <View style={styles.subContainer}>
+        {(!isCancelBooking && !isPastDate) && (
+          <TouchableOpacity
+            style={styles.cancelBtnContainer}
+            onPress={cancelPressed}>
+            <Image
+              style={styles.imageContainer}
+              source={require('../../../assets/images/cancel-icon.png')}
+            />
+          </TouchableOpacity>
+        )}
         <View style={styles.itemContainer}>
           <Text style={styles.itemTitle}>Date :</Text>
           <Text style={styles.itemValue}>{date}</Text>
@@ -56,7 +90,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderRadius: 12,
     width: rMS(350),
-    elevation: 7,
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: rMS(2)},
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
     alignSelf: 'center',
     marginHorizontal: 12,
     marginVertical: 12,
@@ -88,5 +132,17 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     backgroundColor: 'yellow',
+  },
+  cancelBtnContainer: {
+    zIndex: 1,
+    height: rMS(28),
+    width: rMS(28),
+    position: 'absolute',
+    right: 5,
+    top: 8,
+  },
+  imageContainer: {
+    height: '100%',
+    width: '100%',
   },
 });

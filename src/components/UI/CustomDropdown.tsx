@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {Platform, StyleSheet, Text} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import colors from '../../config/colors';
 import {View} from 'react-native';
 import {HelperText} from 'react-native-paper';
 import {rMS} from '../../config/responsive';
+import useDeviceType from '../../hooks/useDeviceType';
 interface Option {
   label: string;
   value: string;
@@ -29,6 +30,8 @@ const CustomDropdown: React.FC<Props> = ({
   errorMsg,
   styles,
 }) => {
+  const {isTablet} = useDeviceType();
+  const height = isTablet ? 70 : 50;
   const renderItem = (item: {label: any}) => {
     return (
       <View style={style.itemContainer}>
@@ -40,10 +43,10 @@ const CustomDropdown: React.FC<Props> = ({
   return (
     <>
       <Dropdown
-        style={[style.dropdown, styles]}
+        style={[style.dropdown, styles,{height}]}
         placeholderStyle={style.placeholderStyle}
         selectedTextStyle={style.selectedTextStyle}
-        itemTextStyle={style.selectedTextStyle}
+        itemTextStyle={style.itemTextStyle}
         iconStyle={style.iconStyle}
         data={data}
         maxHeight={150}
@@ -70,28 +73,38 @@ export default CustomDropdown;
 
 const style = StyleSheet.create({
   dropdown: {
-    paddingRight: 8,
-    paddingLeft: 14,
+    // paddingHorizontal:rMS(12),
+    paddingRight:rMS(12),
     borderWidth: 1,
     borderColor: colors.borderColor,
     backgroundColor: colors.primary,
     borderRadius: 12,
     marginBottom: rMS(20),
     marginHorizontal: 20,
-    paddingVertical: 10,
+    
+    // paddingLeft:rMS(20)
   },
   placeholderStyle: {
-    fontSize: rMS(14),
+    fontSize: rMS(13),
     fontWeight: '600',
+    color:colors.placeholder,
   },
   selectedTextStyle: {
+    fontSize: rMS(12),
+    fontWeight: '500',
+    color: colors.fontDark,
+    // color: 'pink',
+    // paddingLeft:rMS(0)
+  },
+  itemTextStyle:{
+    // paddingVertical:10,
     fontSize: rMS(14),
-    fontWeight: '600',
+    fontWeight: '500',
     color: colors.fontDark,
   },
   iconStyle: {
-    width: 40,
-    height: 40,
+    width: rMS(30),
+    height: rMS(30),
   },
   errorContainer: {
     marginTop: -20,
@@ -112,7 +125,8 @@ const style = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   itemFont: {
-    fontSize: 14,
+    fontSize: rMS(14),
     color: colors.fontDark,
+    fontWeight:'400'
   },
 });

@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {rMS, rV} from '../../../config/responsive';
 import colors from '../../../config/colors';
 import {IMAGE_URL} from '@env';
@@ -47,9 +47,19 @@ const styles = StyleSheet.create({
     width: rMS(140),
     alignItems: 'center',
     marginHorizontal: rMS(10),
-    elevation: 4,
     marginVertical: rMS(10),
     justifyContent: 'center',
+    ...Platform.select({
+      android: {
+        elevation: 4,
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   imageContainer: {
     height: rMS(70),

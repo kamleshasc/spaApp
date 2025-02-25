@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import colors from '../../../config/colors';
 import {UI} from '../..';
 import {durationData} from '../../../config/data';
 import {HelperText} from 'react-native-paper';
 import SubServiceItem from './SubServiceItem';
+import { rMS } from '../../../config/responsive';
 
 type SubValues = {
   name: string;
@@ -137,18 +138,28 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     marginBottom: 20,
-    paddingLeft: 12,
-    paddingTop: 5,
+    paddingLeft: rMS(12),
     paddingBottom: 15,
     borderRadius: 12,
-    elevation: 5,
     backgroundColor: colors.primary,
+    paddingTop:rMS(10),
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   title: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: rMS(13),
+    fontWeight: '600',
     color: colors.fontDark,
-    marginBottom: 5,
+    marginBottom: rMS(8),
   },
   inputRow: {
     flexDirection: 'row',
@@ -162,9 +173,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   dropdown: {
-    marginBottom: 0,
+    marginBottom: 4,
     marginHorizontal: 0,
-    paddingVertical: 5,
+    paddingLeft:rMS(12)
   },
   buttonContainer: {
     flex: 1,
@@ -174,8 +185,9 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 0,
     marginBottom: 0,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingVertical: rMS(10),
+    paddingHorizontal: rMS(10),
+    borderRadius:rMS(12)
   },
   errorContainer: {
     marginLeft: 0,

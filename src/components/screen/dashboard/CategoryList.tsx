@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {rMS} from '../../../config/responsive';
 import colors from '../../../config/colors';
 import {Image} from 'react-native';
@@ -38,7 +38,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     flex: 0.5,
     borderRadius: 10,
-    elevation: 2,
+    ...Platform.select({
+      android: {
+        elevation: rMS(3),
+      },
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: rMS(2) },
+        shadowRadius: rMS(4),
+        shadowOpacity: 0.15,
+      },
+    }),
   },
   imageContainer: {
     height: rMS(90),

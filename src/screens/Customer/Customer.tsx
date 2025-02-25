@@ -82,7 +82,7 @@ function Customer({navigation}: CustomerProp) {
   };
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <FlatList
         onRefresh={() => getCustomerDetails()}
         refreshing={isLoader}
@@ -115,7 +115,7 @@ function Customer({navigation}: CustomerProp) {
         message={errorMsg}
         onDismissSnackBar={() => dispatchCustomer(clearCustomerErrorMsg())}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

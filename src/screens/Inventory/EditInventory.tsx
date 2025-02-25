@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {initialInputs, inventoryInputsTypes} from './AddInventory';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
@@ -233,7 +233,7 @@ function EditInventory({navigation, route}: EditInventoryProp) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.headerContainer}>
@@ -256,6 +256,7 @@ function EditInventory({navigation, route}: EditInventoryProp) {
             value={unit.value}
             isError={!unit.isValid}
             errorMsg={unit.message}
+            styles={styles.dropdownStyle}
           />
 
           <UI.Input
@@ -296,6 +297,7 @@ function EditInventory({navigation, route}: EditInventoryProp) {
             value={String(stock.value)}
             isError={!stock.isValid}
             errorMsg={stock.message}
+            styles={styles.dropdownStyle}
           />
           <UI.DropDown
             data={userData.map(value => {
@@ -311,6 +313,7 @@ function EditInventory({navigation, route}: EditInventoryProp) {
             value={updatedBy.value}
             isError={!updatedBy.isValid}
             errorMsg={updatedBy.message}
+            styles={styles.dropdownStyle}
           />
           <View style={styles.btnContainer}>
             <UI.Btn
@@ -328,7 +331,7 @@ function EditInventory({navigation, route}: EditInventoryProp) {
           dispatchEditInventory(clearUpdateInventoryData())
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -353,8 +356,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(21),
     fontWeight: '600',
     color: colors.fontDark,
+  },
+  dropdownStyle: {
+    ...Platform.select({
+      ios: {
+        paddingLeft: rMS(13),
+      },
+      android: {
+        paddingLeft: rMS(15),
+      },
+    }),
   },
 });

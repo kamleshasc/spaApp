@@ -1,15 +1,18 @@
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
+  TouchableOpacityProps,
   View,
 } from 'react-native';
 import {HelperText} from 'react-native-paper';
 import colors from '../../config/colors';
 import {rMS} from '../../config/responsive';
+import useDeviceType from '../../hooks/useDeviceType';
 
 interface CustomInputUIProps {
   showIcon?: boolean;
@@ -22,6 +25,7 @@ interface CustomInputUIProps {
   stylesInput?: object;
   showText?: boolean;
   disableText?: boolean;
+  childrenStyle?: TouchableOpacityProps;
 }
 
 function CustomInput({
@@ -35,10 +39,20 @@ function CustomInput({
   stylesInput,
   showText,
   disableText,
+  childrenStyle,
 }: CustomInputUIProps) {
+  const {isTablet} = useDeviceType();
+  const containerHeight = isTablet ? 70 : 50;
+
   return (
     <>
-      <View style={[styles.container, stylesInput]}>
+      <View
+        style={[
+          styles.container,
+          stylesInput,
+          showText && styles.iosShowText,
+          {height: containerHeight},
+        ]}>
         <View
           style={{
             width: showIcon ? '85%' : showText ? '72%' : '95%',
@@ -47,12 +61,13 @@ function CustomInput({
             style={styles.fontStyle}
             editable={!disableInput}
             {...textInputConfig}
-            placeholderTextColor={'#73777B'}
+            placeholderTextColor={colors.placeholder}
           />
         </View>
         {showIcon && (
           <TouchableOpacity
             style={styles.childrenContainer}
+            {...childrenStyle}
             onPress={iconPressed}>
             {children}
           </TouchableOpacity>
@@ -99,24 +114,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderColor,
     backgroundColor: colors.primary,
-    borderRadius: 12,
+    borderRadius: Platform.OS === 'ios' ? 10 : 12,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: rMS(20),
     marginHorizontal: 20,
-    paddingVertical: rMS(4),
+    // height: rMS(50),
+    // paddingVertical: Platform.OS === 'ios' ? rMS(14) : rMS(4),
     paddingHorizontal: rMS(12),
     justifyContent: 'space-between',
   },
   fontStyle: {
-    fontSize: rMS(14),
-    lineHeight: 22,
+    fontSize: Platform.OS === 'ios' ? rMS(13) : rMS(14),
     color: colors.fontDark,
     fontWeight: '500',
   },
   childrenContainer: {
-    height: 30,
-    width: 30,
+    height: rMS(30),
+    width: rMS(30),
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 4,
@@ -129,5 +144,8 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: rMS(10),
     fontWeight: '700',
+  },
+  iosShowText: {
+    paddingVertical: Platform.OS === 'ios' ? rMS(6) : rMS(4),
   },
 });

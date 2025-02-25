@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {get, post} from '../../service/Apis';
+import {get, post, put} from '../../service/Apis';
 import {errorMsgWrap} from '../../config/helper';
 
 interface getBookingType {
@@ -110,6 +110,23 @@ export const getMyBookings = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const res = await get({url: `/bookings/myBookings`});
+      if (res?.success) {
+        return res?.data;
+      } else {
+        return rejectWithValue(res?.message);
+      }
+    } catch (error) {
+      let errorMessage = errorMsgWrap(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const deleteBoooking = createAsyncThunk(
+  'cancelBooking',
+  async ({id}: {id: string}, {rejectWithValue}) => {
+    try {
+      const res = await put({url: `/bookings/deleteBooking/${id}`});
       if (res?.success) {
         return res?.data;
       } else {

@@ -349,6 +349,7 @@ function AddService({navigation}: Props) {
             onChange={(value: any) =>
               inputChangedHandler('category', value.value)
             }
+            styles={styles.dropdownStyle}
           />
 
           <SCREEN.ServiceWithList
@@ -409,6 +410,7 @@ function AddService({navigation}: Props) {
             isError={!createdBy.isValid}
             errorMsg={createdBy.message}
             onChange={value => inputChangedHandler('createdBy', value.value)}
+            styles={styles.dropdownStyle}
           />
 
           <UI.Radio
@@ -457,8 +459,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: rMS(22),
     fontWeight: '600',
     color: colors.fontDark,
   },
+  dropdownStyle:{
+    ...Platform.select({
+      ios:{
+        paddingLeft: rMS(13),
+      },
+      android:{
+        paddingLeft: rMS(15),
+      }
+    })
+  }
 });

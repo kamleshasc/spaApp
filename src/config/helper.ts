@@ -1,8 +1,13 @@
 import axios from 'axios';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {ImagePickerResponseObject} from '../components/UI/CustomModalImagePicker';
+import moment from 'moment-timezone';
+import { Alert, Platform } from 'react-native';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
-const timeZone = 'Asia/Kolkata';
+// const timeZone = 'Asia/Kolkata';
+// const timeZone = 'Asia/Calcutta';
+const timeZone = 'America/New_York';
 
 export const DateFormateMMMMDDYYY = (value: any) => {
   const date = new Date(value);
@@ -337,3 +342,101 @@ export const convertDateStringToDateWithZone = (dateString: string) => {
   // Return a new Date object with the specified time zone considered
   return new Date(isoDateString);
 };
+
+export function getDateInNewYorkTimeZone(date = new Date()) {
+  // Convert the given date to ISO string for precise handling
+  const isoString: string = date.toISOString();
+
+  // Create a new date in America/New_York time zone using Intl.DateTimeFormat
+  const options: Intl.DateTimeFormatOptions = {timeZone: 'America/New_York'};
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    ...options,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+
+  // const parts = formatter.formatToParts(new Date(isoString)).reduce((acc, part) => {
+  //   if (part.type !== 'literal') {
+  //     acc[part.type] = part.value;
+  //   }
+  //   return acc;
+  // }, {});
+
+  // // Construct the new date object
+  // const newYorkDate = new Date(
+  //   `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`
+  // );
+
+  // return newYorkDate;
+  const parts: {[key: string]: string} = formatter
+    .formatToParts(new Date(isoString))
+    .reduce((acc: {[key: string]: string}, part) => {
+      if (part.type !== 'literal') {
+        acc[part.type] = part.value;
+      }
+      return acc;
+    }, {});
+
+  // Construct the new date object
+  const newYorkDate = new Date(
+    `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`,
+  );
+
+  return newYorkDate;
+}
+
+export const getDateInNewYorkTimeZoneMoment = (date = new Date()) => {
+  const newYorkDate = moment().tz('America/New_York');
+  return newYorkDate.toDate();
+};
+
+export const getItPastDate = (date:string) => {
+    const now = moment().tz('America/New_York').startOf('day');
+    const bookingDate = moment.tz(date,"MMMM DD, YYYY", "America/New_York");
+    const isPastDate = now.isAfter(bookingDate);
+
+    return isPastDate
+};
+
+export const checkPermissionsDocument = async (): Promise<boolean> => {
+    if (Platform.OS === 'ios') {
+      const permission = await check(PERMISSIONS.IOS.MEDIA_LIBRARY);
+      if (permission === RESULTS.DENIED || permission === RESULTS.BLOCKED) {
+        const requestResult = await request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+        if (requestResult !== RESULTS.GRANTED) {
+          Alert.alert(
+            'Permission Required',
+            'The app requires media library permissions to save the document. Please allow it in settings.',
+            [{text: 'OK'}],
+          );
+          return false;
+        }
+      }
+    } else if (Platform.OS === 'android') {
+      if (Platform.Version < 33) {
+        const permission = await check(
+          PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+        );
+        if (permission === RESULTS.DENIED || permission === RESULTS.BLOCKED) {
+          const requestResult = await request(
+            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+          );
+          if (requestResult !== RESULTS.GRANTED) {
+            Alert.alert(
+              'Permission Required',
+              'The app requires storage permissions to save the document. Please allow it in settings.',
+              [{text: 'OK'}],
+            );
+            return false;
+          }
+        }
+      }
+      return true
+    }
+    return false;
+  };

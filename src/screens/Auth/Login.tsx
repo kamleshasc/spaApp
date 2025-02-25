@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  Image,
   ImageBackground,
-  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -75,6 +77,7 @@ function Login({navigation}: loginProps) {
         password: inputs.password.value,
       };
       const result: any = await loginDispatch(loginUser(payload)).unwrap();
+
       if (result.success) {
         loginDispatch(loadUserScreens());
         loginDispatch(userDetails());
@@ -135,14 +138,17 @@ function Login({navigation}: loginProps) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.keyboardStyles}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <ImageBackground
+          <Image
             style={styles.imageBackground}
-            source={require('../../assets/images/login.jpg')}>
-            {/* <View style={styles.imageOverlay} /> */}
-          </ImageBackground>
+            source={require('../../assets/images/login.jpg')}
+          />
+          {/* <View style={styles.imageOverlay} /> */}
+          {/* </ImageBackground> */}
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.welcomeText}>Welcome Back.!</Text>
@@ -172,7 +178,7 @@ function Login({navigation}: loginProps) {
               onPressBtn={checkValidation}
               styles={[
                 styles.loginButton,
-                {paddingVertical: rMS(width > 500 ? 6 : 12)},
+                {paddingVertical: rMS(width > 500 ? 10 : 12)},
               ]}>
               Login
             </UI.Btn>
@@ -197,26 +203,25 @@ function Login({navigation}: loginProps) {
           }}
         />
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 export default Login;
 
 const styles = StyleSheet.create({
-  safeArea: {
+  keyboardStyles: {
     flex: 1,
-    backgroundColor: colors.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.primary,
   },
   imageContainer: {
     flexDirection: 'row',
     flex: 0.6,
     width: '100%',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.primary,
     borderBottomRightRadius: rMS(160),
     overflow: 'hidden',
   },

@@ -96,7 +96,7 @@ function Inventory({navigation}: InventoryProps): React.JSX.Element {
   }
 
   return (
-    <SafeAreaView style={style.container}>
+    <View style={style.container}>
       <ScrollView
         style={style.fullScreen}
         horizontal={true}
@@ -128,7 +128,7 @@ function Inventory({navigation}: InventoryProps): React.JSX.Element {
         message={errorMsg}
         onDismissSnackBar={() => dispatchInventory(clearGetInventoryErrorMsg())}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
