@@ -8,9 +8,12 @@ export const fetchCommissionRules = createAsyncThunk(
     try {
       const res = await get({url: '/commissionrules'});
       if (res.success) {
-        return res.data;
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       const errorMesssage = errorMsgWrap(error);

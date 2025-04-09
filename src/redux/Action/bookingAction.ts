@@ -12,10 +12,13 @@ export const fetchBookingDetails = createAsyncThunk(
   async ({serviceId, date}: getBookingType, {rejectWithValue}) => {
     try {
       const res = await get({url: `/bookings/${serviceId}/${date}`});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -40,10 +43,10 @@ export const newBooking = createAsyncThunk(
   async (body: BookingDetails, {rejectWithValue}) => {
     try {
       const res: any = await post({url: '/bookings/', body});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -55,6 +58,8 @@ export const newBooking = createAsyncThunk(
 interface UserBookingDetails {
   date: string;
   serviceId: string;
+  serviceName: string;
+  price: any;
   expertId: string;
   parentId: string;
   name: string;
@@ -69,10 +74,10 @@ export const customerBooking = createAsyncThunk(
   async (body: UserBookingDetails, {rejectWithValue}) => {
     try {
       const res: any = await post({url: '/bookings/user', body});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -93,10 +98,10 @@ export const getBookingByExpertId = createAsyncThunk(
       const res = await get({
         url: `/bookings/expertStatus/${date}/${expertId}`,
       });
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);

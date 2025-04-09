@@ -937,7 +937,7 @@ PODS:
     - React-debug
   - react-native-blob-util (0.19.11):
     - React-Core
-  - react-native-date-picker (5.0.7):
+  - react-native-date-picker (5.0.10):
     - React-Core
   - react-native-image-picker (7.2.3):
     - DoubleConversion
@@ -1637,7 +1637,7 @@ SPEC CHECKSUMS:
   React-logger: de9b65c8c7b71a663e6e99d347b1c445f5190c39
   React-Mapbuffer: 766bb4d8f655d816913325b353d800debbde7209
   react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
-  react-native-date-picker: 06a4d96ab525a163c7a90bccd68833d136b0bb13
+  react-native-date-picker: 58c231c37c1a9be5715018b369210c34e83f6e48
   react-native-image-picker: fb0c2b3adc3eff6caa3cd6a507a34b9dcc9238dd
   react-native-pdf: 70ec85fc764070ce9324f5aea504795e889e6ba0
   react-native-safe-area-context: 141eca0fd4e4191288dfc8b96a7c7e1c2983447a

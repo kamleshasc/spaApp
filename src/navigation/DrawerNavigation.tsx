@@ -144,15 +144,19 @@ function DrawerNavigation() {
           options={{drawerLabel: 'My Bookings', title: 'My Bookings'}}
         />
       )}
-      <Drawer.Screen
-        name="Payment"
-        component={SCREENS.PAYMENTSCREENS.getBookings}
-      />
-      <Drawer.Screen
-        name="SalesReport"
-        options={{drawerLabel: 'Sales Report', title: 'Sales Report'}}
-        component={SCREENS.REPORTSCREENS.salesReport}
-      />
+      {screens.includes('Payment') && (
+        <Drawer.Screen
+          name="Payment"
+          component={SCREENS.PAYMENTSCREENS.getBookings}
+        />
+      )}
+      {screens.includes('SalesReport') && (
+        <Drawer.Screen
+          name="SalesReport"
+          options={{drawerLabel: 'Sales Report', title: 'Sales Report'}}
+          component={SCREENS.REPORTSCREENS.salesReport}
+        />
+      )}
       <Drawer.Screen
         name="Profile"
         component={SCREENS.PROFILESCREENS.profile}

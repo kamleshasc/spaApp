@@ -8,9 +8,12 @@ export const fetchService = createAsyncThunk(
     try {
       const res = await get({url: '/services/'});
       if (res.success) {
-        return res.data;
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -38,10 +41,10 @@ export const fetchAddService = createAsyncThunk(
         body: payload,
       });
 
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -62,10 +65,10 @@ export const fetchUpdateService = createAsyncThunk(
         url: `/services/${serviceId}`,
         body: payload,
       });
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -97,10 +100,10 @@ export const fetchSubService = createAsyncThunk(
     try {
       const res = await get({url: '/services/subService'});
       // return res;
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -115,10 +118,10 @@ export const fetchExpertService = createAsyncThunk(
     try {
       const res = await get({url: '/services/expert/all'});
       // return res;
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -136,10 +139,10 @@ export const fetchServiceByExpertId = createAsyncThunk(
   async ({expertId}: getServiceByExpertID, {rejectWithValue}) => {
     try {
       const res = await get({url: `/services/expert/${expertId}`});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);

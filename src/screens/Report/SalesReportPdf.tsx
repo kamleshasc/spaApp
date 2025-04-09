@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Alert,
+  Platform,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
@@ -13,7 +15,10 @@ import Pdf from 'react-native-pdf';
 import {useAppDispatch, useAppSelector} from '../../hooks/storeHook';
 import {fetchPdfReport} from '../../redux/Action/salesReportAction';
 import {UI} from '../../components';
-import { clearGetSalesReportPDFErrorMsg } from '../../redux/Reducer/salesReducer/getSalesPdf';
+import {clearGetSalesReportPDFErrorMsg} from '../../redux/Reducer/salesReducer/getSalesPdf';
+import {checkPermissionsDocument} from '../../config/helper';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import {API_URL} from '@env';
 
 type PdfInvoiceProp = StackScreenProps<RootStackParamList, 'SalesReportPdf'>;
 
@@ -24,19 +29,40 @@ const SalesReportPdf = ({navigation, route}: PdfInvoiceProp) => {
     state => state.sales.getSalePdf,
   );
 
+  const {dirs} = ReactNativeBlobUtil.fs;
+  const dirToSave = Platform.OS === 'ios' ? dirs.DocumentDir : dirs.DownloadDir; // iOS uses DocumentDir
+  const fileName = 'salesReport.pdf';
+  const filePath = `${dirToSave}/${fileName}`;
+
+  const configfb = {
+    fileCache: true,
+    path: filePath,
+    mime: 'application/pdf',
+  };
+  const androidConfig = {
+    ...configfb,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true,
+      mediaScannable: true,
+      path: filePath,
+    },
+  };
+
+  const configOptions = Platform.select({
+    ios: configfb,
+    android: androidConfig,
+  });
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.iconContainer}>
+        <TouchableOpacity onPress={downloadPdf} style={styles.iconContainer}>
           <Icon name="download" size={30} color={colors.themePrimary} />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
-
-
 
   const getPDFReport = () => {
     try {
@@ -44,6 +70,45 @@ const SalesReportPdf = ({navigation, route}: PdfInvoiceProp) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const downloadPdf = async () => {
+    const hasPermission = await checkPermissionsDocument();
+
+    if (!hasPermission) return;
+
+    ReactNativeBlobUtil.config(configOptions || {})
+      .fetch(
+        'GET',
+        `${API_URL}/report/pdf/download/saleReport/?startDate=${startDate}&endDate=${endDate}&tType=${s_type}`,
+        {},
+      )
+      .then(res => {
+        if (Platform.OS === 'ios') {
+          ReactNativeBlobUtil.ios.previewDocument(res.path());
+        } else if (Platform.OS === 'android') {
+          ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+            {
+              name: fileName,
+              parentFolder: '',
+              mimeType: 'application/pdf',
+            },
+            'Download',
+            res.path(),
+          ).then(dest =>
+            ReactNativeBlobUtil.android.actionViewIntent(
+              dest,
+              'application/pdf',
+            ),
+          );
+        }
+      })
+      .catch((e: unknown) => {
+        Alert.alert(
+          'Download Error',
+          'Failed to download the invoice. Please try again.',
+        );
+      });
   };
 
   React.useEffect(() => {

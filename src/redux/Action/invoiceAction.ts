@@ -7,11 +7,13 @@ export const fetchInvoice = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const res = await get({url: '/invoices'});
-
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -38,11 +40,10 @@ export const fetchAddInvoice = createAsyncThunk(
   async (payload: InvoiceBody, {rejectWithValue}) => {
     try {
       const res: any = await post({url: '/invoices', body: payload});
-      // return res;
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -61,11 +62,10 @@ export const fetchUpdateInvoice = createAsyncThunk(
   async ({invoiceId, payload}: UpdateInvoiceBody, {rejectWithValue}) => {
     try {
       const res = await put({url: `/invoices/${invoiceId}`, body: payload});
-      // return res;
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -82,11 +82,10 @@ export const fetchPdfById = createAsyncThunk(
   async ({invoiceId}: GetInvoicePdf, {rejectWithValue}) => {
     try {
       const res = await get({url: `/invoices/pdf/${invoiceId}`});
-      // return res;
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);

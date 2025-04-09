@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {
+  StackNavigationOptions,
   StackNavigationProp,
   createStackNavigator,
 } from '@react-navigation/stack';
@@ -30,6 +31,7 @@ interface BookingTimeLine {
   phone: string;
   duration: string;
   serviceName: string;
+  price: any;
 }
 
 export type RootStackParamList = {
@@ -100,150 +102,92 @@ function RootNavigation() {
     handleNavigation();
   }, []);
 
+  const commonHeaderOptions: StackNavigationOptions = {
+    headerShown: true,
+    headerStyle: {
+      height: 55,
+      backgroundColor: colors.primary,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.themePrimary,
+    },
+    headerTitleStyle: {
+      fontSize: 21,
+      fontWeight: '600',
+      color: colors.themePrimary,
+    },
+    headerTitleAlign: 'left',
+    headerTintColor: colors.themePrimary,
+    headerBackTitleVisible: false,
+  };
+
+  const screens: {name: keyof RootStackParamList; component: FC<any>}[] = [
+    {name: 'OnBoarding', component: SCREENS.ONBOARDINGSCREENS.onBoarding},
+    {name: 'Welcome', component: SCREENS.ONBOARDINGSCREENS.welcome},
+    {name: 'DrawerNavigation', component: DrawerNavigation},
+    {name: 'Login', component: SCREENS.AUTHSCREENS.login},
+    {name: 'SignUp', component: SCREENS.AUTHSCREENS.signup},
+    {name: 'Forgot', component: SCREENS.AUTHSCREENS.forgot},
+    {name: 'ResetPassword', component: SCREENS.AUTHSCREENS.resetPassword},
+    {name: 'BookingUser', component: SCREENS.BOOKSCREENS.bookingUser},
+    {name: 'BookingTimeLine', component: SCREENS.BOOKSCREENS.timeLine},
+    {name: 'EmployeeList', component: SCREENS.DASHBOARD.employeeList},
+    {name: 'EditProfile', component: SCREENS.PROFILESCREENS.editProfile},
+    {name: 'ChangePassword', component: SCREENS.PROFILESCREENS.changePassword},
+    {name: 'PrivacyPolicy', component: SCREENS.PROFILESCREENS.privacyPolicy},
+    {name: 'PaymentMethod', component: SCREENS.PAYMENTSCREENS.paymentMethods},
+  ];
+
+  const headerScreens: {
+    name: keyof RootStackParamList;
+    component: FC<any>;
+    options?: StackNavigationOptions;
+  }[] = [
+    {name: 'AddEmployee', component: SCREENS.EMPLOYEESCREENS.addEmployee},
+    {name: 'EditEmployee', component: SCREENS.EMPLOYEESCREENS.editEmployee},
+    {name: 'AddService', component: SCREENS.SERVICE.addService},
+    {name: 'EditService', component: SCREENS.SERVICE.editService},
+    {name: 'AddClient', component: SCREENS.CLIENT.addClient},
+    {name: 'EditClient', component: SCREENS.CLIENT.editClient},
+    {name: 'AddInventory', component: SCREENS.INVENTORY.addInventory},
+    {name: 'EditInventory', component: SCREENS.INVENTORY.editInventory},
+    {
+      name: 'AddCommissionRule',
+      component: SCREENS.COMMISSIONRULESCREENS.addCommissionRule,
+    },
+    {
+      name: 'EditCommissionRule',
+      component: SCREENS.COMMISSIONRULESCREENS.editCommissionRule,
+    },
+    {name: 'AddInvoice', component: SCREENS.INVOICESCREENS.addInvoice},
+    {name: 'EditInvoice', component: SCREENS.INVOICESCREENS.editInvoice},
+    {name: 'PdfInvoice', component: SCREENS.INVOICESCREENS.PdfInvoice},
+    {name: 'AddCustomer', component: SCREENS.CUSTOMERSCREENS.addCustomer},
+    {name: 'EditCustomer', component: SCREENS.CUSTOMERSCREENS.editCustemer},
+    {
+      name: 'SalesReportPdf',
+      component: SCREENS.REPORTSCREENS.salesReportPdf,
+      options: {title: 'Report PDF'},
+    },
+  ];
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        headerStyle: {
-          height: 55,
-          backgroundColor: colors.primary,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.themePrimary,
-        },
-        headerTitleStyle: {
-          fontSize: 21,
-          fontWeight: '600',
-          color: colors.themePrimary,
-        },
-        headerTitleAlign: 'left',
-        headerTintColor: colors.themePrimary,
-        headerBackTitleVisible: false,
       }}>
       {loadingStatus && <Stack.Screen name="Loading" component={UI.Loader} />}
-      <Stack.Screen
-        name="OnBoarding"
-        component={SCREENS.ONBOARDINGSCREENS.onBoarding}
-      />
-      <Stack.Screen
-        name="Welcome"
-        component={SCREENS.ONBOARDINGSCREENS.welcome}
-      />
-      <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
-      <Stack.Screen name="Login" component={SCREENS.AUTHSCREENS.login} />
-      <Stack.Screen
-        name="AddEmployee"
-        component={SCREENS.EMPLOYEESCREENS.addEmployee}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditEmployee"
-        component={SCREENS.EMPLOYEESCREENS.editEmployee}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddService"
-        component={SCREENS.SERVICE.addService}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditService"
-        component={SCREENS.SERVICE.editService}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddClient"
-        component={SCREENS.CLIENT.addClient}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditClient"
-        component={SCREENS.CLIENT.editClient}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddInventory"
-        component={SCREENS.INVENTORY.addInventory}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditInventory"
-        component={SCREENS.INVENTORY.editInventory}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddCommissionRule"
-        component={SCREENS.COMMISSIONRULESCREENS.addCommissionRule}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditCommissionRule"
-        component={SCREENS.COMMISSIONRULESCREENS.editCommissionRule}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddInvoice"
-        component={SCREENS.INVOICESCREENS.addInvoice}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditInvoice"
-        component={SCREENS.INVOICESCREENS.editInvoice}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="PdfInvoice"
-        component={SCREENS.INVOICESCREENS.PdfInvoice}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="AddCustomer"
-        component={SCREENS.CUSTOMERSCREENS.addCustomer}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="EditCustomer"
-        component={SCREENS.CUSTOMERSCREENS.editCustemer}
-        options={{headerShown: true}}
-      />
-      <Stack.Screen name="SignUp" component={SCREENS.AUTHSCREENS.signup} />
-      <Stack.Screen
-        name="BookingUser"
-        component={SCREENS.BOOKSCREENS.bookingUser}
-      />
-      <Stack.Screen
-        name="BookingTimeLine"
-        component={SCREENS.BOOKSCREENS.timeLine}
-      />
-      <Stack.Screen
-        name="EmployeeList"
-        component={SCREENS.DASHBOARD.employeeList}
-      />
-      <Stack.Screen
-        name="EditProfile"
-        component={SCREENS.PROFILESCREENS.editProfile}
-      />
-      <Stack.Screen
-        name="ChangePassword"
-        component={SCREENS.PROFILESCREENS.changePassword}
-      />
-      <Stack.Screen
-        name="PrivacyPolicy"
-        component={SCREENS.PROFILESCREENS.privacyPolicy}
-      />
-      <Stack.Screen name="Forgot" component={SCREENS.AUTHSCREENS.forgot} />
-      <Stack.Screen
-        name="ResetPassword"
-        component={SCREENS.AUTHSCREENS.resetPassword}
-      />
-      <Stack.Screen
-        name="PaymentMethod"
-        component={SCREENS.PAYMENTSCREENS.paymentMethods}
-      />
-      <Stack.Screen
-        name="SalesReportPdf"
-        options={{headerShown: true, title: 'Report PDF'}}
-        component={SCREENS.REPORTSCREENS.salesReportPdf}
-      />
+      {screens.map(({name, component}) => (
+        <Stack.Screen key={name} name={name} component={component} />
+      ))}
+
+      {headerScreens.map(({name, component, options}) => (
+        <Stack.Screen
+          key={name}
+          name={name}
+          component={component}
+          options={{...commonHeaderOptions, ...options}}
+        />
+      ))}
     </Stack.Navigator>
   );
 }

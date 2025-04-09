@@ -27,6 +27,9 @@ export const fetchGetUser = createAsyncThunk(
     try {
       const res = await get({url: '/users'});
       if (res?.success) {
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
         return res?.data;
       } else {
         return rejectWithValue(res?.message);

@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  FlatList,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import colors from '../../config/colors';
 import {SCREEN, UI} from '../../components';
 import {rMS} from '../../config/responsive';
@@ -80,12 +72,7 @@ type SalesReportProps = CompositeScreenProps<
 type SelectedType = {
   label: any;
   value: any;
-};
-
-const initalSelectedType: SelectedType = {
-  label: '',
-  value: '',
-};
+} | null;
 
 function SalesReport({navigation}: SalesReportProps) {
   const {isTablet} = useDeviceType();
@@ -103,8 +90,7 @@ function SalesReport({navigation}: SalesReportProps) {
     errorMsg,
     isLoader,
   } = useAppSelector(state => state.sales.getSalesReport);
-  const [selectedType, setSelectedType] =
-    React.useState<SelectedType>(initalSelectedType);
+  const [selectedType, setSelectedType] = React.useState<SelectedType>(null);
 
   const overAllDetails = salesData?.length > 0 ? salesData[0]?.overAll : false;
   const disableBtn = inputs.from.value && inputs.to.value ? false : true;
@@ -307,11 +293,18 @@ function SalesReport({navigation}: SalesReportProps) {
               selectionType={selectionType}
             />
             {selectionType == 0 && (
-              <FlatList
-                data={salesData?.length > 0 ? salesData[0]?.reportList : []}
-                renderItem={renderItem}
-                keyExtractor={(_, index) => index.toString()}
-              />
+              <>
+                {salesData?.length <= 0 && (
+                  <View style={styles.noDataContainer}>
+                    <Text style={styles.noDataText}>No record found!</Text>
+                  </View>
+                )}
+                <FlatList
+                  data={salesData?.length > 0 ? salesData[0]?.reportList : []}
+                  renderItem={renderItem}
+                  keyExtractor={(_, index) => index.toString()}
+                />
+              </>
             )}
 
             {selectionType == 1 && (
@@ -338,15 +331,17 @@ function SalesReport({navigation}: SalesReportProps) {
                           data={paymentTypeData}
                           onChange={onSelectType}
                           placeholder={'Select Type'}
-                          value={selectedType.value}
+                          value={selectedType?.value}
                         />
                       </View>
                     </View>
-                    <UI.Btn
-                      onPressBtn={handleProcessedBtn}
-                      styles={styles.btnContainer}>
-                      Processed
-                    </UI.Btn>
+                    {selectedType && (
+                      <UI.Btn
+                        onPressBtn={handleProcessedBtn}
+                        styles={styles.btnContainer}>
+                        Processed
+                      </UI.Btn>
+                    )}
                   </>
                 )}
               </>
@@ -356,6 +351,7 @@ function SalesReport({navigation}: SalesReportProps) {
         data={new Array(1)}
         keyExtractor={(_, index) => index.toString()}
       />
+
       <UI.Toast
         message={errorMsg}
         visible={isError}
@@ -443,5 +439,14 @@ const styles = StyleSheet.create({
   },
   dropDownParentContainer: {
     flex: 1,
+  },
+  noDataContainer: {
+    marginTop: rMS(50),
+    alignItems: 'center',
+  },
+  noDataText: {
+    fontSize: rMS(14),
+    fontWeight: '500',
+    color: colors.fontDark,
   },
 });

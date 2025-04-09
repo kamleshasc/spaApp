@@ -78,7 +78,6 @@ function Forgot({navigation}: forgotProps) {
       }
     } catch (error) {
       console.log(error, 'errrr');
-
       setMessageStatus(true);
       setMessage(error);
     }
@@ -109,12 +108,12 @@ function Forgot({navigation}: forgotProps) {
         return {
           ...prevInputs,
           email: {
-            value: prevInputs.email.value,
+            value: prevInputs?.email?.value,
             isValid: emailIsValid,
             message: emailMsg,
           },
           otp: {
-            value: prevInputs.otp.value,
+            value: prevInputs?.otp?.value,
             isValid: otpIsValid,
             message: otpMsg,
           },

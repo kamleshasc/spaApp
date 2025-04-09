@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   FlatList,
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,

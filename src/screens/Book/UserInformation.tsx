@@ -1,4 +1,11 @@
-import {Image, Platform, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import colors from '../../config/colors';
 import {UI} from '../../components';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
@@ -46,6 +53,7 @@ function UserInformation({navigation, route}: UserInformationProp) {
       expertId: expertId,
       serviceId: selectedService?.serviceId,
       serviceName: selectedService?.name,
+      price: selectedService?.price,
       parentId: selectedService?.parentId,
       name: userDetails?.firstName + userDetails?.lastName,
       mail: userDetails?.email ? userDetails.email : '',
@@ -57,86 +65,86 @@ function UserInformation({navigation, route}: UserInformationProp) {
 
   return (
     <View style={styles.root}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <UI.Header
-            onPress={() => navigation.goBack()}
-            headerName={'Personal Information'}
-            showHeaderName={true}
-          />
-          <View style={styles.subScreen}>
-            <View style={styles.userContainer}>
-              <Image
-                resizeMode="cover"
-                style={styles.userImage}
-                source={
-                  userDetails?.userImage
-                    ? {uri: `${IMAGE_URL}${userDetails?.userImage}`}
-                    : require('../../assets/images/no_user.png')
-                }
-              />
-            </View>
-            <UI.Input
-              disableInput={true}
-              textInputConfig={{
-                placeholder: 'First Name',
-                value: userDetails?.firstName,
-              }}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <UI.Header
+          onPress={() => navigation.goBack()}
+          headerName={'Personal Information'}
+          showHeaderName={true}
+        />
+        <View style={styles.subScreen}>
+          <View style={styles.userContainer}>
+            <Image
+              resizeMode="cover"
+              style={styles.userImage}
+              source={
+                userDetails?.userImage
+                  ? {uri: `${IMAGE_URL}${userDetails?.userImage}`}
+                  : require('../../assets/images/no_user.png')
+              }
             />
-            <UI.Input
-              disableInput={true}
-              textInputConfig={{
-                placeholder: 'Last Name',
-                value: userDetails?.lastName,
-                editable: false,
-              }}
-            />
-            <UI.Input
-              disableInput={true}
-              textInputConfig={{
-                placeholder: 'Email',
-                value: userDetails?.email,
-                editable: false,
-              }}
-            />
-            <UI.DropDown
-              data={data.map(value => {
-                return {
-                  label: value.name,
-                  value: value.serviceId,
-                };
-              })}
-              onChange={(value: any) => handleService(value?.value)}
-              placeholder={'Select Service'}
-              value={selectedService?.serviceId || ''}
-              styles={styles.inputStyle}
-            />
-            <UI.Input
-              disableInput={true}
-              textInputConfig={{
-                placeholder: 'Price',
-                value: selectedService?.price
-                  ? `$ ${selectedService?.price.toFixed(2)}`
-                  : '',
-                editable: false,
-              }}
-            />
-            <UI.Input
-              disableInput={true}
-              textInputConfig={{
-                placeholder: 'Duration',
-                value: selectedService?.duration || '',
-                editable: false,
-              }}
-            />
-            <View style={styles.btnContainer}>
-              <UI.Btn
-                disabledBtn={selectedService ? false : true}
-                onPressBtn={handleNext}>
-                Next
-              </UI.Btn>
-            </View>
           </View>
-        </ScrollView>
+          <UI.Input
+            disableInput={true}
+            textInputConfig={{
+              placeholder: 'First Name',
+              value: userDetails?.firstName,
+            }}
+          />
+          <UI.Input
+            disableInput={true}
+            textInputConfig={{
+              placeholder: 'Last Name',
+              value: userDetails?.lastName,
+              editable: false,
+            }}
+          />
+          <UI.Input
+            disableInput={true}
+            textInputConfig={{
+              placeholder: 'Email',
+              value: userDetails?.email,
+              editable: false,
+            }}
+          />
+          <UI.DropDown
+            data={data.map(value => {
+              return {
+                label: value.name,
+                value: value.serviceId,
+              };
+            })}
+            onChange={(value: any) => handleService(value?.value)}
+            placeholder={'Select Service'}
+            value={selectedService?.serviceId || ''}
+            styles={styles.inputStyle}
+          />
+          <UI.Input
+            disableInput={true}
+            textInputConfig={{
+              placeholder: 'Price',
+              value: selectedService?.price
+                ? `$ ${selectedService?.price.toFixed(2)}`
+                : '',
+              editable: false,
+            }}
+          />
+          <UI.Input
+            disableInput={true}
+            textInputConfig={{
+              placeholder: 'Duration',
+              value: selectedService?.duration || '',
+              editable: false,
+            }}
+          />
+          <View style={styles.btnContainer}>
+            <UI.Btn
+              disabledBtn={selectedService ? false : true}
+              onPressBtn={handleNext}>
+              Next
+            </UI.Btn>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -172,14 +180,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: rMS(20),
   },
-  inputStyle:{
+  inputStyle: {
     ...Platform.select({
-      ios:{
+      ios: {
         paddingLeft: rMS(13),
       },
-      android:{
+      android: {
         paddingLeft: rMS(15),
-      }
-    })
-  }
+      },
+    }),
+  },
 });

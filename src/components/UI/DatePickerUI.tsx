@@ -7,7 +7,7 @@ import {rMS} from '../../config/responsive';
 interface DatePickerUIProps {
   handleCancelPressed: () => void;
   handleOkayPressed: (date: any) => void;
-  dateValue: Date;
+  dateValue: any;
   options?: any;
 }
 
@@ -16,7 +16,7 @@ const DatePickerUI: React.FC<DatePickerUIProps> = ({
   handleOkayPressed,
   dateValue,
   options,
-}) => {  
+}) => {
   const [date, setDate] = useState(dateValue);
 
   const handleDateChange = (newDate: any) => {
@@ -38,6 +38,7 @@ const DatePickerUI: React.FC<DatePickerUIProps> = ({
               style={styles.datePicker}
               date={date}
               onDateChange={handleDateChange}
+              // dividerColor={colors.themePrimary}
               {...options}
             />
             <View style={styles.btnContainer}>
@@ -80,8 +81,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   datePicker: {
-    marginBottom: 20,
-    backgroundColor: colors.primary,
+    // marginBottom: 20,
+    // backgroundColor: colors.primary,
+    // shadowColor: 'red',
+    // shadowRadius: 0,
+    // shadowOpacity: 1,
+    // shadowOffset: {height: 0, width: 0},
   },
   btnContainer: {
     flexDirection: 'row',

@@ -10,8 +10,7 @@ import RootNavigation, {
 } from './src/navigation/RootNavigation';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
-import {LogBox, StatusBar} from 'react-native';
-import colors from './src/config/colors';
+import {LogBox} from 'react-native';
 
 export const navigationRef =
   createRef<NavigationContainerRef<RootStackParamList>>();
@@ -40,10 +39,6 @@ export function resetTo(
 function App(): React.JSX.Element {
   return (
     <>
-      <StatusBar
-        backgroundColor={colors.themePrimary}
-        barStyle={'light-content'}
-      />
       <Provider store={store}>
         <NavigationContainer ref={navigationRef}>
           <RootNavigation />

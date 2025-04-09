@@ -8,6 +8,9 @@ export const fetchInventory = createAsyncThunk(
     try {
       const res = await get({url: '/inventory/'});
       if (res.success) {
+        if (res?.data.length <= 0) {
+          return rejectWithValue('No Data Found.');
+        }
         return res.data;
       } else {
         return rejectWithValue(res.message);
@@ -58,7 +61,7 @@ export const fetchUpdateInventory = createAsyncThunk(
   async ({inventoryId, payload}: updateInventoryPayload, {rejectWithValue}) => {
     try {
       const res = await put({url: `/inventory/${inventoryId}`, body: payload});
-      
+
       if (res.success) {
         return res.data;
       } else {

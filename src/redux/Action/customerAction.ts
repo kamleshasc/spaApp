@@ -24,10 +24,10 @@ export const fetchGetCustomer = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const res = await get({url: '/users/customer'});
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
-        return rejectWithValue(res.message);
+        return rejectWithValue(res?.message);
       }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
@@ -44,7 +44,11 @@ export const fetchUpdateCustomer = createAsyncThunk(
         url: `/users/customer/${customerId}`,
         body: payload,
       });
-      return res;
+      if(res?.success){
+        return res;
+      }else{
+        return rejectWithValue(res?.message);
+      }
     } catch (error) {
       let errorMessage = errorMsgWrap(error);
       return rejectWithValue(errorMessage);
@@ -60,8 +64,8 @@ export const fetchAddCustomer = createAsyncThunk(
         url: '/users/customer',
         body: payload,
       });
-      if (res.success) {
-        return res.data;
+      if (res?.success) {
+        return res?.data;
       } else {
         return rejectWithValue(res.message);
       }

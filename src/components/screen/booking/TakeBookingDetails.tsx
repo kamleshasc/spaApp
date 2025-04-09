@@ -23,6 +23,9 @@ import {getEmployeeByServiceId} from '../../../redux/Action/serviceAction';
 interface inputString {
   value: string;
 }
+interface inputAny {
+  value: any;
+}
 
 interface bookingInputs {
   name: inputString;
@@ -34,6 +37,8 @@ interface bookingInputs {
   selectedId: inputString;
   selectedParentId: inputString;
   duration: inputString;
+  price: inputAny;
+  serviceName: inputString;
 }
 
 const BookingIntialValue: bookingInputs = {
@@ -46,6 +51,8 @@ const BookingIntialValue: bookingInputs = {
   selectedId: {value: ''},
   selectedParentId: {value: ''},
   duration: {value: ''},
+  price: {value: 0},
+  serviceName: {value: ''},
 };
 
 interface TakeBookingDetailsProps {
@@ -94,6 +101,8 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
       let body = {
         date: selectedDate,
         serviceId: inputs?.selectedId?.value,
+        serviceName: inputs?.serviceName?.value,
+        price: inputs?.price?.value,
         parentId: inputs?.selectedParentId?.value,
         name: inputs?.name?.value,
         mail: inputs?.mail?.value,
@@ -196,6 +205,8 @@ const TakeBookingDetails: React.FC<TakeBookingDetailsProps> = ({
       subServiceData[indexSubService]?.parentId,
     );
     inputChangedHandler('duration', subServiceData[indexSubService].duration);
+    inputChangedHandler('price', subServiceData[indexSubService].price);
+    inputChangedHandler('serviceName', subServiceData[indexSubService].name);
     getEmployeeData(subServiceData[indexSubService]?.parentId);
   };
 

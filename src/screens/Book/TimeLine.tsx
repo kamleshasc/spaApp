@@ -175,6 +175,8 @@ function TimeLine({navigation, route}: BookingProps) {
         date: payload.date,
         expertId: payload.expertId,
         serviceId: payload.serviceId,
+        serviceName:payload.serviceName,
+        price:payload.price,
         parentId: payload.parentId,
         name: payload.name,
         mail: payload.mail,

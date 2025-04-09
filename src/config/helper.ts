@@ -2,8 +2,8 @@ import axios from 'axios';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {ImagePickerResponseObject} from '../components/UI/CustomModalImagePicker';
 import moment from 'moment-timezone';
-import { Alert, Platform } from 'react-native';
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import {Alert, Platform} from 'react-native';
+import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 // const timeZone = 'Asia/Kolkata';
 // const timeZone = 'Asia/Calcutta';
@@ -393,50 +393,51 @@ export function getDateInNewYorkTimeZone(date = new Date()) {
 export const getDateInNewYorkTimeZoneMoment = (date = new Date()) => {
   const newYorkDate = moment().tz('America/New_York');
   return newYorkDate.toDate();
+  // return moment().tz('America/New_York').format('YYYY-MM-DD HH:mm:ss');
 };
 
-export const getItPastDate = (date:string) => {
-    const now = moment().tz('America/New_York').startOf('day');
-    const bookingDate = moment.tz(date,"MMMM DD, YYYY", "America/New_York");
-    const isPastDate = now.isAfter(bookingDate);
+export const getItPastDate = (date: string) => {
+  const now = moment().tz('America/New_York').startOf('day');
+  const bookingDate = moment.tz(date, 'MMMM DD, YYYY', 'America/New_York');
+  const isPastDate = now.isAfter(bookingDate);
 
-    return isPastDate
+  return isPastDate;
 };
 
-export const checkPermissionsDocument = async (): Promise<boolean> => {
-    if (Platform.OS === 'ios') {
-      const permission = await check(PERMISSIONS.IOS.MEDIA_LIBRARY);
+export const checkPermissionsDocument = async (): Promise<any> => {
+  if (Platform.OS === 'ios') {
+    const permission = await check(PERMISSIONS.IOS.MEDIA_LIBRARY);
+    if (permission === RESULTS.DENIED || permission === RESULTS.BLOCKED) {
+      const requestResult = await request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+      if (requestResult !== RESULTS.GRANTED) {
+        Alert.alert(
+          'Permission Required',
+          'The app requires media library permissions to save the document. Please allow it in settings.',
+          [{text: 'OK'}],
+        );
+      }
+      return false;
+    }
+    return true;
+  } else if (Platform.OS === 'android') {
+    if (Platform.Version < 33) {
+      const permission = await check(
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      );
       if (permission === RESULTS.DENIED || permission === RESULTS.BLOCKED) {
-        const requestResult = await request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+        const requestResult = await request(
+          PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+        );
         if (requestResult !== RESULTS.GRANTED) {
           Alert.alert(
             'Permission Required',
-            'The app requires media library permissions to save the document. Please allow it in settings.',
+            'The app requires storage permissions to save the document. Please allow it in settings.',
             [{text: 'OK'}],
           );
           return false;
         }
       }
-    } else if (Platform.OS === 'android') {
-      if (Platform.Version < 33) {
-        const permission = await check(
-          PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-        );
-        if (permission === RESULTS.DENIED || permission === RESULTS.BLOCKED) {
-          const requestResult = await request(
-            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-          );
-          if (requestResult !== RESULTS.GRANTED) {
-            Alert.alert(
-              'Permission Required',
-              'The app requires storage permissions to save the document. Please allow it in settings.',
-              [{text: 'OK'}],
-            );
-            return false;
-          }
-        }
-      }
-      return true
     }
-    return false;
-  };
+    return true;
+  }
+};
