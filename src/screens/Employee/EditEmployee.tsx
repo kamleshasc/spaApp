@@ -382,10 +382,6 @@ function EditEmployee({route, navigation}: Props): React.JSX.Element {
     inputChangedHandler('role', value.value);
   };
 
-  const onChangeStatus = (value: {value: any}) => {
-    inputChangedHandler('status', value.value);
-  };
-
   const fetchUserDetails = (user: any) => {
     let keys = Object.keys(user).filter(x => fieldsKeys.indexOf(x) > -1);
 
@@ -395,6 +391,11 @@ function EditEmployee({route, navigation}: Props): React.JSX.Element {
       if (key == 'status') {
         let statusCheck = user[key] === 'Active' ? true : false;
         toggleSwitch(statusCheck);
+      } else if (key == 'dateOfjoining') {
+        if (user[key].length > 0) {
+          const selectedDate = DateFormateMMMMDDYYY(user[key]);
+          inputChangedHandler('dateOfjoining', selectedDate || '');
+        }
       } else {
         inputChangedHandler(key, user[key] || '');
       }
@@ -576,7 +577,7 @@ const style = StyleSheet.create({
     fontWeight: '600',
     color: colors.fontDark,
   },
-  dropdownStyle:{
-    paddingLeft:rMS(12)
-  }
+  dropdownStyle: {
+    paddingLeft: rMS(12),
+  },
 });

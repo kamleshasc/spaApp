@@ -51,7 +51,6 @@ interface userInputsTypes {
   role: objValues;
   mobileNumber: objValues;
   dateOfjoining: objValues;
-  status: objValues;
   userImage: objValues;
   password: objValues;
 }
@@ -65,7 +64,6 @@ const initialInputs: userInputsTypes = {
   role: {value: '', isValid: true, message: ''},
   mobileNumber: {value: '', isValid: true, message: ''},
   dateOfjoining: {value: '', isValid: true, message: ''},
-  status: {value: '', isValid: true, message: ''},
   userImage: {value: '', isValid: true, message: ''},
   password: {value: '', isValid: true, message: ''},
 };
@@ -146,7 +144,6 @@ function AddEmployee({navigation}: Props): React.JSX.Element {
         name: imgPath.fileName,
         type: imgPath.type,
       });
-
       let result: any = await dispatchUser(uploadImg(formData)).unwrap();
       if (result && result?.data) {
         inputChangedHandler('userImage', result?.data || '');
@@ -394,10 +391,6 @@ function AddEmployee({navigation}: Props): React.JSX.Element {
     inputChangedHandler('role', value.value);
   };
 
-  const onChangeStatus = (value: {value: any}) => {
-    inputChangedHandler('status', value.value);
-  };
-
   const emailOtpApi = async () => {
     try {
       const res = await dispatchUser(signUpOtp({email: email.value})).unwrap();
@@ -439,7 +432,7 @@ function AddEmployee({navigation}: Props): React.JSX.Element {
     }
     emailOtpApi();
   };
-
+  
   return (
     <SafeAreaView style={style.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

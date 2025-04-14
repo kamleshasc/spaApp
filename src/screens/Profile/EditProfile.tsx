@@ -108,23 +108,24 @@ function EditProfile({navigation, route}: EditProfileProp) {
 
   const userUploadImg = async (value: any) => {
     try {
+      console.log(value,'value ====== >')
       const formData = new FormData();
       formData.append('file', {
         uri:
           Platform.OS === 'android'
             ? value.uri
             : value.uri.replace('file://', ''),
-        name: value.fileName,
-        type: value.type,
+        name: value?.fileName || 'photo.jpg',
+        type: value?.type || 'image/jpeg',
       });
-
       let result: any = await disPatchEditProfile(uploadImg(formData)).unwrap();
       if (result && result?.data) {
         inputChangedHandler('userImage', result?.data || '');
       }
     } catch (error) {
+      console.log(error,'errorr')
       setMsgStatus(true);
-      setMessage(error);
+      // setMessage(error);
     }
   };
 
@@ -286,6 +287,7 @@ function EditProfile({navigation, route}: EditProfileProp) {
     }
     updateUser();
   };
+console.log(userImage.value,'userImage.value');
 
   return (
     <SafeAreaView style={styles.root}>

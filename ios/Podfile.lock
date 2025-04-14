@@ -937,7 +937,7 @@ PODS:
     - React-debug
   - react-native-blob-util (0.19.11):
     - React-Core
-  - react-native-date-picker (5.0.10):
+  - react-native-date-picker (5.0.8):
     - React-Core
   - react-native-image-picker (7.2.3):
     - DoubleConversion
@@ -1637,7 +1637,7 @@ SPEC CHECKSUMS:
   React-logger: de9b65c8c7b71a663e6e99d347b1c445f5190c39
   React-Mapbuffer: 766bb4d8f655d816913325b353d800debbde7209
   react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
-  react-native-date-picker: 58c231c37c1a9be5715018b369210c34e83f6e48
+  react-native-date-picker: 8a0d56cdef18f61945e6d0dfd250dc1b8e7a313e
   react-native-image-picker: fb0c2b3adc3eff6caa3cd6a507a34b9dcc9238dd
   react-native-pdf: 70ec85fc764070ce9324f5aea504795e889e6ba0
   react-native-safe-area-context: 141eca0fd4e4191288dfc8b96a7c7e1c2983447a
@@ -1675,6 +1675,6 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 4f4f07a17818e76d1b04edc01b68b6d49a682100
 
-PODFILE CHECKSUM: f83fb324aa203f19ad254d061e7091b14fb9eab4
+PODFILE CHECKSUM: e7ad851cc0b7719493faf53b319ef78722d498a1
 
 COCOAPODS: 1.16.2

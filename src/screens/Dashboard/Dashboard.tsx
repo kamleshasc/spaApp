@@ -303,7 +303,7 @@ function Dashboard({navigation}: DashboardProps): React.JSX.Element {
                     onPress={handleBookingPressed}
                     date={DateToYYYYMMDD(item?.date)}
                     endTime={item?.serviceEndTime}
-                    service={item?.service}
+                    service={item?.serviceName}
                     startTime={item?.serviceStartTime}
                     key={index}
                   />

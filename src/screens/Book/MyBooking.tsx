@@ -14,7 +14,7 @@ import CancelBookingModal from '../../components/UI/CancelBookingModal';
 type BookingItem = {
   _id: string;
   date: any;
-  service: string;
+  serviceName: string;
   serviceStartTime: string;
   serviceEndTime: string;
   expertName: string;
@@ -63,7 +63,7 @@ function MyBooking() {
       <SCREEN.BookedItem
         cancelPressed={() => handleShowCancelBookingModal(item)}
         date={DateFormateMMMMDDYYY(item?.date)}
-        service={item?.service}
+        service={item?.serviceName}
         startTime={item?.serviceStartTime}
         endTime={item?.serviceEndTime}
         expertName={item?.expertName}

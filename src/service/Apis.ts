@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
-import {API_URL} from '@env';
+import {API_URL,IMAGE_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {clearUserScreens} from '../redux/Action/authAction';
 import {store} from '../redux/store';
@@ -7,6 +7,7 @@ import {resetTo} from '../../App';
 let isRefreshing = false; // To track if the refresh token request is already in progress
 
 console.log(API_URL, 'API_URL');
+console.log(IMAGE_URL, 'IMAGE_URL');
 
 interface ApiProps {
   url: string;
@@ -156,8 +157,6 @@ export async function patch({
   hasFormData = false,
 }: ApiProps): Promise<AxiosResponse | AxiosError> {
   let header = await getHeader({config, hasFormData});
-  console.log(url, 'urlllll');
-  console.log(body, 'body');
 
   return await instance
     .patch(API_URL + url, body, header)

@@ -28,7 +28,7 @@ type ErrorResponseData = {
 };
 
 export const errorMsgWrap = (error: any) => {
-  let errorMessage = 'Unknown error occurred';
+    let errorMessage = 'Unknown error occurred';
   if (axios.isAxiosError(error) && error.response) {
     const responseData = error.response.data as ErrorResponseData;
 
